@@ -1,0 +1,372 @@
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+@font-face {
+    font-family: "Leroy Merlin Font";
+    src: url('fonts/leroymerlinsans-web/LeroyMerlinSans-Web-Regular.ttf');
+}
+@font-face {
+    font-family: "Leroy Merlin Font Italic";
+    font-style: italic;
+    src: url('fonts/leroymerlinsans-web/LeroyMerlinSans-Web-Regular.ttf');
+}
+@font-face {
+    font-family: "Leroy Merlin Font Bold";
+    src: url('fonts/leroymerlinsans-web/LeroyMerlinSans-Web-Bold.ttf');
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-weight: 400;
+    font-family: "Leroy Merlin Font";
+    font-size: 1rem;
+    line-height: 1.58;
+    color: #333;
+    background-color: #f4f4f4;
+}
+
+body:before {
+    height: 50%;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: #7cb220;
+    content: "";
+    z-index: 0;
+}
+
+.clearfix:after {
+    display: block;
+    content: "";
+    clear: both;
+}
+
+img
+{
+    float: right;
+    width: 13%;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+h1 {
+    font-size: 1.7em;
+}
+
+a {
+    color: #128ff2;
+}
+.submit{
+    text-align: center;
+}
+
+button {
+    align-content: center;
+    box-shadow: none;
+    border: 1px solid transparent;
+    font-size: 14px;
+    outline: none;
+    line-height: 100%;
+    white-space: nowrap;
+    vertical-align: middle;
+    padding: 0.6rem 1rem;
+    border-radius: 2px;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+    min-height: 38px;
+}
+
+
+button.primary {
+    background-color: #7cb220;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.12);
+    color: #fff;
+}
+
+input {
+    font-family: "Leroy Merlin Font Bold";
+    font-size: 100%;
+    color: #555555;
+}
+
+input[type="file"] {
+    border: 1px solid #7cb220;
+    padding: 6px;
+    max-width: 100%;
+}
+
+.file-input {
+    width: 100%;
+}
+
+.submit-btn {
+    display: block;
+    margin-top: 15px;
+    min-width: 100px;
+}
+
+@media screen and (min-width: 500px) {
+    .file-input {
+        width: calc(100% - 115px);
+    }
+
+    .submit-btn {
+        display: inline-block;
+        margin-top: 0;
+        margin-left: 10px;
+    }
+}
+
+.upload-container {
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #fff;
+    box-shadow: 0 1px 11px rgba(0, 0, 0, 0.27);
+    margin-top: 60px;
+    min-height: 330px;
+    position: relative;
+    padding: 20px;
+}
+
+.upload-header {
+    border-bottom: 1px solid #ececec;
+}
+
+/*.single-upload {
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #7cb220;
+}*/
+
+.multiple-upload {
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #7cb220;
+}
+
+.upload-response {
+    overflow-x: hidden;
+    word-break: break-all;
+}
+
+
+.conteneur
+{
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+select {
+    flex-direction: column;
+    font-family: "Leroy Merlin Font Bold";
+    font-size: 100%;
+    width: 100%;
+    height: 100%;
+    margin: 1%;
+    padding-left: 15px;
+    color: #555555;
+    cursor: pointer;
+}
+button {
+    font-family: "Leroy Merlin Font";
+    width: auto;
+    height: 100%;
+    margin: 1%;
+    padding-left: 15px;
+    color: #555555;
+    cursor: pointer;
+}
+
+.simulation-informations
+{
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #7cb220;
+}
+
+.loader-container{
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 999;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    transition: opacity 1s ease-in-out, transition 1s ease-in-out;
+}
+
+.preview.hidden{
+    opacity: 0;
+    visibility: hidden;
+}
+.preview{
+    position: absolute;
+    align-content: center;
+    background-color: #ffff;
+    height: auto;
+    margin-top: 5%;
+}
+.preview-export{
+    text-align: center;
+}
+
+table {
+    align-content: center;
+    border: medium solid #ffffff;
+    border-collapse: collapse;
+    width: 50%;
+}
+th {
+    color: #ffffff;
+    text-align: center;
+    font-size: 80%;
+    border: thin solid #7cb220;
+    width: 50%;
+    padding: 5px;
+    background-color: #7cb220;
+}
+td {
+    text-align: center;
+    font-size: 80%;
+    border: thin solid #7cb220;
+    width: 50%;
+    padding: 5px;
+    text-align: center;
+    background-color: #ffffff;
+}
+
+iframe{
+    position: absolute;
+    align-content: center;
+    width: 100%;
+    height: 100%;
+    border: 9px solid #666;
+    background-color: #ffff;
+}
+
+.loader-container.hidden{
+    opacity: 0;
+    visibility: hidden;
+}
+
+
+.loader {
+    position: relative;
+    margin: 0 auto;
+    width: 100px;
+}
+.loader::before {
+     content: '';
+     display: block;
+     padding-top: 100%;
+}
+
+
+.circular {
+    animation: rotate 2s linear infinite;
+    height: 100%;
+    transform-origin: center center;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+
+.path {
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+    animation: dash 1.5s ease-in-out infinite, color 6s ease-in-out infinite;
+    stroke-linecap: round;
+}
+
+@keyframes rotate {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes dash {
+    0% {
+        stroke-dasharray: 1, 200;
+        stroke-dashoffset: 0;
+    }
+    50% {
+        stroke-dasharray: 89, 200;
+        stroke-dashoffset: -35px;
+    }
+    100% {
+        stroke-dasharray: 89, 200;
+        stroke-dashoffset: -124px;
+    }
+}
+
+@keyframes color {
+    100%,
+    0% {
+        stroke: #d62d20;
+    }
+    40% {
+        stroke: #0057e7;
+    }
+    66% {
+        stroke: #008744;
+    }
+    80%,
+    90% {
+        stroke: #ffa700;
+    }
+}
+
+   body {
+       background-color: #eee;
+   }
+.showbox {
+    display : flex;
+    text-align: center;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 5%;
+}
+/*
+.loader{
+    width: 120px;
+    height: 120px;
+    border: 16px solid #e5e5e5;
+    border-top: 16px solid #7cb220;
+    box-shadow: 0 0 6px 2px rgba(0,0,0,0.2);
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    animation: loader 1s linear infinite;
+}
+
+@keyframes loader{
+    0%{
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+    100%{
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+*/
+
+.export-file{
+    text-align: center;
+}

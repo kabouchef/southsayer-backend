@@ -1,0 +1,72 @@
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+@font-face {
+    font-family: "Leroy Merlin Font";
+    src: url('fonts/leroymerlinsans-web/LeroyMerlinSans-Web-Regular.ttf');
+}
+@font-face {
+    font-family: "Leroy Merlin Font Italic";
+    font-style: italic;
+    src: url('fonts/leroymerlinsans-web/LeroyMerlinSans-Web-Regular.ttf');
+}
+@font-face {
+    font-family: "Leroy Merlin Font Bold";
+    src: url('fonts/leroymerlinsans-web/LeroyMerlinSans-Web-Bold.ttf');
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-weight: 400;
+    font-family: "Leroy Merlin Font";
+    font-size: 1rem;
+    line-height: 1.58;
+    color: #333;
+    background-color: #ffffff;
+}
+.c2, .c5 {
+    text-align:center;
+    margin: 0;
+    padding: 0;
+    font-weight: 400;
+    font-family: "Leroy Merlin Font Bold";
+    color: #ffffff;
+    margin-left: 10%;
+    font-size: 0.8rem;
+    line-height: 1.58;
+    background-color: #7cb220;
+}
+th, .c1{
+    display: none;
+}
+
+h2{
+    text-align: center;
+}
+
+.c6, .c3, .c4 {
+    font-family: "Leroy Merlin Font";
+    text-align:center;
+}
+
+.preview.hidden{
+    opacity: 0;
+    visibility: hidden;
+}
+.preview{
+    align-content: center;
+    background-color: #ffff;
+}
+iframe{
+    position: absolute;
+    align-content: center;
+    width: 100%;
+    height: 100%;
+    border: 9px solid #666;
+    background-color: #ffffff;
+}
+

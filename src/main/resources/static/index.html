@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+        <title>Price Extractor OAP Offers / Spring Boot File Upload</title>
+        <link rel="stylesheet" href="css/main.css" />
+    </head>
+    <body>
+        <div class="loader-container">
+            <div class="showbox">
+                <div class="loader">
+                    <svg class="circular" viewBox="25 25 50 50">
+                        <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+        <noscript>
+            <h2>Sorry! Your browser doesn't support Javascript</h2>
+        </noscript>
+        <div class="upload-container">
+            <div class ="imageHeader">
+                <img src="../images/Leroy_Merlin.svg" alt="Logo Leroy Merlin" title="Leroy Merlin"/>
+            </div>
+            <div class="upload-header">
+                <h2>OAP - Extracteur des tarifs de simulation</h2>
+            </div>
+            <div class="simulation-informations">
+                <form id="simulationForm" name="simulationForm" action="/request" method="post">
+                    <div class="conteneur">
+                        <div class = "simulation-code">
+                            <h3>Numéro de Simulation</h3>
+                            <input id="simulationCodeInput" type="text" name="simulationCode" class="simulationCode" value = "20190415S38248" required autofocus/>
+                        </div>
+                        <div class="environment-select">
+                            <h3>Environnement</h3>
+                            <div class="select">
+                                <select id="environment" type="select" name="environment" value = "" class="environment" required />
+                                <option value="PROD">PROD</option>
+                                <option value="PREPROD">PREPROD</option>
+                                <option value="RECETTE" selected>RECETTE</option>
+                                <option value="DEV">DEV</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="schema-radio">
+                            <h3>Schéma</h3>
+                            <input type="radio" name="schema" value="REEL" id="schemaReel" checked/> <label for="schemaReel">Reel</label>
+                            <input type="radio" name="schema" value="SIMUL" id="schemaSimul" /> <label for="schemaSimul">Simul</label>
+                        </div>
+                    </div>
+                    <div class="submit">
+                        <button id= "submitSimulation" type="submit" class="primary submit-btn">Submit</button>
+                    </div>
+                </form>
+            </div>
+            <div class="export-file">
+                <div id="export"></div>
+            </div>
+
+            <!--<div class="upload-content">
+                 <div class="single-upload">
+                     <h3>Upload Single File</h3>
+                     <form id="singleUploadForm" name="singleUploadForm">
+                         <input id="singleFileUploadInput" type="file" name="file" class="file-input" required />
+                         <button type="submit" class="primary submit-btn">Submit</button>
+                     </form>
+                     <div class="upload-response">
+                         <div id="singleFileUploadError"></div>
+                         <div id="singleFileUploadSuccess"></div>
+                     </div>
+                 </div>
+                <div class="multiple-upload">
+                    <h3>Upload Multiple Files</h3>
+                    <form id="multipleUploadForm" name="multipleUploadForm">
+                        <input id="multipleFileUploadInput" type="file" name="files" class="file-input" multiple required />
+                        <button type="submit" class="primary submit-btn">Submit</button>
+                    </form>
+                    <div class="upload-response">
+                        <div id="multipleFileUploadError"></div>
+                        <div id="multipleFileUploadSuccess"></div>
+                    </div>
+                </div>
+            </div>-->
+    </div>
+        <div class="preview hidden">
+            <div class="preview-export">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>IDENTIFIANT</th>
+                            <th>DETAIL_PRESTATION</th>
+                            <th>QUANTITE</th>
+                            <th>TARIF_UNITAIRE</th>
+                            <th>TARIF_PRESTATION</th>
+                            <th>TYPE_PRESTATION</th>
+                            <th>PRESTATION_DE</th>
+                            <th>TVA_REDUITE</th>
+                            <th>TVA_INTER</th>
+                            <th>TVA_NORMALE</th>
+                            <th>CODE_49</th>
+                            <th>COD_TYPE_PRESTATION</th>
+                            <th>TEMP_POSE</th>
+                            <th>ORDRE</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <!--<iframe  name="preview-result" id="preview-result"></iframe>-->
+        </div>
+    <script src="../js/main.js" ></script>
+    </body>
+</html>

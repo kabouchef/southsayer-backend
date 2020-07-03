@@ -1,0 +1,49 @@
+server:
+  servlet:
+    context-path: /southsayer
+  port: 8081
+
+jwt:
+  secret: tabler
+
+spring:
+  application:
+    name: southsayer-backend
+    environment: ${ENVIRONMENT:RECETTE}
+
+  datasource:
+    url: ${DATABASE_ENV_URL:jdbc:oracle:thin:@rfrlmdboaag01:1521:roaag01}
+    username: ${DATABASE_ENV_USERNAME:oaa}
+    password: ${DATABASE_ENV_PASSWORD:oaa}
+    driver:
+      class: oracle.jdbc.driver.OracleDriver
+
+  jpa:
+    properties:
+      hibernate:
+        default_schema: ${DATABASE_ENV_SCHEMA:oaa}
+---
+## MULTIPART (MultipartProperties)
+# Enable multipart uploads
+spring:
+  servlet:
+    multipart:
+      enabled: true
+      # Threshold after which files are written to disk.
+      file-size-threshold: 2KB
+      # Max file size.
+      max-file-size: 200MB
+      # Max Request Size
+      max-request-size: 215MB
+
+## File Storage Properties
+# All files uploaded through the REST API will be stored in this directory
+file:
+  upload-dir: downloads
+
+# Spring Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include=*:
