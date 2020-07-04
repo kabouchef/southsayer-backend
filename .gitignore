@@ -29,3 +29,13 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Static ###
+**/dev/oaa/*
+**/dev/oaasim/*
+**/qa/oaa/*
+**/qa/oaasim/*
+**/preprod/oaa/*
+**/preprod/oaasim/*
+**/prod/oaa/*
+**/prod/oaasim/*

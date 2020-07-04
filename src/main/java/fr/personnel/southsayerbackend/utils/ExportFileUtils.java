@@ -1,4 +1,4 @@
-package fr.personnel.southsayerbackend.service;
+package fr.personnel.southsayerbackend.utils;
 
 
 import fr.personnel.exceptions.handling.WebClientError.NotFoundException;
@@ -25,12 +25,12 @@ import java.nio.file.Paths;
 @Slf4j
 @Service
 @AllArgsConstructor
-public class ExportFileService {
+public class ExportFileUtils {
 
     private final Path fileStorageLocation;
 
     @Autowired
-    public ExportFileService(FileStorageProperties fileStorageProperties) throws Exception {
+    public ExportFileUtils(FileStorageProperties fileStorageProperties) throws Exception {
         this.fileStorageLocation = Paths.get(fileStorageProperties.getUploadDir())
                 .toAbsolutePath().normalize();
 

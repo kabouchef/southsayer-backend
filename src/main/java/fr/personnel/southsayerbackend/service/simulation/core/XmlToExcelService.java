@@ -1,12 +1,13 @@
-package fr.personnel.southsayerbackend.service;
+package fr.personnel.southsayerbackend.service.simulation.core;
 
 
-import fr.personnel.southsayerbackend.model.PriceLine;
-import lombok.NoArgsConstructor;
+import fr.personnel.southsayerbackend.model.simulation.PriceLine;
+import fr.personnel.southsayerbackend.utils.DeleteFileUtils;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.usermodel.*;
-import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.util.IOUtils;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
@@ -15,7 +16,10 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.*;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,9 +31,11 @@ import java.util.List;
  */
 @Slf4j
 @Service
-@NoArgsConstructor
-public class XMLToExcelService {
+@RequiredArgsConstructor
+public class XmlToExcelService {
 
+    private final DeleteFileUtils deleteFileUtils;
+    private final StyleOfCellsService styleOfCellsService;
 
     public List<PriceLine> generateExcel(String simulationCode, String staticDir, String environment, String databaseEnvSchema)
             throws ParserConfigurationException, IOException, SAXException {
@@ -39,7 +45,7 @@ public class XMLToExcelService {
         String extension = "xls";
         String target = extension + "/" + environment + "/" + databaseEnvSchema;
 
-        new DeleteFileService().DeleteFilesByPath(staticDir, target, extension, simulationCode);
+        this.deleteFileUtils.DeleteFilesByPath(staticDir, target, extension, simulationCode);
 
         String directory = staticDir + target + "/";
 
@@ -68,31 +74,31 @@ public class XMLToExcelService {
              */
 
             // Style of Title Cell
-            HSSFCellStyle styleTitle = new StyleOfCellsService().getCustomStyleTitle(wb, spreadSheet);
+            HSSFCellStyle styleTitle = this.styleOfCellsService.getCustomStyleTitle(wb, spreadSheet);
 
             // Style of Title Cell
-            HSSFCellStyle styleHead = new StyleOfCellsService().getCustomStyleHead(wb);
+            HSSFCellStyle styleHead = this.styleOfCellsService.getCustomStyleHead(wb);
 
             // Style of Global Content Cells
-            HSSFCellStyle styleGlobalContent = new StyleOfCellsService().getCustomGlobalContent(wb);
+            HSSFCellStyle styleGlobalContent = this.styleOfCellsService.getCustomGlobalContent(wb);
 
             // Style of Price Content Cells
-            HSSFCellStyle stylePriceContent = new StyleOfCellsService().getCustomPriceContent(wb);
+            HSSFCellStyle stylePriceContent = this.styleOfCellsService.getCustomPriceContent(wb);
 
             // Style of Quantifier Content Cells
-            HSSFCellStyle styleQuantifyContent = new StyleOfCellsService().getCustomQuantifyContent(wb);
+            HSSFCellStyle styleQuantifyContent = this.styleOfCellsService.getCustomQuantifyContent(wb);
 
             // Style of Head Total Price Effected Cells
-            HSSFCellStyle styleHeadTotalPriceEffected = new StyleOfCellsService().getCustomHeadTotalPriceEffected(wb);
+            HSSFCellStyle styleHeadTotalPriceEffected = this.styleOfCellsService.getCustomHeadTotalPriceEffected(wb);
 
             // Style of Total Price Effected Cells
-            HSSFCellStyle styleTotalPriceEffected = new StyleOfCellsService().getCustomTotalPriceEffected(wb);
+            HSSFCellStyle styleTotalPriceEffected = this.styleOfCellsService.getCustomTotalPriceEffected(wb);
 
             // Style of Head Total Price Cells
-            HSSFCellStyle styleHeadTotalPrice = new StyleOfCellsService().getCustomHeadTotalPrice(wb);
+            HSSFCellStyle styleHeadTotalPrice = this.styleOfCellsService.getCustomHeadTotalPrice(wb);
 
             // Style of Total Price Cells
-            HSSFCellStyle styleTotalPrice = new StyleOfCellsService().getCustomTotalPrice(wb);
+            HSSFCellStyle styleTotalPrice = this.styleOfCellsService.getCustomTotalPrice(wb);
 
             /**
              * Création of Title and Head Rows

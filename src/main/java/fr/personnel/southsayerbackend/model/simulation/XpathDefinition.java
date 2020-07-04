@@ -1,4 +1,4 @@
-package fr.personnel.southsayerbackend.model;
+package fr.personnel.southsayerbackend.model.simulation;
 
 import lombok.Data;
 
@@ -9,8 +9,6 @@ import lombok.Data;
  */
 @Data
 public class XpathDefinition {
-    private String environment;
-    private String schema;
     private String idOAP;
     private String xpath;
 }

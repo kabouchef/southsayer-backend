@@ -1,4 +1,4 @@
-package fr.personnel.southsayerbackend.configuration.utils;
+package fr.personnel.southsayerbackend.utils;
 
 import lombok.extern.slf4j.Slf4j;
 

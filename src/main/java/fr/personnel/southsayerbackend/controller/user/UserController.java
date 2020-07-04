@@ -1,8 +1,8 @@
-package fr.personnel.southsayerbackend.controller;
+package fr.personnel.southsayerbackend.controller.user;
 
 import fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils;
-import fr.personnel.southsayerbackend.service.UserService;
-import fr.personnel.southsayerdatabase.entity.User;
+import fr.personnel.southsayerbackend.service.user.UserService;
+import fr.personnel.southsayerdatabase.entity.user.User;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;

@@ -1,6 +1,10 @@
-package fr.personnel.southsayerbackend.service;
+package fr.personnel.southsayerbackend.service.simulation;
 
-import fr.personnel.southsayerbackend.model.PriceLine;
+import fr.personnel.southsayerbackend.model.simulation.PriceLine;
+import fr.personnel.southsayerbackend.service.simulation.core.ExtractFromDatabaseService;
+import fr.personnel.southsayerbackend.service.simulation.core.XmlToExcelService;
+import fr.personnel.southsayerbackend.service.simulation.core.XmlWriterService;
+import fr.personnel.southsayerbackend.utils.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -8,7 +12,6 @@ import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -23,9 +26,9 @@ import java.util.List;
 public class SimulationService {
 
     private final ExtractFromDatabaseService extractFromDatabaseService;
-    private final DeleteFileService deleteFileService;
+    private final DeleteFileUtils deleteFileUtils;
     private final XmlWriterService xmlWriterService;
-    private final XMLToExcelService xmlToExcelService;
+    private final XmlToExcelService xmlToExcelService;
 
 
     public List<PriceLine> getSimulationOffer(String simulationCode, String environment, String databaseEnvSchema) {
@@ -43,7 +46,7 @@ public class SimulationService {
         /**
          * Drain static repository
          */
-        this.deleteFileService.DeleteFilesByPath(staticDir, target, extension, simulationCode);
+        this.deleteFileUtils.DeleteFilesByPath(staticDir, target, extension, simulationCode);
 
         try {
             /**
