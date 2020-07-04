@@ -1,4 +1,4 @@
-package fr.personnel.southsayerbackend.service;
+package fr.personnel.southsayerbackend.service.simulation.core;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

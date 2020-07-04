@@ -1,4 +1,4 @@
-package fr.personnel.southsayerbackend.model;
+package fr.personnel.southsayerbackend.model.simulation;
 
 import lombok.Data;
 

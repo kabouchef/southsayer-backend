@@ -1,17 +1,17 @@
-package fr.personnel.southsayerbackend.service;
+package fr.personnel.southsayerbackend.service.simulation.core;
 
 import fr.personnel.exceptions.handling.WebClientError.NotFoundException;
-import fr.personnel.southsayerdatabase.entity.ConfigurationStorage;
-import fr.personnel.southsayerdatabase.repository.ConfigurationStorageRepository;
-import lombok.AllArgsConstructor;
+import fr.personnel.southsayerbackend.model.simulation.ValueXmlSimulation;
+import fr.personnel.southsayerbackend.utils.ClobToStringUtils;
+import fr.personnel.southsayerdatabase.entity.storage.ConfigurationStorage;
+import fr.personnel.southsayerdatabase.repository.storage.ConfigurationStorageRepository;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -23,10 +23,11 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @Data
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ExtractFromDatabaseService {
 
     private final ConfigurationStorageRepository configurationStorageRepository;
+    private final XmlReaderService xmlReaderService;
 
     /**
      * Get simulation content
@@ -39,9 +40,9 @@ public class ExtractFromDatabaseService {
         Optional<ConfigurationStorage> configStorage = this.configurationStorageRepository.findByConfId(simulationCode);
 
         if (!configStorage.isPresent())
-                throw new NotFoundException("No offer match to the following simulation code: " + simulationCode);
+            throw new NotFoundException("No offer match to the following simulation code: " + simulationCode);
 
-        return configStorage.get().getXmlConf();
+        return new ClobToStringUtils().clobToString(configStorage.get().getXmlConf());
     }
 
     /**
@@ -72,14 +73,15 @@ public class ExtractFromDatabaseService {
      *
      * @param idOAP : Id OAP
      * @param xpath : Xpath to get the search value
-     * @return {@link Map<String, String>}
+     * @return {@link List<ValueXmlSimulation>}
      */
-    public Map<String, String> findValueInSimulationByXpath(String idOAP, String xpath) {
+    public List<ValueXmlSimulation> /*Map<String, String>*/ findValueInSimulationByXpath(String idOAP, String xpath) {
 
         List<ConfigurationStorage> simulationsList = new ArrayList<>();
+        List<ValueXmlSimulation> valueXmlSimulationList = new ArrayList<>();
 
         try {
-            simulationsList = this.configurationStorageRepository.findByConfCategId(idOAP);
+            simulationsList = this.configurationStorageRepository.findByConfCategIdLike(idOAP);
 
             if (simulationsList.isEmpty())
                 throw new NotFoundException("No result matches your query with the following xpath : " + xpath);
@@ -87,7 +89,17 @@ public class ExtractFromDatabaseService {
         } catch (NotFoundException e) {
             e.printStackTrace();
         }
-        return simulationsList.stream().collect(Collectors.toMap(ConfigurationStorage::getConfId, ConfigurationStorage::getXmlConf));
+        return simulationsList.stream()
+                .map(x -> {
+                    ValueXmlSimulation valueXmlSimulation = new ValueXmlSimulation();
+                    valueXmlSimulation.setSimulationCode(x.getConfId());
+                    valueXmlSimulation.setIdOAP(x.getConfCategId());
+                    String xmlConf = this.xmlReaderService.readIntoXMLByXpath(
+                            new ClobToStringUtils().clobToString(x.getXmlConf()), xpath);
+                    valueXmlSimulation.setValue(xmlConf);
+                    return valueXmlSimulation;
+                })
+                .collect(Collectors.toList());
     }
 
 }

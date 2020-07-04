@@ -1,4 +1,4 @@
-package fr.personnel.southsayerbackend.service;
+package fr.personnel.southsayerbackend.utils;
 
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +14,7 @@ import java.io.File;
 @Slf4j
 @Service
 @NoArgsConstructor
-public class DeleteFileService {
+public class DeleteFileUtils {
 
     /**
      * Delete Files By Path

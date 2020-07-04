@@ -1,4 +1,4 @@
-package fr.personnel.southsayerbackend.service;
+package fr.personnel.southsayerbackend.service.simulation.core;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,19 +29,18 @@ public class XmlReaderService {
 
     /**
      * Returns the value returned by the xpath for resultSet.
-     * @param resultSet
-     * @param xpath
+     * @param xmlString : xmlString
+     * @param xpath : xpath
      * @return {@link String}
      */
-    public String readIntoXMLByXpath(String resultSet, String xpath) {
+    public String readIntoXMLByXpath(String xmlString, String xpath) {
         String result = null;
         try {
             DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 
-            resultSet = resultSet.replace("ns2:", "");
+            xmlString = xmlString.replace("ns2:", "");
             XPath xPath = XPathFactory.newInstance().newXPath();
-            InputSource inputXML = new InputSource(new StringReader(resultSet));
-
+            InputSource inputXML = new InputSource(new StringReader(xmlString));
             result = xPath.evaluate(xpath,dBuilder.parse(inputXML));
 
         } catch (XPathExpressionException | ParserConfigurationException | SAXException | IOException e) {
@@ -52,18 +51,15 @@ public class XmlReaderService {
 
     /**
      * Read into XML
-     * @param xpath
+     * @param xpath : xpath
      * @return {@link String}
      */
     public String readIntoXML(String xpath) {
         String searchValue = "";
         String nameDefaultFile = "src/main/resources/static/xml/XML_CONF.xml";
         try {
-
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-
-
             /**
              * xmlDocument correspond au document xml parsé
              */
@@ -72,15 +68,10 @@ public class XmlReaderService {
             } catch (Exception e) {
                 Logger.getLogger(e.getMessage());
             }
-
-
             /**
              * Recherche du resultat du xpath dans le xmlDocument
              */
-            /*String expression = "//*[@cpe=\"CPE.Settings.Session.CodeOffre\"]/@value";*/
-            XPathFactory xPathfactory = XPathFactory.newInstance();
             XPath xPath = XPathFactory.newInstance().newXPath();
-            XPathExpression expr = xPath.compile(xpath);
             /**
              * @offerCode : Récupération du numéro de simulation de l'offre
              */

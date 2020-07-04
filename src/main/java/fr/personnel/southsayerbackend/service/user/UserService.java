@@ -1,9 +1,9 @@
-package fr.personnel.southsayerbackend.service;
+package fr.personnel.southsayerbackend.service.user;
 
 
 import fr.personnel.exceptions.handling.WebClientError.NotFoundException;
-import fr.personnel.southsayerdatabase.entity.User;
-import fr.personnel.southsayerdatabase.repository.UserRepository;
+import fr.personnel.southsayerdatabase.entity.user.User;
+import fr.personnel.southsayerdatabase.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

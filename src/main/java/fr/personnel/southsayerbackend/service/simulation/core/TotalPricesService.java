@@ -1,6 +1,6 @@
-package fr.personnel.southsayerbackend.service;
+package fr.personnel.southsayerbackend.service.simulation.core;
 
-import fr.personnel.southsayerbackend.model.PriceLine;
+import fr.personnel.southsayerbackend.model.simulation.PriceLine;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static fr.personnel.southsayerbackend.configuration.utils.MathUtils.arrondiMathematique;
-import static fr.personnel.southsayerbackend.configuration.utils.MathUtils.multiplyDouble;
+import static fr.personnel.southsayerbackend.utils.MathUtils.arrondiMathematique;
+import static fr.personnel.southsayerbackend.utils.MathUtils.multiplyDouble;
 
 /**
  * @author Farouk KABOUCHE
