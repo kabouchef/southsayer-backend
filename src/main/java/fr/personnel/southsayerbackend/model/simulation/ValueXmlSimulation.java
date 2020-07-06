@@ -9,7 +9,7 @@ import lombok.Data;
  */
 @Data
 public class ValueXmlSimulation {
-    private String simulationCode;
     private String idOAP;
+    private String simulationCode;
     private String value;
 }

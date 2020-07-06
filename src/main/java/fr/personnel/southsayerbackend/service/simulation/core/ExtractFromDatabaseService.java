@@ -50,14 +50,14 @@ public class ExtractFromDatabaseService {
      *
      * @param idOAP        : Id OAP
      * @param sequenceChar : Characters Sequence searched
-     * @return {@link List<String>}
+     * @return {@link List<ValueXmlSimulation>}
      */
-    public List<String> findSimulationBySequenceChar(String idOAP, String sequenceChar) {
+    public List<ValueXmlSimulation> findSimulationBySequenceChar(String idOAP, String simualtionCode, String sequenceChar) {
 
         List<ConfigurationStorage> simulationsList = new ArrayList<>();
 
         try {
-            simulationsList = this.configurationStorageRepository.findByConfCategIdAndXmlConfLike(idOAP, sequenceChar);
+            simulationsList = this.configurationStorageRepository.findByConfCategIdLikeAndConfIdLike(idOAP, simualtionCode);
 
             if (simulationsList.isEmpty())
                 throw new NotFoundException("No offer contains the following characters sequence: " + sequenceChar);
@@ -65,7 +65,24 @@ public class ExtractFromDatabaseService {
         } catch (NotFoundException e) {
             e.printStackTrace();
         }
-        return simulationsList.stream().map(ConfigurationStorage::getConfId).collect(Collectors.toList());
+        return simulationsList.stream()
+                .filter(x ->{
+                    String xmlConf = new ClobToStringUtils().clobToString(x.getXmlConf());
+                    return xmlConf.contains(sequenceChar);
+                })
+                .map(x -> {
+                    ValueXmlSimulation valueXmlSimulation = new ValueXmlSimulation();
+                    String simCode =
+                            this.xmlReaderService
+                                    .readIntoXMLByXpath(
+                                            new ClobToStringUtils().clobToString(x.getXmlConf()),
+                                            "//*[@cpe='CPE.Settings.Session.CodeOffre']/@value");
+                    valueXmlSimulation.setSimulationCode(simCode);
+                    valueXmlSimulation.setIdOAP(x.getConfCategId());
+                    valueXmlSimulation.setValue(sequenceChar);
+                    return valueXmlSimulation;
+                })
+                .collect(Collectors.toList());
     }
 
     /**
@@ -75,13 +92,12 @@ public class ExtractFromDatabaseService {
      * @param xpath : Xpath to get the search value
      * @return {@link List<ValueXmlSimulation>}
      */
-    public List<ValueXmlSimulation> /*Map<String, String>*/ findValueInSimulationByXpath(String idOAP, String xpath) {
+    public List<ValueXmlSimulation> findValueInSimulationByXpath(String idOAP, String simulationCode, String xpath) {
 
         List<ConfigurationStorage> simulationsList = new ArrayList<>();
-        List<ValueXmlSimulation> valueXmlSimulationList = new ArrayList<>();
 
         try {
-            simulationsList = this.configurationStorageRepository.findByConfCategIdLike(idOAP);
+            simulationsList = this.configurationStorageRepository.findByConfCategIdLikeAndConfIdLike(idOAP, simulationCode);
 
             if (simulationsList.isEmpty())
                 throw new NotFoundException("No result matches your query with the following xpath : " + xpath);
@@ -92,10 +108,12 @@ public class ExtractFromDatabaseService {
         return simulationsList.stream()
                 .map(x -> {
                     ValueXmlSimulation valueXmlSimulation = new ValueXmlSimulation();
-                    valueXmlSimulation.setSimulationCode(x.getConfId());
-                    valueXmlSimulation.setIdOAP(x.getConfCategId());
+
                     String xmlConf = this.xmlReaderService.readIntoXMLByXpath(
                             new ClobToStringUtils().clobToString(x.getXmlConf()), xpath);
+
+                    valueXmlSimulation.setSimulationCode(x.getConfId());
+                    valueXmlSimulation.setIdOAP(x.getConfCategId());
                     valueXmlSimulation.setValue(xmlConf);
                     return valueXmlSimulation;
                 })

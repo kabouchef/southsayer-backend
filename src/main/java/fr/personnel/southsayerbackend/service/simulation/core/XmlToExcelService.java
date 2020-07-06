@@ -1,6 +1,7 @@
 package fr.personnel.southsayerbackend.service.simulation.core;
 
 
+import fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils;
 import fr.personnel.southsayerbackend.model.simulation.PriceLine;
 import fr.personnel.southsayerbackend.utils.DeleteFileUtils;
 import lombok.RequiredArgsConstructor;
@@ -42,14 +43,15 @@ public class XmlToExcelService {
         /**
          * Drain static repository
          */
-        String extension = "xls";
-        String target = extension + "/" + environment + "/" + databaseEnvSchema;
+        String target = RestConstantUtils.XLS_EXTENSION + "/" + environment + "/" + databaseEnvSchema;
 
-        this.deleteFileUtils.DeleteFilesByPath(staticDir, target, extension, simulationCode);
+        this.deleteFileUtils.DeleteFilesByPath(staticDir, target, RestConstantUtils.XLS_EXTENSION, simulationCode);
 
         String directory = staticDir + target + "/";
 
-        String nameDefaultFile = staticDir + "xml/" + environment + "/" + databaseEnvSchema + "/" + simulationCode + ".xml";
+        String nameDefaultFile = staticDir + RestConstantUtils.XML_EXTENSION +"/" + environment + "/" +
+                databaseEnvSchema + "/" + simulationCode + "." + RestConstantUtils.XML_EXTENSION;
+
         String priceLines = null;
         List<PriceLine> priceLineList = new ArrayList<PriceLine>();
 
@@ -112,9 +114,8 @@ public class XmlToExcelService {
 
             //Ajout du logo LM
             HSSFCell cellPicture = row0.createCell(1);
-            String directoryImages = staticDir + "images/";
             // Lire l'image à l'aide d'un stream
-            InputStream inputStream = new FileInputStream(directoryImages + "/1200px-Leroy_Merlin.svg.jpeg");
+            InputStream inputStream = new FileInputStream(RestConstantUtils.STATIC_DIRECTORY_IMAGES + "/1200px-Leroy_Merlin.svg.jpeg");
             byte[] bytes = IOUtils.toByteArray(inputStream);
             //Ajouter l'image au classeur
             int pictureIdx = wb.addPicture(bytes, Workbook.PICTURE_TYPE_JPEG);
@@ -293,16 +294,20 @@ public class XmlToExcelService {
             /**
              * Outputting to Excel spreadsheet
              */
-            FileOutputStream fos = new FileOutputStream(new File(directory + "PRICE_FROM_" + simulationCode + ".xls"));
+            FileOutputStream fos = new FileOutputStream(new File(directory +
+                    "PRICE_FROM_" + simulationCode + "." + RestConstantUtils.XLS_EXTENSION));
             wb.write(fos);
             fos.flush();
             fos.close();
             log.info("*******************************");
-            File file = new File(directory + "PRICE_FROM_" + simulationCode + ".xls");
+            File file = new File(directory +
+                    "PRICE_FROM_" + simulationCode + "." + RestConstantUtils.XLS_EXTENSION);
             if (file.exists()) {
-                log.info("Le fichier \"PRICE_FROM_" + simulationCode + ".xls\" a bien été créé.");
+                log.info("The file \"PRICE_FROM_" + simulationCode + "." + RestConstantUtils.XLS_EXTENSION +
+                        "\" has been created.");
             } else {
-                log.info("Le fichier \"PRICE_FROM_" + simulationCode + ".xls\" n'a été créé...");
+                log.info("The file \"PRICE_FROM_" + simulationCode + "." + RestConstantUtils.XLS_EXTENSION +
+                        "\" has not been created...");
             }
             log.info("*******************************");
 

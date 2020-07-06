@@ -1,5 +1,6 @@
 package fr.personnel.southsayerbackend.service.simulation.core;
 
+import fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,8 +23,7 @@ public class XmlWriterService {
 
     public void generateXML(String stringToXML, String staticDir, String environment, String databaseEnvSchema, String simulationCode) {
 
-        String extension = "xml";
-        String target = extension + "/" + environment + "/" + databaseEnvSchema;
+        String target = RestConstantUtils.XML_EXTENSION + "/" + environment + "/" + databaseEnvSchema;
         String path = staticDir + target;
         String defaultFile = path + "/XML_CONF.xml";
 
@@ -38,7 +38,7 @@ public class XmlWriterService {
             /**
              *  Get the file
              */
-            String pathNewFile = path + "/" + simulationCode + "." + extension;
+            String pathNewFile = path + "/" + simulationCode + "." + RestConstantUtils.XML_EXTENSION;
             File oldFile = new File(defaultFile);
             File newFile = new File(pathNewFile);
             oldFile.renameTo(newFile);
@@ -46,8 +46,12 @@ public class XmlWriterService {
             /**
              * Check if the specified file exists or not
              */
-            if (newFile.exists()) log.info("The following file : \"" + simulationCode + "." + extension + "\" has been created.");
-            else log.info("The following file : \"" + simulationCode + "." + extension + "\" has not been created...");
+            if (newFile.exists())
+                log.info("The following file : \"" + simulationCode + "." +
+                        RestConstantUtils.XML_EXTENSION + "\" has been created.");
+            else
+                log.info("The following file : \"" + simulationCode + "." +
+                        RestConstantUtils.XML_EXTENSION + "\" has not been created...");
 
         } catch (IOException e) {
             e.printStackTrace();

@@ -1,5 +1,6 @@
 package fr.personnel.southsayerbackend.service.simulation;
 
+import fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils;
 import fr.personnel.southsayerbackend.model.simulation.PriceLine;
 import fr.personnel.southsayerbackend.service.simulation.core.ExtractFromDatabaseService;
 import fr.personnel.southsayerbackend.service.simulation.core.XmlToExcelService;
@@ -16,7 +17,7 @@ import java.util.List;
 
 /**
  * @author Farouk KABOUCHE
- * <p>
+ * 
  * Simulation Offer Service
  */
 
@@ -35,9 +36,7 @@ public class SimulationService {
         /**
          * Init
          */
-        String staticDir = "src/main/resources/static/";
-        String extension = "xml";
-        String target = extension + "/" + environment + "/" + databaseEnvSchema;
+        String target = RestConstantUtils.XML_EXTENSION + "/" + environment + "/" + databaseEnvSchema;
         List<PriceLine> tabPriceElement = null;
         /**
          * Removal of unnecessary spaces
@@ -46,7 +45,8 @@ public class SimulationService {
         /**
          * Drain static repository
          */
-        this.deleteFileUtils.DeleteFilesByPath(staticDir, target, extension, simulationCode);
+        this.deleteFileUtils.DeleteFilesByPath(
+                RestConstantUtils.STATIC_DIRECTORY, target, RestConstantUtils.XML_EXTENSION, simulationCode);
 
         try {
             /**
@@ -57,13 +57,16 @@ public class SimulationService {
             /**
              * Create file XML_CONF.xml from data extracted
              */
-            this.xmlWriterService.generateXML(clobFromDatabase, staticDir, environment, databaseEnvSchema, simulationCode);
+            this.xmlWriterService.generateXML(
+                    clobFromDatabase, RestConstantUtils.STATIC_DIRECTORY,
+                    environment, databaseEnvSchema, simulationCode);
 
             /**
              * Create Excel File PRICE_FROM_simulationCode.xls
              * File which present price lines of the simulation
              */
-            tabPriceElement = this.xmlToExcelService.generateExcel(simulationCode, staticDir, environment, databaseEnvSchema);
+            tabPriceElement = this.xmlToExcelService.generateExcel(
+                    simulationCode, RestConstantUtils.STATIC_DIRECTORY, environment, databaseEnvSchema);
 
         } catch (IOException | ParserConfigurationException | SAXException e) {
             e.printStackTrace();

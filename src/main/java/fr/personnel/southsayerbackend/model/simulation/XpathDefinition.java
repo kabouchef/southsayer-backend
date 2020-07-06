@@ -5,10 +5,11 @@ import lombok.Data;
 /**
  * @author Farouk KABOUCHE
  *
- * Xpath
+ * Xpath definition
  */
 @Data
 public class XpathDefinition {
     private String idOAP;
+    private String simulationCode;
     private String xpath;
 }
