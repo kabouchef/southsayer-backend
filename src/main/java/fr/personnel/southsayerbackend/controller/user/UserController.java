@@ -66,7 +66,9 @@ public class UserController {
      * @param ldap : LDAP
      */
     @ApiOperation(value = "Delete a User")
+    @ApiResponses(value = {@ApiResponse(code = 201, message = "User added")})
     @DeleteMapping("{ldap}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUser(@PathVariable final String ldap) {
         this.userService.deleteOne(ldap);
     }

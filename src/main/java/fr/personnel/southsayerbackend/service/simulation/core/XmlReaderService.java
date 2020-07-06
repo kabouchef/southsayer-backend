@@ -1,8 +1,10 @@
 package fr.personnel.southsayerbackend.service.simulation.core;
 
+import fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
@@ -26,6 +28,9 @@ import java.util.logging.Logger;
 @Data
 @NoArgsConstructor
 public class XmlReaderService {
+
+    @Value("${ENVIRONMENT}")
+    private String environment;
 
     /**
      * Returns the value returned by the xpath for resultSet.
@@ -56,7 +61,8 @@ public class XmlReaderService {
      */
     public String readIntoXML(String xpath) {
         String searchValue = "";
-        String nameDefaultFile = "src/main/resources/static/xml/XML_CONF.xml";
+        String nameDefaultFile = RestConstantUtils.STATIC_DIRECTORY + "/" + RestConstantUtils.XML_EXTENSION +
+                "/" + environment + "/" + "XML_CONF." + RestConstantUtils.XML_EXTENSION;
         try {
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();

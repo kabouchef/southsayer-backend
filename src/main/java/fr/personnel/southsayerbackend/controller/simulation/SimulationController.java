@@ -39,9 +39,6 @@ public class SimulationController {
     private String environment;
     @Value("${DATABASE_ENV_SCHEMA}")
     private String databaseEnvSchema;
-    private String staticDir = "src/main/resources/static/";
-    private String xmlExtension = "xml";
-    private String excelExtension = "xls";
 
 
     /**
@@ -54,7 +51,8 @@ public class SimulationController {
     @CrossOrigin
     @GetMapping()
     @ResponseBody
-    public List<PriceLine> getPriceLinesSimulation(@RequestParam(name = "simulationCode") String simulationCode) {
+    public List<PriceLine> getPriceLinesSimulation(
+            @RequestParam(name = "simulationCode") String simulationCode) {
         return this.simulationService.getSimulationOffer(simulationCode, environment, databaseEnvSchema);
     }
 
@@ -67,16 +65,27 @@ public class SimulationController {
      */
     @ApiOperation(value = "Get the xls file of the simulation submitted by the request '/request'")
     @GetMapping("/downloadPricesFile")
-    public ResponseEntity<Resource> downloadFile(@RequestParam(name = "simulationCode") String simulationCode) {
-        String target = staticDir + "/xls/" + environment + "/" + databaseEnvSchema + "/";
-        File file = new File(target + "PRICE_FROM_" + simulationCode + "." + excelExtension);
+    public ResponseEntity<Resource> downloadFile(
+            @RequestParam(name = "simulationCode") String simulationCode) {
+        String target =
+                RestConstantUtils.STATIC_DIRECTORY + "/" +
+                        RestConstantUtils.XLS_EXTENSION + "/" +
+                        environment + "/" +
+                        databaseEnvSchema + "/";
+
+        File file = new File(target + "PRICE_FROM_" + simulationCode + "." + RestConstantUtils.XLS_EXTENSION);
 
         // Load file as Resource
         Resource resource = this.exportFileUtils.loadFileAsResource(file.getAbsolutePath());
 
         String contentType = "application/octet-stream";
 
-        return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType)).header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"").body(resource);
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=\"" + resource.getFilename() + "\"")
+                .body(resource);
     }
 
     /**
@@ -90,9 +99,12 @@ public class SimulationController {
     @CrossOrigin
     @GetMapping("/search")
     @ResponseBody
-    public List<String> getSimulationsBySequenceChar(@RequestParam(name = "idOAP") String idOAP, @RequestParam(name = "sequenceChar") String sequenceChar) {
+    public List<ValueXmlSimulation> getSimulationsBySequenceChar(
+            @RequestParam(name = "idOAP") String idOAP,
+            @RequestParam(name = "simulationCode") String simulationCode,
+            @RequestParam(name = "sequenceChar") String sequenceChar) {
 
-        return this.extractFromDatabaseService.findSimulationBySequenceChar(idOAP, sequenceChar);
+        return this.extractFromDatabaseService.findSimulationBySequenceChar(idOAP, simulationCode, sequenceChar);
     }
 
     /**
@@ -104,9 +116,13 @@ public class SimulationController {
     @ApiOperation(value = "Returns the value returned by the xpath for each simulation.")
     @CrossOrigin
     @PostMapping("/findByCPE")
-    public /*Map<String, String>*/ List<ValueXmlSimulation> getValueInSimulationByCPE(@RequestBody XpathDefinition xpathDefinition) {
+    public List<ValueXmlSimulation> getValueInSimulationByCPE(
+            @RequestBody XpathDefinition xpathDefinition) {
 
-        return this.extractFromDatabaseService.findValueInSimulationByXpath(xpathDefinition.getIdOAP(), xpathDefinition.getXpath());
+        return this.extractFromDatabaseService.findValueInSimulationByXpath(
+                xpathDefinition.getIdOAP(),
+                xpathDefinition.getSimulationCode(),
+                xpathDefinition.getXpath());
     }
 
 
