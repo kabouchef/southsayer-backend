@@ -16,11 +16,17 @@ import org.springframework.web.bind.annotation.*;
 import javax.transaction.Transactional;
 import java.util.List;
 
+/**
+ * @author Farouk KABOUCHE
+ *
+ * API to manage OAP delivery rate lines
+ */
 @Slf4j
 @Api("API to manage OAP delivery rate lines")
 @RestController
 @RequestMapping(OAPDeliveryRateController.PATH)
 @RequiredArgsConstructor
+@Transactional
 public class OAPDeliveryRateController {
 
     public final static String PATH = RestConstantUtils.DEFAULT_PATH + "/rate";
@@ -35,7 +41,7 @@ public class OAPDeliveryRateController {
      */
     @ApiOperation(value = "Get OAP DR by id")
     @CrossOrigin
-    @GetMapping()
+    @GetMapping
     public List<OAPDeliveryRateDetails> getRateLineById(@RequestParam final String id) {
         return this.OAPDeliveryRateService.getByIdentifiant(id);
     }
@@ -49,7 +55,7 @@ public class OAPDeliveryRateController {
      */
     @ApiOperation(value = "Get OAP DR by wording")
     @CrossOrigin
-    @GetMapping("/findByLibelleId")
+    @GetMapping("/byLibelleId")
     public List<OAPDeliveryRateDetails> getRateLineByLibelleId(@RequestParam final String id, @RequestParam final String libelleId) {
         return this.OAPDeliveryRateService.getByLibelleId(id, libelleId);
     }
@@ -63,7 +69,7 @@ public class OAPDeliveryRateController {
      */
     @ApiOperation(value = "Get OAP DR by designation detail")
     @CrossOrigin
-    @GetMapping("/findByDesignation")
+    @GetMapping("/byDesignation")
     public List<OAPDeliveryRateDetails> getRateLineByDesignation(@RequestParam final String id, @RequestParam final String designation) {
         return this.OAPDeliveryRateService.getByDesignation(id, designation);
     }
@@ -91,9 +97,8 @@ public class OAPDeliveryRateController {
      */
     @ApiOperation(value = "Delete")
     @ApiResponses(value = {@ApiResponse(code = 204, message = "Deleted")})
-    @DeleteMapping()
+    @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Transactional
     public void deleteAll(@RequestParam final List<String> listIdentifiant) {
         this.OAPDeliveryRateService.deleteByIdentifiant(listIdentifiant);
     }
