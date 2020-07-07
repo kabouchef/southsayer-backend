@@ -18,15 +18,22 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author Farouk KABOUCHE
+ *
+ * API to extract OAP simulation prices
+ */
 @Slf4j
 @Api("API to extract OAP simulation prices")
 @RestController
 @RequestMapping(SimulationController.PATH)
 @RequiredArgsConstructor
+@Transactional
 public class SimulationController {
 
     public final static String PATH = RestConstantUtils.DEFAULT_PATH + "/simulation";
@@ -49,7 +56,7 @@ public class SimulationController {
      */
     @ApiOperation(value = "Retrieves the list of simulation price lines according to the simulationCode")
     @CrossOrigin
-    @GetMapping()
+    @GetMapping
     @ResponseBody
     public List<PriceLine> getPriceLinesSimulation(
             @RequestParam(name = "simulationCode") String simulationCode) {

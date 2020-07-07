@@ -12,11 +12,19 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
+
+/**
+ * @author Farouk KABOUCHE
+ *
+ * API to manage user OAP
+ */
 @Slf4j
-@Api("API to extract OAP simulation prices")
+@Api("API to manage user OAP")
 @RestController
 @RequestMapping(UserController.PATH)
 @RequiredArgsConstructor
+@Transactional
 public class UserController {
 
     public final static String PATH = RestConstantUtils.DEFAULT_PATH + "/user";
@@ -30,7 +38,7 @@ public class UserController {
      * @return {@link User}
      */
     @ApiOperation(value = "Add a user")
-    @ApiResponses(value = {@ApiResponse(code = 201, message = "User added"), @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 500, message = "Technical error happened")})
+    @ApiResponses(value = {@ApiResponse(code = 201, message = "Added"), @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 500, message = "Technical error happened")})
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public User addUser(@RequestBody final User user) {
@@ -66,10 +74,10 @@ public class UserController {
      * @param ldap : LDAP
      */
     @ApiOperation(value = "Delete a User")
-    @ApiResponses(value = {@ApiResponse(code = 201, message = "User added")})
-    @DeleteMapping("{ldap}")
+    @ApiResponses(value = {@ApiResponse(code = 201, message = "Deleted")})
+    @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteUser(@PathVariable final String ldap) {
+    public void deleteUser(@RequestParam final String ldap) {
         this.userService.deleteOne(ldap);
     }
 
