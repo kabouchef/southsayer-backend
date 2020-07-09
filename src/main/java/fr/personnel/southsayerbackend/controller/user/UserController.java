@@ -32,20 +32,6 @@ public class UserController {
     private final UserService userService;
 
     /**
-     * Add User
-     *
-     * @param user : user to add
-     * @return {@link User}
-     */
-    @ApiOperation(value = "Add a user")
-    @ApiResponses(value = {@ApiResponse(code = 201, message = "Added"), @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 500, message = "Technical error happened")})
-    @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping
-    public User addUser(@RequestBody final User user) {
-        return this.userService.save(user);
-    }
-
-    /**
      * GET all User
      *
      * @return {@link Iterable<User>}
@@ -66,6 +52,20 @@ public class UserController {
     @GetMapping("{ldap}")
     public User getUser(@PathVariable final String ldap) {
         return this.userService.findOne(ldap);
+    }
+
+    /**
+     * Add User
+     *
+     * @param user : user to add
+     * @return {@link User}
+     */
+    @ApiOperation(value = "Add a user")
+    @ApiResponses(value = {@ApiResponse(code = 201, message = "Added"), @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 500, message = "Technical error happened")})
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping
+    public User addUser(@RequestBody final User user) {
+        return this.userService.save(user);
     }
 
     /**

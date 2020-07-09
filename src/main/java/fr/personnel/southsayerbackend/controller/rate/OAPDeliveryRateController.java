@@ -80,7 +80,7 @@ public class OAPDeliveryRateController {
      * @param oapDeliveryRateDetails : OAP DR
      * @return {@link List<OAPDeliveryRateDetails>}
      */
-    @ApiOperation(value = "Add a user")
+    @ApiOperation(value = "Add a OAPDeliveryRateDetails")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Created"),
             @ApiResponse(code = 401, message = "Unauthorized"),
