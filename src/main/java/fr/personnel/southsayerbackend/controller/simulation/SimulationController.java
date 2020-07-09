@@ -132,5 +132,19 @@ public class SimulationController {
                 xpathDefinition.getXpath());
     }
 
+    /**
+     * Count simulations by idOAP
+     *
+     * @param confCategId : idOAP
+     * @param confId : simulation code
+     * @return {@link int}
+     */
+    @ApiOperation(value = "Count simulations by idOAP")
+    @CrossOrigin
+    @GetMapping("/count")
+    public int countAllByConfCategIdLikeConfIdLike(@RequestParam String confCategId, @RequestParam String confId) {
+        return this.simulationService.countAllByConfCategIdLikeConfIdLike(confCategId, confId);
+    }
+
 
 }

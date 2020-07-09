@@ -6,6 +6,7 @@ import fr.personnel.southsayerbackend.service.simulation.core.ExtractFromDatabas
 import fr.personnel.southsayerbackend.service.simulation.core.XmlToExcelService;
 import fr.personnel.southsayerbackend.service.simulation.core.XmlWriterService;
 import fr.personnel.southsayerbackend.utils.*;
+import fr.personnel.southsayerdatabase.repository.simulation.ConfigurationStorageRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,8 @@ public class SimulationService {
     private final DeleteFileUtils deleteFileUtils;
     private final XmlWriterService xmlWriterService;
     private final XmlToExcelService xmlToExcelService;
+
+    private final ConfigurationStorageRepository configurationStorageRepository;
 
 
     public List<PriceLine> getSimulationOffer(String simulationCode, String environment, String databaseEnvSchema) {
@@ -72,5 +75,9 @@ public class SimulationService {
             e.printStackTrace();
         }
         return tabPriceElement;
+    }
+
+    public int countAllByConfCategIdLikeConfIdLike(String confCategId, String confId){
+        return this.configurationStorageRepository.countByConfCategIdLikeAndConfIdLike(confCategId, confId);
     }
 }
