@@ -9,12 +9,13 @@ import lombok.experimental.UtilityClass;
  */
 @UtilityClass
 public final class RestConstantUtils {
-    public final static String DEFAULT_PATH = "api/v1";
+    public static final String DEFAULT_PATH = "api/v1";
 
-    public final static String STATIC_DIRECTORY = "src/main/resources/static/";
-    public final static String XML_EXTENSION = "xml";
-    public final static String XLS_EXTENSION = "xls";
+    public static final String STATIC_DIRECTORY_FILES = "src/main/resources/static/files/";
+    public static final String STATIC_DIRECTORY_IMAGES = "src/main/resources/static/images/";
+    public static final String XML_EXTENSION = "xml";
+    public static final String XLS_EXTENSION = "xls";
 
-    public final static String STATIC_DIRECTORY_IMAGES = "src/main/resources/static/images";
+
 }
 

@@ -4,12 +4,12 @@ import fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils;
 import fr.personnel.southsayerbackend.model.simulation.PriceLine;
 import fr.personnel.southsayerbackend.model.simulation.ValueXmlSimulation;
 import fr.personnel.southsayerbackend.model.simulation.XpathDefinition;
-import fr.personnel.southsayerbackend.service.simulation.core.ExtractFromDatabaseService;
 import fr.personnel.southsayerbackend.service.simulation.SimulationService;
+import fr.personnel.southsayerbackend.service.simulation.core.ExtractFromDatabaseService;
 import fr.personnel.southsayerbackend.utils.ExportFileUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import lombok.RequiredArgsConstructor;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -20,23 +20,23 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Farouk KABOUCHE
- *
+ * <p>
  * API to extract OAP simulation prices
  */
 @Slf4j
 @Api("API to extract OAP simulation prices")
 @RestController
 @RequestMapping(SimulationController.PATH)
-@RequiredArgsConstructor
+@Data
 @Transactional
 public class SimulationController {
 
-    public final static String PATH = RestConstantUtils.DEFAULT_PATH + "/simulation";
+    public static final String PATH = RestConstantUtils.DEFAULT_PATH + "/simulation";
 
     private final ExportFileUtils exportFileUtils;
     private final SimulationService simulationService;
@@ -57,9 +57,8 @@ public class SimulationController {
     @ApiOperation(value = "Retrieves the list of simulation price lines according to the simulationCode")
     @CrossOrigin
     @GetMapping
-    @ResponseBody
-    public List<PriceLine> getPriceLinesSimulation(
-            @RequestParam(name = "simulationCode") String simulationCode) {
+    public List<PriceLine> getPriceLinesSimulation(@RequestParam(name = "simulationCode") String simulationCode)
+            throws IOException {
         return this.simulationService.getSimulationOffer(simulationCode, environment, databaseEnvSchema);
     }
 
@@ -72,13 +71,8 @@ public class SimulationController {
      */
     @ApiOperation(value = "Get the xls file of the simulation submitted by the request '/request'")
     @GetMapping("/downloadPricesFile")
-    public ResponseEntity<Resource> downloadFile(
-            @RequestParam(name = "simulationCode") String simulationCode) {
-        String target =
-                RestConstantUtils.STATIC_DIRECTORY + "/" +
-                        RestConstantUtils.XLS_EXTENSION + "/" +
-                        environment + "/" +
-                        databaseEnvSchema + "/";
+    public ResponseEntity<Resource> downloadFile(@RequestParam(name = "simulationCode") String simulationCode) {
+        String target = RestConstantUtils.STATIC_DIRECTORY_FILES + "/" + RestConstantUtils.XLS_EXTENSION + "/" + environment + "/" + databaseEnvSchema + "/";
 
         File file = new File(target + "PRICE_FROM_" + simulationCode + "." + RestConstantUtils.XLS_EXTENSION);
 
@@ -87,12 +81,22 @@ public class SimulationController {
 
         String contentType = "application/octet-stream";
 
-        return ResponseEntity
-                .ok()
-                .contentType(MediaType.parseMediaType(contentType))
-                .header(HttpHeaders.CONTENT_DISPOSITION,
-                        "attachment; filename=\"" + resource.getFilename() + "\"")
-                .body(resource);
+        return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType)).header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"").body(resource);
+    }
+
+    /**
+     * Retrieves the list of code simulations by iDOAP
+     *
+     * @param idOAP : id of OAP
+     * @return {@link List<String>}
+     */
+    @ApiOperation(value = "Retrieves the list of code simulations by iDOAP")
+    @CrossOrigin
+    @GetMapping("/byIdOAP")
+    @ResponseBody
+    public List<String> getSimulationCodes(@RequestParam(name = "idOAP") String idOAP) {
+
+        return this.simulationService.getSimCodebyConfCategIdLike(idOAP);
     }
 
     /**
@@ -106,10 +110,7 @@ public class SimulationController {
     @CrossOrigin
     @GetMapping("/search")
     @ResponseBody
-    public List<ValueXmlSimulation> getSimulationsBySequenceChar(
-            @RequestParam(name = "idOAP") String idOAP,
-            @RequestParam(name = "simulationCode") String simulationCode,
-            @RequestParam(name = "sequenceChar") String sequenceChar) {
+    public List<ValueXmlSimulation> getSimulationsBySequenceChar(@RequestParam(name = "idOAP") String idOAP, @RequestParam(name = "simulationCode") String simulationCode, @RequestParam(name = "sequenceChar") String sequenceChar) {
 
         return this.extractFromDatabaseService.findSimulationBySequenceChar(idOAP, simulationCode, sequenceChar);
     }
@@ -123,20 +124,16 @@ public class SimulationController {
     @ApiOperation(value = "Returns the value returned by the xpath for each simulation.")
     @CrossOrigin
     @PostMapping("/findByCPE")
-    public List<ValueXmlSimulation> getValueInSimulationByCPE(
-            @RequestBody XpathDefinition xpathDefinition) {
+    public List<ValueXmlSimulation> getValueInSimulationByCPE(@RequestBody XpathDefinition xpathDefinition) {
 
-        return this.extractFromDatabaseService.findValueInSimulationByXpath(
-                xpathDefinition.getIdOAP(),
-                xpathDefinition.getSimulationCode(),
-                xpathDefinition.getXpath());
+        return this.extractFromDatabaseService.findValueInSimulationByXpath(xpathDefinition.getIdOAP(), xpathDefinition.getSimulationCode(), xpathDefinition.getXpath());
     }
 
     /**
      * Count simulations by idOAP
      *
      * @param confCategId : idOAP
-     * @param confId : simulation code
+     * @param confId      : simulation code
      * @return {@link int}
      */
     @ApiOperation(value = "Count simulations by idOAP")

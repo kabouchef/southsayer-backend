@@ -1,6 +1,7 @@
 package fr.personnel.southsayerbackend.service.rate;
 
 import fr.personnel.exceptions.handling.WebClientError.NotFoundException;
+import fr.personnel.southsayerbackend.configuration.message.NotFoundMessage;
 import fr.personnel.southsayerdatabase.entity.rate.OAPDeliveryRateDetails;
 import fr.personnel.southsayerdatabase.repository.rate.OAPDeliveryRateDetailsRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,7 @@ import java.util.stream.Collectors;
 public class OAPDeliveryRateService {
 
     private final OAPDeliveryRateDetailsRepository oapDeliveryRateDetailsRepository;
-
+    private final NotFoundMessage notFoundMessage;
 
     /**
      * get all delivery rates by id
@@ -32,10 +33,11 @@ public class OAPDeliveryRateService {
      * @return {@link List<OAPDeliveryRateDetails>}
      */
     public List<OAPDeliveryRateDetails> getByIdentifiant(String id) {
-        Optional<List<OAPDeliveryRateDetails>> oapDeliveryRateDetails = this.oapDeliveryRateDetailsRepository.findByIdentifiantLike(id);
+        Optional<List<OAPDeliveryRateDetails>> oapDeliveryRateDetails =
+                this.oapDeliveryRateDetailsRepository.findByIdentifiantLike(id);
 
         if (!oapDeliveryRateDetails.isPresent())
-            throw new NotFoundException("\"" + id + "\"" + " with the following id : " + id + " was not found.");
+            throw new NotFoundException(this.notFoundMessage.toString(id));
         return oapDeliveryRateDetails.get();
     }
 
@@ -47,10 +49,11 @@ public class OAPDeliveryRateService {
      * @return {@link List<OAPDeliveryRateDetails>}
      */
     public List<OAPDeliveryRateDetails> getByLibelleId(String id, String libelleId) {
-        Optional<List<OAPDeliveryRateDetails>> oapDeliveryRateDetails = this.oapDeliveryRateDetailsRepository.findByIdentifiantLikeAndLibelleIdentifiantLike(id, libelleId);
+        Optional<List<OAPDeliveryRateDetails>> oapDeliveryRateDetails =
+                this.oapDeliveryRateDetailsRepository.findByIdentifiantLikeAndLibelleIdentifiantLike(id, libelleId);
 
         if (!oapDeliveryRateDetails.isPresent())
-            throw new NotFoundException("\"" + libelleId + "\"" + " with the following id : " + id + " was not found.");
+            throw new NotFoundException(this.notFoundMessage.toString(id, libelleId));
         return oapDeliveryRateDetails.get();
     }
 
@@ -63,10 +66,11 @@ public class OAPDeliveryRateService {
      */
     public List<OAPDeliveryRateDetails> getByDesignation(String id, String designation) {
 
-        Optional<List<OAPDeliveryRateDetails>> oapDeliveryRateDetails = this.oapDeliveryRateDetailsRepository.findByIdentifiantLikeAndDesignationLike(id, designation);
+        Optional<List<OAPDeliveryRateDetails>> oapDeliveryRateDetails =
+                this.oapDeliveryRateDetailsRepository.findByIdentifiantLikeAndDesignationLike(id, designation);
 
         if (!oapDeliveryRateDetails.isPresent())
-            throw new NotFoundException("\"" + designation + "\"" + " with the following id : " + id + " was not found.");
+            throw new NotFoundException(this.notFoundMessage.toString(id, designation));
         return oapDeliveryRateDetails.get();
     }
 

@@ -31,17 +31,17 @@ public class TotalPricesService {
     public void getTotalPrice(List<PriceLine> tarifPrestation) {
         totalPriceHT =
                 tarifPrestation.stream()
-                .map(x -> Double.parseDouble(x.getTarif_prestation()))
+                .map(x -> Double.parseDouble(x.getTarifPrestation()))
                 .reduce(0.0d, (x, y) -> x + y);
 
         tvaReduceForbidden =
                 tarifPrestation.stream()
-                        .map(x -> Double.parseDouble(x.getTva_reduite()))
+                        .map(x -> Double.parseDouble(x.getTvaReduite()))
                         .filter(x -> x < 1).count();
 
         tvaInterForbidden =
                 tarifPrestation.stream()
-                        .map(x -> Double.parseDouble(x.getTva_inter()))
+                        .map(x -> Double.parseDouble(x.getTvaInter()))
                         .filter(x -> x < 1).count();
 
         if (tvaReduceForbidden == 0)

@@ -1,6 +1,8 @@
 package fr.personnel.southsayerbackend.service.simulation.core;
 
+import fr.personnel.exceptions.handling.WebClientError.MethodNotAllowedException;
 import fr.personnel.exceptions.handling.WebClientError.NotFoundException;
+import fr.personnel.southsayerbackend.configuration.message.NotFoundMessage;
 import fr.personnel.southsayerbackend.model.simulation.ValueXmlSimulation;
 import fr.personnel.southsayerbackend.utils.ClobToStringUtils;
 import fr.personnel.southsayerdatabase.entity.simulation.ConfigurationStorage;
@@ -28,6 +30,7 @@ public class ExtractFromDatabaseService {
 
     private final ConfigurationStorageRepository configurationStorageRepository;
     private final XmlReaderService xmlReaderService;
+    private final NotFoundMessage notFoundMessage;
 
     /**
      * Get simulation content
@@ -40,7 +43,10 @@ public class ExtractFromDatabaseService {
         Optional<ConfigurationStorage> configStorage = this.configurationStorageRepository.findByConfId(simulationCode);
 
         if (!configStorage.isPresent())
-            throw new NotFoundException("No offer match to the following simulation code: " + simulationCode);
+            throw new NotFoundException(this.notFoundMessage.toString(simulationCode));
+
+        if (!configStorage.get().getConfCategId().contains("OAP:0"))
+            throw new MethodNotAllowedException(this.notFoundMessage.toString(simulationCode));
 
         return new ClobToStringUtils().clobToString(configStorage.get().getXmlConf());
     }
@@ -60,7 +66,7 @@ public class ExtractFromDatabaseService {
             simulationsList = this.configurationStorageRepository.findByConfCategIdLikeAndConfIdLike(idOAP, simualtionCode);
 
             if (simulationsList.isEmpty())
-                throw new NotFoundException("No offer contains the following characters sequence: " + sequenceChar);
+                throw new NotFoundException(this.notFoundMessage.toString(sequenceChar));
 
         } catch (NotFoundException e) {
             e.printStackTrace();
@@ -97,10 +103,11 @@ public class ExtractFromDatabaseService {
         List<ConfigurationStorage> simulationsList = new ArrayList<>();
 
         try {
-            simulationsList = this.configurationStorageRepository.findByConfCategIdLikeAndConfIdLike(idOAP, simulationCode);
+            simulationsList =
+                    this.configurationStorageRepository.findByConfCategIdLikeAndConfIdLike(idOAP, simulationCode);
 
             if (simulationsList.isEmpty())
-                throw new NotFoundException("No result matches your query with the following xpath : " + xpath);
+                throw new NotFoundException(this.notFoundMessage.toString(xpath));
 
         } catch (NotFoundException e) {
             e.printStackTrace();

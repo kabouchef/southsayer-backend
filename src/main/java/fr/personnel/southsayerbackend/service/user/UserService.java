@@ -2,6 +2,7 @@ package fr.personnel.southsayerbackend.service.user;
 
 
 import fr.personnel.exceptions.handling.WebClientError.NotFoundException;
+import fr.personnel.southsayerbackend.configuration.message.NotFoundMessage;
 import fr.personnel.southsayerdatabase.entity.user.User;
 import fr.personnel.southsayerdatabase.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,13 +17,13 @@ import java.util.Optional;
  * <p>
  * User Service
  */
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
+    private final NotFoundMessage notFoundMessage;
 
     /**
      * Save User
@@ -53,7 +54,7 @@ public class UserService {
     public User findOne(String ldap) {
         Optional<User> user = this.userRepository.findByIdUser(ldap);
 
-        if (!user.isPresent()) throw new NotFoundException("LDAP : " + ldap + " is not found.");
+        if (!user.isPresent()) throw new NotFoundException(this.notFoundMessage.toString(ldap));
 
         return user.get();
 

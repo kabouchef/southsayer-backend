@@ -1,8 +1,8 @@
-package fr.personnel.southsayerbackend.controller.activityCode;
+package fr.personnel.southsayerbackend.controller.activitycode;
 
 import fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils;
-import fr.personnel.southsayerbackend.service.activityCode.ActivityCodeService;
-import fr.personnel.southsayerdatabase.entity.activityCode.ActivityCode;
+import fr.personnel.southsayerbackend.service.activitycode.ActivityCodeService;
+import fr.personnel.southsayerdatabase.entity.activitycode.ActivityCode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -28,7 +28,7 @@ import java.util.List;
 @Transactional
 public class ActivityCodeController {
 
-    public final static String PATH = RestConstantUtils.DEFAULT_PATH + "/activity-code";
+    public static final String PATH = RestConstantUtils.DEFAULT_PATH + "/activity-code";
 
     private final ActivityCodeService activityCodeService;
 

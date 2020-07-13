@@ -3,9 +3,9 @@ package fr.personnel.southsayerbackend.service.simulation.core;
 
 import fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils;
 import fr.personnel.southsayerbackend.model.simulation.PriceLine;
-import fr.personnel.southsayerbackend.utils.DeleteFileUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellReference;
@@ -35,27 +35,25 @@ import java.util.List;
 @RequiredArgsConstructor
 public class XmlToExcelService {
 
-    private final DeleteFileUtils deleteFileUtils;
     private final StyleOfCellsService styleOfCellsService;
 
-    public List<PriceLine> generateExcel(String simulationCode, String staticDir, String environment, String databaseEnvSchema)
+    public List<PriceLine> generateExcel(String simulationCode, String environment, String databaseEnvSchema)
             throws ParserConfigurationException, IOException, SAXException {
         /**
          * Drain static repository
          */
-        String target = RestConstantUtils.XLS_EXTENSION + "/" + environment + "/" + databaseEnvSchema;
+        String path = RestConstantUtils.STATIC_DIRECTORY_FILES + environment + "/" + databaseEnvSchema + "/";
 
-        this.deleteFileUtils.DeleteFilesByPath(staticDir, target, RestConstantUtils.XLS_EXTENSION, simulationCode);
+        FileUtils.cleanDirectory(new File(path + RestConstantUtils.XLS_EXTENSION));
 
-        String directory = staticDir + target + "/";
-
-        String nameDefaultFile = staticDir + RestConstantUtils.XML_EXTENSION +"/" + environment + "/" +
-                databaseEnvSchema + "/" + simulationCode + "." + RestConstantUtils.XML_EXTENSION;
+        String nameDefaultFile = path + RestConstantUtils.XML_EXTENSION + "/" + simulationCode + "." + RestConstantUtils.XML_EXTENSION;
 
         String priceLines = null;
         List<PriceLine> priceLineList = new ArrayList<PriceLine>();
 
         String[] priceElement = new String[0];
+
+        FileOutputStream fos = null;
 
         try {// Creating a Workbook
             HSSFWorkbook wb = new HSSFWorkbook();
@@ -115,7 +113,7 @@ public class XmlToExcelService {
             //Ajout du logo LM
             HSSFCell cellPicture = row0.createCell(1);
             // Lire l'image à l'aide d'un stream
-            InputStream inputStream = new FileInputStream(RestConstantUtils.STATIC_DIRECTORY_IMAGES + "/1200px-Leroy_Merlin.svg.jpeg");
+            InputStream inputStream = new FileInputStream(RestConstantUtils.STATIC_DIRECTORY_IMAGES + "1200px-Leroy_Merlin.svg.jpeg");
             byte[] bytes = IOUtils.toByteArray(inputStream);
             //Ajouter l'image au classeur
             int pictureIdx = wb.addPicture(bytes, Workbook.PICTURE_TYPE_JPEG);
@@ -168,18 +166,18 @@ public class XmlToExcelService {
 
                 PriceLine priceLine = new PriceLine();
                 if (priceElement.length >= 1) priceLine.setIdentifiant(priceElement[0]);
-                if (priceElement.length >= 2) priceLine.setDetail_prestation(priceElement[1]);
+                if (priceElement.length >= 2) priceLine.setDetailPrestation(priceElement[1]);
                 if (priceElement.length >= 3) priceLine.setQuantite(priceElement[2]);
-                if (priceElement.length >= 4) priceLine.setTarif_unitaire(priceElement[3]);
-                if (priceElement.length >= 5) priceLine.setTarif_prestation(priceElement[4]);
-                if (priceElement.length >= 6) priceLine.setType_prestation(priceElement[5]);
-                if (priceElement.length >= 7) priceLine.setPrestation_de(priceElement[6]);
-                if (priceElement.length >= 8) priceLine.setTva_reduite(priceElement[7]);
-                if (priceElement.length >= 9) priceLine.setTva_inter(priceElement[8]);
-                if (priceElement.length >= 10) priceLine.setTva_normale(priceElement[9]);
-                if (priceElement.length >= 11) priceLine.setCode_49(priceElement[10]);
-                if (priceElement.length >= 12) priceLine.setCod_type_prestation(priceElement[11]);
-                if (priceElement.length >= 13) priceLine.setTemp_pose(priceElement[12]);
+                if (priceElement.length >= 4) priceLine.setTarifUnitaire(priceElement[3]);
+                if (priceElement.length >= 5) priceLine.setTarifPrestation(priceElement[4]);
+                if (priceElement.length >= 6) priceLine.setTypePrestation(priceElement[5]);
+                if (priceElement.length >= 7) priceLine.setPrestationDe(priceElement[6]);
+                if (priceElement.length >= 8) priceLine.setTvaReduite(priceElement[7]);
+                if (priceElement.length >= 9) priceLine.setTvaInter(priceElement[8]);
+                if (priceElement.length >= 10) priceLine.setTvaNormale(priceElement[9]);
+                if (priceElement.length >= 11) priceLine.setCode49(priceElement[10]);
+                if (priceElement.length >= 12) priceLine.setCod_typePrestation(priceElement[11]);
+                if (priceElement.length >= 13) priceLine.setTempPose(priceElement[12]);
                 if (priceElement.length >= 14) priceLine.setOrdre(priceElement[13]);
 
                 priceLineList.add(priceLine);
@@ -294,14 +292,18 @@ public class XmlToExcelService {
             /**
              * Outputting to Excel spreadsheet
              */
-            FileOutputStream fos = new FileOutputStream(new File(directory +
-                    "PRICE_FROM_" + simulationCode + "." + RestConstantUtils.XLS_EXTENSION));
+            fos = new FileOutputStream(new File(path + RestConstantUtils.XLS_EXTENSION +
+                    "/PRICE_FROM_" + simulationCode + "." + RestConstantUtils.XLS_EXTENSION));
             wb.write(fos);
+
+        }catch (XPathExpressionException e) {
+            e.printStackTrace();
+        }finally {
             fos.flush();
             fos.close();
             log.info("*******************************");
-            File file = new File(directory +
-                    "PRICE_FROM_" + simulationCode + "." + RestConstantUtils.XLS_EXTENSION);
+            File file = new File(path + RestConstantUtils.XLS_EXTENSION +
+                    "/PRICE_FROM_" + simulationCode + "." + RestConstantUtils.XLS_EXTENSION);
             if (file.exists()) {
                 log.info("The file \"PRICE_FROM_" + simulationCode + "." + RestConstantUtils.XLS_EXTENSION +
                         "\" has been created.");
@@ -311,8 +313,6 @@ public class XmlToExcelService {
             }
             log.info("*******************************");
 
-        }catch (XPathExpressionException e) {
-            e.printStackTrace();
         }
         return priceLineList;
     }

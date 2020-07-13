@@ -7,6 +7,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -23,11 +24,11 @@ import javax.transaction.Transactional;
 @Api("API to manage user OAP")
 @RestController
 @RequestMapping(UserController.PATH)
-@RequiredArgsConstructor
+@Data
 @Transactional
 public class UserController {
 
-    public final static String PATH = RestConstantUtils.DEFAULT_PATH + "/user";
+    static final String PATH = RestConstantUtils.DEFAULT_PATH + "/user";
 
     private final UserService userService;
 
@@ -61,7 +62,10 @@ public class UserController {
      * @return {@link User}
      */
     @ApiOperation(value = "Add a user")
-    @ApiResponses(value = {@ApiResponse(code = 201, message = "Added"), @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 500, message = "Technical error happened")})
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Added"),
+            @ApiResponse(code = 401, message = "Unauthorized"),
+            @ApiResponse(code = 500, message = "Technical error happened")})
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public User addUser(@RequestBody final User user) {

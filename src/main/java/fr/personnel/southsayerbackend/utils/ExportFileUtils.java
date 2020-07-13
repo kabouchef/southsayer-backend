@@ -2,10 +2,10 @@ package fr.personnel.southsayerbackend.utils;
 
 
 import fr.personnel.exceptions.handling.WebClientError.NotFoundException;
+import fr.personnel.southsayerbackend.configuration.message.NotFoundMessage;
 import fr.personnel.southsayerbackend.configuration.properties.FileStorageProperties;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -19,7 +19,7 @@ import java.nio.file.Paths;
 
 /**
  * @author Farouk KABOUCHE
- *
+ * <p>
  * Export File Service
  */
 @Slf4j
@@ -31,8 +31,7 @@ public class ExportFileUtils {
 
     @Autowired
     public ExportFileUtils(FileStorageProperties fileStorageProperties) throws Exception {
-        this.fileStorageLocation = Paths.get(fileStorageProperties.getUploadDir())
-                .toAbsolutePath().normalize();
+        this.fileStorageLocation = Paths.get(fileStorageProperties.getUploadDir()).toAbsolutePath().normalize();
 
         try {
             Files.createDirectories(this.fileStorageLocation);
@@ -42,11 +41,12 @@ public class ExportFileUtils {
     }
 
     public Resource loadFileAsResource(String fileName) {
+
         try {
             Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
 
             Resource resource = new UrlResource(filePath.toUri());
-            if(resource.exists()) {
+            if (resource.exists()) {
                 return resource;
             } else {
                 throw new NotFoundException("File not found " + fileName);

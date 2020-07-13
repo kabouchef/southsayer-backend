@@ -1,6 +1,7 @@
 package fr.personnel.southsayerbackend.service.rate;
 
 import fr.personnel.exceptions.handling.WebClientError.NotFoundException;
+import fr.personnel.southsayerbackend.configuration.message.NotFoundMessage;
 import fr.personnel.southsayerdatabase.entity.rate.OAPDeliveryRateDetails;
 import fr.personnel.southsayerdatabase.entity.rate.OAPDeliveryType;
 import fr.personnel.southsayerdatabase.repository.rate.OAPDeliveryTypeRepository;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 public class OAPTypeRateService {
 
     private final OAPDeliveryTypeRepository oapDeliveryTypeRepository;
+    private final NotFoundMessage notFoundMessage;
 
     /**
      * Get all OAP DT
@@ -41,10 +43,11 @@ public class OAPTypeRateService {
      * @return {@link List<OAPDeliveryType>}
      */
     public List<OAPDeliveryType> getByCodTypePrestation(String codTypePrestation) {
-        Optional<List<OAPDeliveryType>> oapDeliveryTypes = this.oapDeliveryTypeRepository.findByCodTypePrestationLike(codTypePrestation);
+        Optional<List<OAPDeliveryType>> oapDeliveryTypes =
+                this.oapDeliveryTypeRepository.findByCodTypePrestationLike(codTypePrestation);
 
         if (!oapDeliveryTypes.isPresent())
-            throw new NotFoundException("\"" + codTypePrestation + "\"" + " was not found.");
+            throw new NotFoundException(this.notFoundMessage.toString(codTypePrestation));
         return oapDeliveryTypes.get();
     }
 
@@ -57,7 +60,7 @@ public class OAPTypeRateService {
     public List<OAPDeliveryType> getByWordingDT(String wording) {
         Optional<List<OAPDeliveryType>> oapDeliveryTypes = this.oapDeliveryTypeRepository.findByLibTypePrestationLike(wording);
 
-        if (!oapDeliveryTypes.isPresent()) throw new NotFoundException("\"" + wording + "\"" + " was not found.");
+        if (!oapDeliveryTypes.isPresent()) throw new NotFoundException(this.notFoundMessage.toString(wording));
         return oapDeliveryTypes.get();
     }
 
@@ -70,7 +73,8 @@ public class OAPTypeRateService {
     public List<OAPDeliveryType> getByIdOAP(Long idOAP) {
         Optional<List<OAPDeliveryType>> oapDeliveryTypes = this.oapDeliveryTypeRepository.findByIdOap(idOAP);
 
-        if (!oapDeliveryTypes.isPresent()) throw new NotFoundException("\"" + idOAP + "\"" + " was not found.");
+        if (!oapDeliveryTypes.isPresent()) throw new NotFoundException(this.notFoundMessage.toLong(idOAP));
+
         return oapDeliveryTypes.get();
     }
 
