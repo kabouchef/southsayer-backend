@@ -87,6 +87,19 @@ public class ActivityCodeService {
         return activityCodes.get();
     }
 
+    /**
+     * Get all AC by rayon
+     *
+     * @param idOAP : idOAP
+     * @return {@link List<ActivityCode>}
+     */
+    public List<ActivityCode> getByIdOAP(String idOAP) {
+        Optional<List<ActivityCode>> activityCodes = this.activityCodeRepository.findByIdOap(idOAP);
+
+        if (!activityCodes.isPresent()) throw new NotFoundException(this.notFoundMessage.toString(idOAP));
+        return activityCodes.get();
+    }
+
 
     /**
      * Save OAP AC

@@ -10,7 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author Farouk KABOUCHE
@@ -28,21 +30,21 @@ public class UserService {
     /**
      * Save User
      *
-     * @param user : User
-     * @return {@link User}
+     * @param users : List of Users
+     * @return {@link List<User>}
      */
-    public User save(User user) {
-        return this.userRepository.save(user);
+    public List<User> save(List<User> users) {
+        return users.stream().map(this.userRepository::save).collect(Collectors.toList());
     }
 
     /**
-     * Delete a User
+     * Delete a Users
      *
      * @param ldap : LDAP
      */
     @Transactional
-    public void deleteOne(String ldap) {
-        this.userRepository.deleteUserByIdUser(ldap);
+    public void deleteByIdUser(List<String> ldap) {
+        this.userRepository.deleteByIdUser(ldap);
     }
 
     /**

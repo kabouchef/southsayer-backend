@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 /**
  * @author Farouk KABOUCHE
@@ -58,7 +59,7 @@ public class UserController {
     /**
      * Add User
      *
-     * @param user : user to add
+     * @param users : users to add
      * @return {@link User}
      */
     @ApiOperation(value = "Add a user")
@@ -68,8 +69,8 @@ public class UserController {
             @ApiResponse(code = 500, message = "Technical error happened")})
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public User addUser(@RequestBody final User user) {
-        return this.userService.save(user);
+    public List<User> addUser(@RequestBody final List<User> users) {
+        return this.userService.save(users);
     }
 
     /**
@@ -81,8 +82,8 @@ public class UserController {
     @ApiResponses(value = {@ApiResponse(code = 201, message = "Deleted")})
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteUser(@RequestParam final String ldap) {
-        this.userService.deleteOne(ldap);
+    public void deleteUser(@RequestBody final List<String> ldap) {
+        this.userService.deleteByIdUser(ldap);
     }
 
 

@@ -33,6 +33,18 @@ public class OAPDeliveryRateController {
     private final OAPDeliveryRateService oapDeliveryRateService;
 
     /**
+     * Get all OAP DR
+     *
+     * @return {@link List<OAPDeliveryRateDetails>}
+     */
+    @ApiOperation(value = "Get all OAP DR")
+    @CrossOrigin
+    @GetMapping
+    public Iterable<OAPDeliveryRateDetails> getAllRateLine() {
+        return this.oapDeliveryRateService.getAll();
+    }
+
+    /**
      * Get OAP DR by id
      *
      * @param id : id

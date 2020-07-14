@@ -27,6 +27,15 @@ public class OAPDeliveryRateService {
     private final NotFoundMessage notFoundMessage;
 
     /**
+     * get all DR
+     *
+     * @return {@link List<OAPDeliveryRateDetails>}
+     */
+    public Iterable<OAPDeliveryRateDetails> getAll() {
+        return this.oapDeliveryRateDetailsRepository.findAll();
+    }
+
+    /**
      * get all delivery rates by id
      *
      * @param id : id
