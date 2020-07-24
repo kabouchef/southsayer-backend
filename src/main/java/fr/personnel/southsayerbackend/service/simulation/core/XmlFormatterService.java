@@ -13,8 +13,8 @@ import java.io.StringWriter;
 
 /**
  * @author Farouk KABOUCHE
- * <p>
  * Xml Formatter Service
+ * @version 1.0
  */
 @Slf4j
 @Service

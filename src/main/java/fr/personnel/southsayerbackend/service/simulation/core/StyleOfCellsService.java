@@ -14,8 +14,8 @@ import org.springframework.stereotype.Service;
 
 /**
  * @author Farouk KABOUCHE
- *
  * Style Of Cells Service
+ * @version 1.0
  */
 @Slf4j
 @Service

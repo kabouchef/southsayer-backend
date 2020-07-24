@@ -1,10 +1,7 @@
-package fr.personnel.southsayerbackend.rate;
+package fr.personnel.southsayerbackend.service.rate;
 
 import com.google.common.collect.Lists;
-import fr.personnel.southsayerbackend.service.rate.OAPDeliveryRateService;
-import fr.personnel.southsayerbackend.service.rate.OAPTypeRateService;
 import fr.personnel.southsayerdatabase.entity.rate.OAPDeliveryRateDetails;
-import fr.personnel.southsayerdatabase.entity.rate.OAPDeliveryType;
 import fr.personnel.southsayerdatabase.repository.rate.OAPDeliveryRateDetailsRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,7 +16,6 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 

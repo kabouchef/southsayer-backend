@@ -4,8 +4,8 @@ import lombok.Data;
 
 /**
  * @author Farouk KABOUCHE
- *
  * Price Line
+ * @version 1.0
  */
 @Data
 public class PriceLine {

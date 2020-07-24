@@ -1,7 +1,6 @@
-package fr.personnel.southsayerbackend.activitycode;
+package fr.personnel.southsayerbackend.service.activitycode;
 
 import com.google.common.collect.Lists;
-import fr.personnel.southsayerbackend.service.activitycode.ActivityCodeService;
 import fr.personnel.southsayerdatabase.entity.activitycode.ActivityCode;
 import fr.personnel.southsayerdatabase.repository.activitycode.ActivityCodeRepository;
 import org.junit.Before;

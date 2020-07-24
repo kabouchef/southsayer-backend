@@ -19,7 +19,6 @@ import java.nio.file.Paths;
 
 /**
  * @author Farouk KABOUCHE
- * <p>
  * Export File Service
  */
 @Slf4j

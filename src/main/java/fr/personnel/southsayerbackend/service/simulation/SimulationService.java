@@ -1,6 +1,5 @@
 package fr.personnel.southsayerbackend.service.simulation;
 
-import fr.personnel.exceptions.handling.WebClientError.MethodNotAllowedException;
 import fr.personnel.exceptions.handling.WebClientError.NotFoundException;
 import fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils;
 import fr.personnel.southsayerbackend.configuration.message.NotFoundMessage;
@@ -23,10 +22,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils.STATIC_DIRECTORY_FILES;
+import static fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils.XML_EXTENSION;
+
 /**
  * @author Farouk KABOUCHE
- *
  * Simulation Offer Service
+ * @see ExtractFromDatabaseService
+ * @version 1.0
  */
 
 @Slf4j
@@ -46,8 +49,7 @@ public class SimulationService {
         /**
          * Init
          */
-        String path = RestConstantUtils.STATIC_DIRECTORY_FILES + environment + "/" + databaseEnvSchema + "/" +
-                RestConstantUtils.XML_EXTENSION;
+        String path =  STATIC_DIRECTORY_FILES + environment + "/" + databaseEnvSchema + "/" + XML_EXTENSION;
         List<PriceLine> tabPriceElement = null;
         /**
          * Removal of unnecessary spaces
@@ -81,20 +83,15 @@ public class SimulationService {
         return tabPriceElement;
     }
 
-    public int countAllByConfCategIdLikeConfIdLike(String confCategId, String confId){
+    public int countAllByConfCategIdLikeConfIdLike(String confCategId, String confId) {
         return this.configurationStorageRepository.countByConfCategIdLikeAndConfIdLike(confCategId, confId);
     }
 
-    public List<String> getSimCodebyConfCategIdLike(String confCategId){
-        Optional<List<ConfigurationStorage>> configurationStorages =
-                this.configurationStorageRepository.findByConfCategIdLike(confCategId);
+    public List<String> getSimCodebyConfCategIdLike(String confCategId) {
+        Optional<List<ConfigurationStorage>> configurationStorages = this.configurationStorageRepository.findByConfCategIdLike(confCategId);
 
-        if (!configurationStorages.isPresent())
-            throw new NotFoundException(this.notFoundMessage.toString(confCategId));
+        if (!configurationStorages.isPresent()) throw new NotFoundException(this.notFoundMessage.toString(confCategId));
 
-        return configurationStorages.get().stream()
-                .filter(x -> x.getConfCategId().contains("OAP:0"))
-                .map(ConfigurationStorage::getConfId)
-                .collect(Collectors.toList());
+        return configurationStorages.get().stream().filter(x -> x.getConfCategId().contains("OAP:0")).map(ConfigurationStorage::getConfId).collect(Collectors.toList());
     }
 }

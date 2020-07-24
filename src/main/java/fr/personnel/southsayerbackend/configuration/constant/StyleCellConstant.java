@@ -4,8 +4,8 @@ import lombok.experimental.UtilityClass;
 
 /**
  * @author Farouk KABOUCHE
- *
  * Style Cell Constants
+ * @version 1.0
  */
 @UtilityClass
 public final class StyleCellConstant {

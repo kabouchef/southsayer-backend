@@ -19,8 +19,10 @@ import java.util.stream.Collectors;
 
 /**
  * @author Farouk KABOUCHE
- * <p>
  * Results Extract Database
+ * @see TotalPricesService
+ * @see XmlToExcelService
+ * @version 1.0
  */
 @Slf4j
 @Service

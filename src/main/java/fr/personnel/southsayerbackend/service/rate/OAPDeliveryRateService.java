@@ -14,8 +14,8 @@ import java.util.stream.Collectors;
 
 /**
  * @author Farouk KABOUCHE
- *
  * OAP Delivery Rate Service
+ * @version 1.0
  */
 
 @Slf4j

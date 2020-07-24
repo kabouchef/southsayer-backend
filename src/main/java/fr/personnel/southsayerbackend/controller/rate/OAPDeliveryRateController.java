@@ -1,6 +1,5 @@
 package fr.personnel.southsayerbackend.controller.rate;
 
-import fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils;
 import fr.personnel.southsayerbackend.service.rate.OAPDeliveryRateService;
 import fr.personnel.southsayerdatabase.entity.rate.OAPDeliveryRateDetails;
 import io.swagger.annotations.Api;
@@ -15,20 +14,21 @@ import org.springframework.web.bind.annotation.*;
 import javax.transaction.Transactional;
 import java.util.List;
 
+import static fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils.DELIVERY_RATE_PATH;
+
 /**
  * @author Farouk KABOUCHE
- * <p>
  * API to manage OAP delivery rate lines
+ * @version 1.0
+ * @see OAPDeliveryRateService
  */
 @Slf4j
 @Api("API to manage OAP delivery rate lines")
 @RestController
-@RequestMapping(OAPDeliveryRateController.PATH)
+@RequestMapping(DELIVERY_RATE_PATH)
 @Data
 @Transactional
 public class OAPDeliveryRateController {
-
-    public static final String PATH = RestConstantUtils.DEFAULT_PATH + "/rate";
 
     private final OAPDeliveryRateService oapDeliveryRateService;
 
@@ -40,7 +40,7 @@ public class OAPDeliveryRateController {
     @ApiOperation(value = "Get all OAP DR")
     @CrossOrigin
     @GetMapping
-    public Iterable<OAPDeliveryRateDetails> getAllRateLine() {
+    public Iterable<OAPDeliveryRateDetails> getAllDR() {
         return this.oapDeliveryRateService.getAll();
     }
 
@@ -52,8 +52,8 @@ public class OAPDeliveryRateController {
      */
     @ApiOperation(value = "Get OAP DR by id")
     @CrossOrigin
-    @GetMapping
-    public List<OAPDeliveryRateDetails> getRateLineById(@RequestParam final String id) {
+    @GetMapping("/byId")
+    public List<OAPDeliveryRateDetails> getDRById(@RequestParam final String id) {
         return this.oapDeliveryRateService.getByIdentifiant(id);
     }
 
@@ -67,7 +67,7 @@ public class OAPDeliveryRateController {
     @ApiOperation(value = "Get OAP DR by wording")
     @CrossOrigin
     @GetMapping("/byLibelleId")
-    public List<OAPDeliveryRateDetails> getRateLineByLibelleId(@RequestParam final String id, @RequestParam final String libelleId) {
+    public List<OAPDeliveryRateDetails> getDRByLibelleId(@RequestParam final String id, @RequestParam final String libelleId) {
         return this.oapDeliveryRateService.getByLibelleId(id, libelleId);
     }
 
@@ -81,7 +81,7 @@ public class OAPDeliveryRateController {
     @ApiOperation(value = "Get OAP DR by designation detail")
     @CrossOrigin
     @GetMapping("/byDesignation")
-    public List<OAPDeliveryRateDetails> getRateLineByDesignation(@RequestParam final String id, @RequestParam final String designation) {
+    public List<OAPDeliveryRateDetails> getDRByDesignation(@RequestParam final String id, @RequestParam final String designation) {
         return this.oapDeliveryRateService.getByDesignation(id, designation);
     }
 
@@ -91,11 +91,11 @@ public class OAPDeliveryRateController {
      * @param oapDeliveryRateDetails : OAP DR
      * @return {@link List<OAPDeliveryRateDetails>}
      */
-    @ApiOperation(value = "Add a OAPDeliveryRateDetails")
+    @ApiOperation(value = "Add a OAP DR")
     @ApiResponses(value = {@ApiResponse(code = 201, message = "Created"), @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 500, message = "Technical error happened")})
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public List<OAPDeliveryRateDetails> addRateLine(@RequestBody final List<OAPDeliveryRateDetails> oapDeliveryRateDetails) {
+    public List<OAPDeliveryRateDetails> addDR(@RequestBody final List<OAPDeliveryRateDetails> oapDeliveryRateDetails) {
         return this.oapDeliveryRateService.save(oapDeliveryRateDetails);
     }
 

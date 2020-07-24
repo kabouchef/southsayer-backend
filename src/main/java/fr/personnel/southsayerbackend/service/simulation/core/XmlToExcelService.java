@@ -25,10 +25,12 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils.*;
+
 /**
  * @author Farouk KABOUCHE
- *
  * XML To Excel Service
+ * @version 1.0
  */
 @Slf4j
 @Service
@@ -44,9 +46,9 @@ public class XmlToExcelService {
          */
         String path = RestConstantUtils.STATIC_DIRECTORY_FILES + environment + "/" + databaseEnvSchema + "/";
 
-        FileUtils.cleanDirectory(new File(path + RestConstantUtils.XLS_EXTENSION));
+        FileUtils.cleanDirectory(new File(path + XLS_EXTENSION));
 
-        String nameDefaultFile = path + RestConstantUtils.XML_EXTENSION + "/" + simulationCode + "." + RestConstantUtils.XML_EXTENSION;
+        String nameDefaultFile = path + XML_EXTENSION + "/" + simulationCode + "." + XML_EXTENSION;
 
         String priceLines = null;
         List<PriceLine> priceLineList = new ArrayList<PriceLine>();
@@ -113,7 +115,7 @@ public class XmlToExcelService {
             //Ajout du logo LM
             HSSFCell cellPicture = row0.createCell(1);
             // Lire l'image à l'aide d'un stream
-            InputStream inputStream = new FileInputStream(RestConstantUtils.STATIC_DIRECTORY_IMAGES + "1200px-Leroy_Merlin.svg.jpeg");
+            InputStream inputStream = new FileInputStream(STATIC_DIRECTORY_IMAGES + "1200px-Leroy_Merlin.svg.jpeg");
             byte[] bytes = IOUtils.toByteArray(inputStream);
             //Ajouter l'image au classeur
             int pictureIdx = wb.addPicture(bytes, Workbook.PICTURE_TYPE_JPEG);
@@ -292,8 +294,8 @@ public class XmlToExcelService {
             /**
              * Outputting to Excel spreadsheet
              */
-            fos = new FileOutputStream(new File(path + RestConstantUtils.XLS_EXTENSION +
-                    "/PRICE_FROM_" + simulationCode + "." + RestConstantUtils.XLS_EXTENSION));
+            fos = new FileOutputStream(new File(path + XLS_EXTENSION +
+                    "/PRICE_FROM_" + simulationCode + "." + XLS_EXTENSION));
             wb.write(fos);
 
         }catch (XPathExpressionException e) {
@@ -302,13 +304,14 @@ public class XmlToExcelService {
             fos.flush();
             fos.close();
             log.info("*******************************");
-            File file = new File(path + RestConstantUtils.XLS_EXTENSION +
-                    "/PRICE_FROM_" + simulationCode + "." + RestConstantUtils.XLS_EXTENSION);
+            File file = new File(path + XLS_EXTENSION +
+                    "/PRICE_FROM_" + simulationCode + "." + XLS_EXTENSION);
             if (file.exists()) {
-                log.info("The file \"PRICE_FROM_" + simulationCode + "." + RestConstantUtils.XLS_EXTENSION +
-                        "\" has been created.");
+                log.info("The file \"PRICE_FROM_" + simulationCode + "." + XLS_EXTENSION +
+                        "\" has been created in :");
+                log.info(path + XLS_EXTENSION);
             } else {
-                log.info("The file \"PRICE_FROM_" + simulationCode + "." + RestConstantUtils.XLS_EXTENSION +
+                log.info("The file \"PRICE_FROM_" + simulationCode + "." + XLS_EXTENSION +
                         "\" has not been created...");
             }
             log.info("*******************************");

@@ -16,8 +16,8 @@ import java.util.stream.Collectors;
 
 /**
  * @author Farouk KABOUCHE
- * <p>
  * User Service
+ * @version 1.0
  */
 @Slf4j
 @Service
@@ -43,7 +43,7 @@ public class UserService {
      * @param ldap : LDAP
      */
     @Transactional
-    public void deleteByIdUser(List<String> ldap) {
+    public void deleteByIdUser(String ldap) {
         this.userRepository.deleteByIdUser(ldap);
     }
 

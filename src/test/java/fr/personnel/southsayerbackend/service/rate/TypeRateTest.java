@@ -1,9 +1,6 @@
-package fr.personnel.southsayerbackend.rate;
+package fr.personnel.southsayerbackend.service.rate;
 
 import com.google.common.collect.Lists;
-import fr.personnel.southsayerbackend.service.activitycode.ActivityCodeService;
-import fr.personnel.southsayerbackend.service.rate.OAPTypeRateService;
-import fr.personnel.southsayerdatabase.entity.activitycode.ActivityCode;
 import fr.personnel.southsayerdatabase.entity.rate.OAPDeliveryType;
 import fr.personnel.southsayerdatabase.repository.rate.OAPDeliveryTypeRepository;
 import org.junit.Before;

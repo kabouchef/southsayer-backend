@@ -11,10 +11,13 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import static fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils.STATIC_DIRECTORY_FILES;
+import static fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils.XML_EXTENSION;
+
 /**
  * @author Farouk KABOUCHE
- *
  * Xml Writer Service
+ * @version 1.0
  */
 @Slf4j
 @Service
@@ -42,7 +45,7 @@ public class XmlWriterService {
             /**
              *  Get the file
              */
-            String pathNewFile = path + "/" + simulationCode + "." + RestConstantUtils.XML_EXTENSION;
+            String pathNewFile = path + "/" + simulationCode + "." + XML_EXTENSION;
             File oldFile = new File(defaultFile);
             File newFile = new File(pathNewFile);
             boolean renamingFile = oldFile.renameTo(newFile);
@@ -51,10 +54,12 @@ public class XmlWriterService {
              * Check if the specified file exists or not
              */
             log.info("*******************************");
-            if (renamingFile)
-                log.info("\"" + simulationCode + "." + RestConstantUtils.XML_EXTENSION + "\" has been created.");
+            if (renamingFile){
+                log.info("\"" + simulationCode + "." + XML_EXTENSION + "\" has been created in :");
+                log.info(path);
+            }
             else
-                log.info("\"" + simulationCode + "." + RestConstantUtils.XML_EXTENSION + "\" has not been created...");
+                log.info("\"" + simulationCode + "." + XML_EXTENSION + "\" has not been created...");
             log.info("*******************************");
         }
     }

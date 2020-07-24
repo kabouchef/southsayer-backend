@@ -4,8 +4,8 @@ import lombok.Data;
 
 /**
  * @author Farouk KABOUCHE
- *
  * Xpath
+ * @version 1.0
  */
 @Data
 public class ValueXmlSimulation {

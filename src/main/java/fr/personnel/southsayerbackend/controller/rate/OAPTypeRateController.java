@@ -15,20 +15,21 @@ import org.springframework.web.bind.annotation.*;
 import javax.transaction.Transactional;
 import java.util.List;
 
+import static fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils.TYPE_RATE_PATH;
+
 /**
  * @author Farouk KABOUCHE
- * <p>
  * API to manage OAP delivery type
+ * @version 1.0
+ * @see OAPTypeRateService
  */
 @Slf4j
 @Api("API to manage OAP delivery type")
 @RestController
-@RequestMapping(OAPTypeRateController.PATH)
+@RequestMapping(TYPE_RATE_PATH)
 @RequiredArgsConstructor
 @Transactional
 public class OAPTypeRateController {
-
-    static final String PATH = RestConstantUtils.DEFAULT_PATH + "/delivery-type";
 
     private final OAPTypeRateService oapTypeRateService;
 
@@ -53,7 +54,7 @@ public class OAPTypeRateController {
     @ApiOperation(value = "Get all OAP DT by Code type prestation")
     @CrossOrigin
     @GetMapping("/byCodTypePrestation")
-    public List<OAPDeliveryType> getRateLineByCodTypePrestation(
+    public List<OAPDeliveryType> getDTByCodTypePrestation(
             @RequestParam final String codTypePrestation) {
         return this.oapTypeRateService.getByCodTypePrestation(codTypePrestation);
     }
@@ -67,7 +68,7 @@ public class OAPTypeRateController {
     @ApiOperation(value = "Get all OAP DT by Libelle Type Prestation")
     @CrossOrigin
     @GetMapping("/byWording")
-    public List<OAPDeliveryType> getRateLineByWording(
+    public List<OAPDeliveryType> getDTByWording(
             @RequestParam final String wording) {
         return this.oapTypeRateService.getByWordingDT(wording);
     }
@@ -81,7 +82,7 @@ public class OAPTypeRateController {
     @ApiOperation(value = "Get all by idOAP")
     @CrossOrigin
     @GetMapping("/byIdOAP")
-    public List<OAPDeliveryType> getRateLineByIdOAP(
+    public List<OAPDeliveryType> getDTByIdOAP(
             @RequestParam final Long idOAP) {
         return this.oapTypeRateService.getByIdOAP(idOAP);
     }

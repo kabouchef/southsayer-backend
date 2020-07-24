@@ -1,6 +1,5 @@
 package fr.personnel.southsayerbackend.service.simulation.core;
 
-import fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,10 +19,13 @@ import javax.xml.xpath.XPathFactory;
 import java.io.IOException;
 import java.io.StringReader;
 
+import static fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils.STATIC_DIRECTORY_FILES;
+import static fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils.XML_EXTENSION;
+
 /**
  * @author Farouk KABOUCHE
- * <p>
  * Xml Reader Service
+ * @version 1.0
  */
 @Slf4j
 @Service
@@ -68,7 +70,7 @@ public class XmlReaderService {
      */
     public String readIntoXML(String xpath) {
         String searchValue = "";
-        String nameDefaultFile = RestConstantUtils.STATIC_DIRECTORY_FILES + "/" + RestConstantUtils.XML_EXTENSION + "/" + environment + "/" + "XML_CONF." + RestConstantUtils.XML_EXTENSION;
+        String nameDefaultFile = STATIC_DIRECTORY_FILES + "/" + XML_EXTENSION + "/" + environment + "/" + "XML_CONF." + XML_EXTENSION;
         try {
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();

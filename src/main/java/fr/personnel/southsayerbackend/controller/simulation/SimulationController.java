@@ -23,20 +23,22 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import static fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils.*;
+import static org.springframework.http.HttpHeaders.CONTENT_DISPOSITION;
+
 /**
  * @author Farouk KABOUCHE
- * <p>
  * API to extract OAP simulation prices
+ * @version 1.0
+ * @see SimulationService
  */
 @Slf4j
 @Api("API to extract OAP simulation prices")
 @RestController
-@RequestMapping(SimulationController.PATH)
+@RequestMapping(SIMULATION_PATH)
 @Data
 @Transactional
 public class SimulationController {
-
-    public static final String PATH = RestConstantUtils.DEFAULT_PATH + "/simulation";
 
     private final ExportFileUtils exportFileUtils;
     private final SimulationService simulationService;
@@ -72,16 +74,16 @@ public class SimulationController {
     @ApiOperation(value = "Get the xls file of the simulation submitted by the request '/request'")
     @GetMapping("/downloadPricesFile")
     public ResponseEntity<Resource> downloadFile(@RequestParam(name = "simulationCode") String simulationCode) {
-        String target = RestConstantUtils.STATIC_DIRECTORY_FILES + "/" + RestConstantUtils.XLS_EXTENSION + "/" + environment + "/" + databaseEnvSchema + "/";
+        String target = STATIC_DIRECTORY_FILES + "/" + XLS_EXTENSION + "/" + environment + "/" + databaseEnvSchema + "/";
 
-        File file = new File(target + "PRICE_FROM_" + simulationCode + "." + RestConstantUtils.XLS_EXTENSION);
+        File file = new File(target + "PRICE_FROM_" + simulationCode + "." + XLS_EXTENSION);
 
         // Load file as Resource
         Resource resource = this.exportFileUtils.loadFileAsResource(file.getAbsolutePath());
 
         String contentType = "application/octet-stream";
 
-        return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType)).header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"").body(resource);
+        return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType)).header(CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"").body(resource);
     }
 
     /**

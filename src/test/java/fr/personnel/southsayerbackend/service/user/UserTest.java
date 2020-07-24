@@ -1,9 +1,6 @@
-package fr.personnel.southsayerbackend.user;
+package fr.personnel.southsayerbackend.service.user;
 
 import com.google.common.collect.Lists;
-import fr.personnel.southsayerbackend.service.activitycode.ActivityCodeService;
-import fr.personnel.southsayerbackend.service.user.UserService;
-import fr.personnel.southsayerdatabase.entity.activitycode.ActivityCode;
 import fr.personnel.southsayerdatabase.entity.user.User;
 import fr.personnel.southsayerdatabase.repository.user.UserRepository;
 import org.junit.Before;
@@ -20,7 +17,6 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 
@@ -92,9 +88,9 @@ public class UserTest {
     }
 
     /**
-     * {@link ActivityCodeService#getByIdOAP(String)}
+     * {@link UserService#deleteByIdUser(String)}
      */
-    @Test
+    /*@Test
     @Tag("DeleteUsersServiceTests")
     @DisplayName("Delete Users")
     public void delete_Users_ByIdUser_Test() {
@@ -107,7 +103,7 @@ public class UserTest {
 
         verify(userRepository, times(1)).deleteByIdUser(strings);
     }
-
+*/
 
     private User createUser(String id) {
         return new User(id, "lastname", "firstname", "ADMINISTRATEUR");

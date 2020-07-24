@@ -13,8 +13,8 @@ import static fr.personnel.southsayerbackend.utils.MathUtils.multiplyDouble;
 
 /**
  * @author Farouk KABOUCHE
- * <p>
  * Total Prices Service
+ * @version 1.0
  */
 @Slf4j
 @Service
