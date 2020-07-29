@@ -4,6 +4,7 @@ import fr.personnel.exceptions.handling.WebClientError.MethodNotAllowedException
 import fr.personnel.exceptions.handling.WebClientError.NotFoundException;
 import fr.personnel.southsayerbackend.configuration.message.NotFoundMessage;
 import fr.personnel.southsayerbackend.model.simulation.ValueXmlSimulation;
+import fr.personnel.southsayerbackend.model.simulation.XpathDefinition;
 import fr.personnel.southsayerbackend.utils.ClobToStringUtils;
 import fr.personnel.southsayerdatabase.entity.simulation.ConfigurationStorage;
 import fr.personnel.southsayerdatabase.repository.simulation.ConfigurationStorageRepository;
@@ -34,6 +35,8 @@ public class ExtractFromDatabaseService {
     private final XmlReaderService xmlReaderService;
     private final NotFoundMessage notFoundMessage;
 
+    private List<ConfigurationStorage> simulationsList = new ArrayList<>();
+
     /**
      * Get simulation content
      *
@@ -61,8 +64,6 @@ public class ExtractFromDatabaseService {
      * @return {@link List<ValueXmlSimulation>}
      */
     public List<ValueXmlSimulation> findSimulationBySequenceChar(String idOAP, String simualtionCode, String sequenceChar) {
-
-        List<ConfigurationStorage> simulationsList = new ArrayList<>();
 
         try {
             simulationsList = this.configurationStorageRepository.findByConfCategIdLikeAndConfIdLike(idOAP, simualtionCode);
@@ -96,13 +97,47 @@ public class ExtractFromDatabaseService {
     /**
      * Find Value which retrieves by xpath in each simulation
      *
+     * @param xpathDefinition : xpathDefinition
+     * @return {@link List<ValueXmlSimulation>}
+     */
+    public List<ValueXmlSimulation> findValueInSimulationByXpath(XpathDefinition xpathDefinition) {
+        String idOAP = xpathDefinition.getIdOAP();
+        String simulationCode = xpathDefinition.getSimulationCode();
+        String xpath = xpathDefinition.getXpath();
+
+        try {
+            simulationsList =
+                    this.configurationStorageRepository.findByConfCategIdLikeAndConfIdLike(idOAP, simulationCode);
+
+            if (simulationsList.isEmpty())
+                throw new NotFoundException(this.notFoundMessage.toString(xpath));
+
+        } catch (NotFoundException e) {
+            e.printStackTrace();
+        }
+        return simulationsList.stream()
+                .map(x -> {
+                    ValueXmlSimulation valueXmlSimulation = new ValueXmlSimulation();
+
+                    String xmlConf = this.xmlReaderService.readIntoXMLByXpath(
+                            new ClobToStringUtils().clobToString(x.getXmlConf()), xpath);
+
+                    valueXmlSimulation.setSimulationCode(x.getConfId());
+                    valueXmlSimulation.setIdOAP(x.getConfCategId());
+                    valueXmlSimulation.setValue(xmlConf);
+                    return valueXmlSimulation;
+                })
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Get rate which retrieves value searched by xpath
+     *
      * @param idOAP : Id OAP
      * @param xpath : Xpath to get the search value
      * @return {@link List<ValueXmlSimulation>}
      */
-    public List<ValueXmlSimulation> findValueInSimulationByXpath(String idOAP, String simulationCode, String xpath) {
-
-        List<ConfigurationStorage> simulationsList = new ArrayList<>();
+    public List<ValueXmlSimulation> countSimulationByValueByXpath(String idOAP, String simulationCode, String xpath) {
 
         try {
             simulationsList =

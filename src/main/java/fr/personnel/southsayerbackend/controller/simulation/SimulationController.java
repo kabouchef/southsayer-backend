@@ -4,6 +4,8 @@ import fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils;
 import fr.personnel.southsayerbackend.model.simulation.PriceLine;
 import fr.personnel.southsayerbackend.model.simulation.ValueXmlSimulation;
 import fr.personnel.southsayerbackend.model.simulation.XpathDefinition;
+import fr.personnel.southsayerbackend.model.simulation.rate.ConversionRate;
+import fr.personnel.southsayerbackend.model.simulation.rate.InputRate;
 import fr.personnel.southsayerbackend.service.simulation.SimulationService;
 import fr.personnel.southsayerbackend.service.simulation.core.ExtractFromDatabaseService;
 import fr.personnel.southsayerbackend.utils.ExportFileUtils;
@@ -128,7 +130,7 @@ public class SimulationController {
     @PostMapping("/findByCPE")
     public List<ValueXmlSimulation> getValueInSimulationByCPE(@RequestBody XpathDefinition xpathDefinition) {
 
-        return this.extractFromDatabaseService.findValueInSimulationByXpath(xpathDefinition.getIdOAP(), xpathDefinition.getSimulationCode(), xpathDefinition.getXpath());
+        return this.extractFromDatabaseService.findValueInSimulationByXpath(xpathDefinition);
     }
 
     /**
@@ -143,6 +145,18 @@ public class SimulationController {
     @GetMapping("/count")
     public int countAllByConfCategIdLikeConfIdLike(@RequestParam String confCategId, @RequestParam String confId) {
         return this.simulationService.countAllByConfCategIdLikeConfIdLike(confCategId, confId);
+    }
+
+    /**
+     * Conversion rate by confCategId, by idOAP and by CPE
+     * @param inputRate : input Rate (XpathDefinition, valueSearched)
+     * @return {@link ConversionRate}
+     */
+    @ApiOperation(value = "Get conversion Rate by value searched")
+    @CrossOrigin
+    @PostMapping("/conversionRate")
+    public ConversionRate getConversionRateByInputRate(@RequestBody InputRate inputRate) {
+        return this.simulationService.conversionRateByInputRate(inputRate);
     }
 
 

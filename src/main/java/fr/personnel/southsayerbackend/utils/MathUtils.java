@@ -9,6 +9,8 @@ import java.math.MathContext;
  * @author Farouk KABOUCHE
  *
  * Math Utils
+ *
+ * @version 2.0
  */
 @Data
 public class MathUtils {
@@ -59,7 +61,7 @@ public class MathUtils {
     /** Cette méthode permet de calculer le prix total selon la tva de type double
      * @param price : price
      * @param vat : vat
-     * @return
+     * @return {@link double}
      */
     public static double calculatePrice(final double price, final double vat){
         return MathUtils.multiplyDouble(price, 1 + MathUtils.divideDouble(vat, 100));
@@ -67,6 +69,10 @@ public class MathUtils {
 
     public static double somme(final double s1, final double s2){
         return s1 + s2;
+    }
+
+    public static double calculatePercentage(double obtained, double total) {
+        return obtained * 100 / total;
     }
 
 }

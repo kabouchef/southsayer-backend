@@ -4,11 +4,16 @@ import fr.personnel.exceptions.handling.WebClientError.NotFoundException;
 import fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils;
 import fr.personnel.southsayerbackend.configuration.message.NotFoundMessage;
 import fr.personnel.southsayerbackend.model.simulation.PriceLine;
+import fr.personnel.southsayerbackend.model.simulation.ValueXmlSimulation;
+import fr.personnel.southsayerbackend.model.simulation.rate.ConversionRate;
+import fr.personnel.southsayerbackend.model.simulation.rate.InputRate;
 import fr.personnel.southsayerbackend.service.simulation.core.ExtractFromDatabaseService;
 import fr.personnel.southsayerbackend.service.simulation.core.XmlToExcelService;
 import fr.personnel.southsayerbackend.service.simulation.core.XmlWriterService;
+import fr.personnel.southsayerbackend.utils.MathUtils;
 import fr.personnel.southsayerdatabase.entity.simulation.ConfigurationStorage;
 import fr.personnel.southsayerdatabase.repository.simulation.ConfigurationStorageRepository;
+import jdk.jfr.Percentage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
@@ -87,11 +92,45 @@ public class SimulationService {
         return this.configurationStorageRepository.countByConfCategIdLikeAndConfIdLike(confCategId, confId);
     }
 
+    public ConversionRate conversionRateByInputRate(InputRate inputRate) {
+        ConversionRate conversionRate = new ConversionRate();
+        double totalRate;
+        double valueRate;
+        double rate;
+
+        List<ValueXmlSimulation> valueXmlSimulations =
+                this.extractFromDatabaseService.findValueInSimulationByXpath(inputRate.getXpathDefinition());
+
+        totalRate =
+                valueXmlSimulations.stream()
+                        .filter(x -> x.getIdOAP().equals(inputRate.getXpathDefinition().getIdOAP()))
+                        .map(ValueXmlSimulation::getIdOAP)
+                        .count();
+        ;
+        valueRate =
+                valueXmlSimulations.stream()
+                        .filter(x -> x.getValue().equals(inputRate.getValueSearched()))
+                        .map(ValueXmlSimulation::getIdOAP)
+                        .count();
+
+        rate = MathUtils.calculatePercentage(valueRate, totalRate);
+
+        conversionRate.setRating(rate);
+        conversionRate.setValueRate(valueRate);
+        conversionRate.setTotal(totalRate);
+
+        return conversionRate;
+    }
+
     public List<String> getSimCodebyConfCategIdLike(String confCategId) {
-        Optional<List<ConfigurationStorage>> configurationStorages = this.configurationStorageRepository.findByConfCategIdLike(confCategId);
+        Optional<List<ConfigurationStorage>> configurationStorages =
+                this.configurationStorageRepository.findByConfCategIdLike(confCategId);
 
         if (!configurationStorages.isPresent()) throw new NotFoundException(this.notFoundMessage.toString(confCategId));
 
-        return configurationStorages.get().stream().filter(x -> x.getConfCategId().contains("OAP:0")).map(ConfigurationStorage::getConfId).collect(Collectors.toList());
+        return configurationStorages.get().stream()
+                .filter(x -> x.getConfCategId().contains("OAP:0"))
+                .map(ConfigurationStorage::getConfId)
+                .collect(Collectors.toList());
     }
 }
