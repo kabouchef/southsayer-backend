@@ -1,8 +1,10 @@
 package fr.personnel.southsayerbackend.service.simulation.core;
 
 import fr.personnel.southsayerbackend.model.simulation.PriceLine;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.With;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +21,9 @@ import static fr.personnel.southsayerbackend.utils.MathUtils.multiplyDouble;
 @Slf4j
 @Service
 @Data
+@With
 @NoArgsConstructor
+@AllArgsConstructor
 public class TotalPricesService {
     double totalPriceHT = 0;
     double totalPriceTVAReduce = 0;
@@ -32,7 +36,7 @@ public class TotalPricesService {
         totalPriceHT =
                 tarifPrestation.stream()
                 .map(x -> Double.parseDouble(x.getTarifPrestation()))
-                .reduce(0.0d, (x, y) -> x + y);
+                .reduce(0.0d, Double::sum);
 
         tvaReduceForbidden =
                 tarifPrestation.stream()

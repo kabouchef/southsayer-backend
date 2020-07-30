@@ -112,11 +112,10 @@ public class SimulationController {
      */
     @ApiOperation(value = "Retrieves the list of code simulations which contain the character string sought.")
     @CrossOrigin
-    @GetMapping("/search")
+    @PostMapping("/search")
     @ResponseBody
-    public List<ValueXmlSimulation> getSimulationsBySequenceChar(@RequestParam(name = "idOAP") String idOAP, @RequestParam(name = "simulationCode") String simulationCode, @RequestParam(name = "sequenceChar") String sequenceChar) {
-
-        return this.extractFromDatabaseService.findSimulationBySequenceChar(idOAP, simulationCode, sequenceChar);
+    public List<ValueXmlSimulation> getSimulationsBySequenceChar(@RequestBody InputRate inputRate) {
+        return this.extractFromDatabaseService.findSimulationBySequenceChar(inputRate);
     }
 
     /**

@@ -45,6 +45,7 @@ public class ActivityCodeService {
         Optional<List<ActivityCode>> activityCodes = this.activityCodeRepository.findByCodActivite(codActivite);
 
         if (!activityCodes.isPresent()) throw new NotFoundException(this.notFoundMessage.toString(codActivite));
+
         return activityCodes.get();
     }
 

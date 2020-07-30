@@ -1,10 +1,8 @@
 package fr.personnel.southsayerbackend.service.simulation;
 
 import fr.personnel.exceptions.handling.WebClientError.NotFoundException;
-import fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils;
 import fr.personnel.southsayerbackend.configuration.message.NotFoundMessage;
 import fr.personnel.southsayerbackend.model.simulation.PriceLine;
-import fr.personnel.southsayerbackend.model.simulation.ValueXmlSimulation;
 import fr.personnel.southsayerbackend.model.simulation.rate.ConversionRate;
 import fr.personnel.southsayerbackend.model.simulation.rate.InputRate;
 import fr.personnel.southsayerbackend.service.simulation.core.ExtractFromDatabaseService;
@@ -13,7 +11,6 @@ import fr.personnel.southsayerbackend.service.simulation.core.XmlWriterService;
 import fr.personnel.southsayerbackend.utils.MathUtils;
 import fr.personnel.southsayerdatabase.entity.simulation.ConfigurationStorage;
 import fr.personnel.southsayerdatabase.repository.simulation.ConfigurationStorageRepository;
-import jdk.jfr.Percentage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
@@ -51,30 +48,20 @@ public class SimulationService {
 
 
     public List<PriceLine> getSimulationOffer(String simulationCode, String environment, String databaseEnvSchema) throws IOException {
-        /**
-         * Init
-         */
+
         String path =  STATIC_DIRECTORY_FILES + environment + "/" + databaseEnvSchema + "/" + XML_EXTENSION;
         List<PriceLine> tabPriceElement = null;
-        /**
-         * Removal of unnecessary spaces
-         */
         simulationCode = simulationCode.replace(" ", "");
-        /**
-         * Drain static repository
-         */
         FileUtils.cleanDirectory(new File(path));
 
         try {
             /**
-             * Extract data from DataBase
-             */
-            String clobFromDatabase = this.extractFromDatabaseService.getClobFromDatabase(simulationCode);
-
-            /**
              * Create file XML_CONF.xml from data extracted
              */
-            this.xmlWriterService.generateXML(clobFromDatabase, path, simulationCode);
+            this.xmlWriterService.generateXML(
+                    this.extractFromDatabaseService.getClobFromDatabase(simulationCode),
+                    path,
+                    simulationCode);
 
             /**
              * Create Excel File PRICE_FROM_simulationCode.xls
@@ -93,33 +80,17 @@ public class SimulationService {
     }
 
     public ConversionRate conversionRateByInputRate(InputRate inputRate) {
-        ConversionRate conversionRate = new ConversionRate();
-        double totalRate;
-        double valueRate;
-        double rate;
 
-        List<ValueXmlSimulation> valueXmlSimulations =
-                this.extractFromDatabaseService.findValueInSimulationByXpath(inputRate.getXpathDefinition());
+        double totalRate = this.countAllByConfCategIdLikeConfIdLike(
+                        inputRate.getXpathDefinition().getIdOAP(),
+                        inputRate.getXpathDefinition().getSimulationCode());
 
-        totalRate =
-                valueXmlSimulations.stream()
-                        .filter(x -> x.getIdOAP().equals(inputRate.getXpathDefinition().getIdOAP()))
-                        .map(ValueXmlSimulation::getIdOAP)
-                        .count();
-        ;
-        valueRate =
-                valueXmlSimulations.stream()
-                        .filter(x -> x.getValue().equals(inputRate.getValueSearched()))
-                        .map(ValueXmlSimulation::getIdOAP)
-                        .count();
+        double valueRate = this.extractFromDatabaseService.countSimulationsByValueByXpath(inputRate);
 
-        rate = MathUtils.calculatePercentage(valueRate, totalRate);
-
-        conversionRate.setRating(rate);
-        conversionRate.setValueRate(valueRate);
-        conversionRate.setTotal(totalRate);
-
-        return conversionRate;
+        return new ConversionRate()
+                .withTotal(totalRate)
+                .withValueRate(valueRate)
+                .withRating(MathUtils.calculatePercentage(valueRate, totalRate));
     }
 
     public List<String> getSimCodebyConfCategIdLike(String confCategId) {

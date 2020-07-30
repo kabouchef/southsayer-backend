@@ -1,7 +1,9 @@
 package fr.personnel.southsayerbackend.model.simulation.rate;
 
-import jdk.jfr.Percentage;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.With;
 
 /**
  * @author Farouk KABOUCHE
@@ -9,6 +11,9 @@ import lombok.Data;
  * @version 1.0
  */
 @Data
+@With
+@AllArgsConstructor
+@NoArgsConstructor
 public class ConversionRate {
     private double rating;
     private double valueRate;
