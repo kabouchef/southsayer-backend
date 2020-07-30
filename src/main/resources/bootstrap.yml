@@ -1,7 +1,6 @@
 server:
   servlet:
     context-path: /southsayer
-  port: 8081
 
 jwt:
   secret: tabler

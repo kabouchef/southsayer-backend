@@ -1,7 +1,12 @@
 package fr.personnel.southsayerbackend.service.simulation.core;
 
+import fr.personnel.exceptions.handling.WebClientError.MethodNotAllowedException;
 import fr.personnel.exceptions.handling.WebClientError.NotFoundException;
+import fr.personnel.southsayerbackend.configuration.message.NotFoundMessage;
 import fr.personnel.southsayerbackend.model.simulation.ValueXmlSimulation;
+import fr.personnel.southsayerbackend.model.simulation.XpathDefinition;
+import fr.personnel.southsayerbackend.model.simulation.rate.ConversionRate;
+import fr.personnel.southsayerbackend.model.simulation.rate.InputRate;
 import fr.personnel.southsayerbackend.utils.ClobToStringUtils;
 import fr.personnel.southsayerdatabase.entity.simulation.ConfigurationStorage;
 import fr.personnel.southsayerdatabase.repository.simulation.ConfigurationStorageRepository;
@@ -17,8 +22,10 @@ import java.util.stream.Collectors;
 
 /**
  * @author Farouk KABOUCHE
- * <p>
  * Results Extract Database
+ * @version 1.0
+ * @see TotalPricesService
+ * @see XmlToExcelService
  */
 @Slf4j
 @Service
@@ -28,6 +35,9 @@ public class ExtractFromDatabaseService {
 
     private final ConfigurationStorageRepository configurationStorageRepository;
     private final XmlReaderService xmlReaderService;
+    private final NotFoundMessage notFoundMessage;
+
+    private List<ConfigurationStorage> simulationsList = new ArrayList<>();
 
     /**
      * Get simulation content
@@ -39,8 +49,10 @@ public class ExtractFromDatabaseService {
 
         Optional<ConfigurationStorage> configStorage = this.configurationStorageRepository.findByConfId(simulationCode);
 
-        if (!configStorage.isPresent())
-            throw new NotFoundException("No offer match to the following simulation code: " + simulationCode);
+        if (!configStorage.isPresent()) throw new NotFoundException(this.notFoundMessage.toString(simulationCode));
+
+        if (!configStorage.get().getConfCategId().contains("OAP:0"))
+            throw new MethodNotAllowedException(this.notFoundMessage.toString(simulationCode));
 
         return new ClobToStringUtils().clobToString(configStorage.get().getXmlConf());
     }
@@ -48,76 +60,64 @@ public class ExtractFromDatabaseService {
     /**
      * Find Value which retrieves by xpath in each simulation
      *
-     * @param idOAP        : Id OAP
-     * @param sequenceChar : Characters Sequence searched
+     * @param inputRate : inputRate
      * @return {@link List<ValueXmlSimulation>}
      */
-    public List<ValueXmlSimulation> findSimulationBySequenceChar(String idOAP, String simualtionCode, String sequenceChar) {
+    public List<ValueXmlSimulation> findSimulationBySequenceChar(InputRate inputRate) {
 
-        List<ConfigurationStorage> simulationsList = new ArrayList<>();
-
-        try {
-            simulationsList = this.configurationStorageRepository.findByConfCategIdLikeAndConfIdLike(idOAP, simualtionCode);
-
-            if (simulationsList.isEmpty())
-                throw new NotFoundException("No offer contains the following characters sequence: " + sequenceChar);
-
-        } catch (NotFoundException e) {
-            e.printStackTrace();
-        }
-        return simulationsList.stream()
-                .filter(x ->{
-                    String xmlConf = new ClobToStringUtils().clobToString(x.getXmlConf());
-                    return xmlConf.contains(sequenceChar);
-                })
-                .map(x -> {
-                    ValueXmlSimulation valueXmlSimulation = new ValueXmlSimulation();
-                    String simCode =
-                            this.xmlReaderService
-                                    .readIntoXMLByXpath(
-                                            new ClobToStringUtils().clobToString(x.getXmlConf()),
-                                            "//*[@cpe='CPE.Settings.Session.CodeOffre']/@value");
-                    valueXmlSimulation.setSimulationCode(simCode);
-                    valueXmlSimulation.setIdOAP(x.getConfCategId());
-                    valueXmlSimulation.setValue(sequenceChar);
-                    return valueXmlSimulation;
-                })
-                .collect(Collectors.toList());
+        return this.getSimulationList(inputRate.getXpathDefinition())
+                .stream()
+                .filter(x ->
+                        new ClobToStringUtils().clobToString(x.getXmlConf()).contains(inputRate.getValueSearched()))
+                .map(x -> new ValueXmlSimulation()
+                        .withSimulationCode(this.xmlReaderService
+                        .readIntoXMLByXpath(
+                                new ClobToStringUtils().clobToString(x.getXmlConf()),
+                                inputRate.getXpathDefinition().getXpath()))
+                        .withIdOAP(x.getConfCategId())
+                        .withValue(inputRate.getValueSearched())).collect(Collectors.toList());
     }
 
     /**
      * Find Value which retrieves by xpath in each simulation
      *
-     * @param idOAP : Id OAP
-     * @param xpath : Xpath to get the search value
+     * @param xpathDefinition : xpathDefinition
      * @return {@link List<ValueXmlSimulation>}
      */
-    public List<ValueXmlSimulation> findValueInSimulationByXpath(String idOAP, String simulationCode, String xpath) {
-
-        List<ConfigurationStorage> simulationsList = new ArrayList<>();
-
-        try {
-            simulationsList = this.configurationStorageRepository.findByConfCategIdLikeAndConfIdLike(idOAP, simulationCode);
-
-            if (simulationsList.isEmpty())
-                throw new NotFoundException("No result matches your query with the following xpath : " + xpath);
-
-        } catch (NotFoundException e) {
-            e.printStackTrace();
-        }
-        return simulationsList.stream()
-                .map(x -> {
-                    ValueXmlSimulation valueXmlSimulation = new ValueXmlSimulation();
-
-                    String xmlConf = this.xmlReaderService.readIntoXMLByXpath(
-                            new ClobToStringUtils().clobToString(x.getXmlConf()), xpath);
-
-                    valueXmlSimulation.setSimulationCode(x.getConfId());
-                    valueXmlSimulation.setIdOAP(x.getConfCategId());
-                    valueXmlSimulation.setValue(xmlConf);
-                    return valueXmlSimulation;
-                })
+    public List<ValueXmlSimulation> findValueInSimulationByXpath(XpathDefinition xpathDefinition) {
+        return this.getSimulationList(xpathDefinition)
+                .stream()
+                .map(x -> new ValueXmlSimulation()
+                        .withSimulationCode(x.getConfId())
+                        .withIdOAP(x.getConfCategId())
+                        .withValue(this.xmlReaderService.readIntoXMLByXpath(
+                                new ClobToStringUtils().clobToString(x.getXmlConf()),xpathDefinition.getXpath())))
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Get rate which retrieves value searched by xpath
+     *
+     * @param inputRate : inputRate
+     * @return {@link ConversionRate}
+     */
+    public double countSimulationsByValueByXpath(InputRate inputRate) {
+        return this.getSimulationList(inputRate.getXpathDefinition())
+                .stream()
+                .filter(x -> {
+                    String value = this.xmlReaderService.readIntoXMLByXpath(
+                            new ClobToStringUtils().clobToString(x.getXmlConf()),
+                            inputRate.getXpathDefinition().getXpath());
+                    return value.equals(inputRate.getValueSearched());})
+                .count();
+    }
+
+    private List<ConfigurationStorage> getSimulationList(XpathDefinition xpathDefinition) {
+        return Optional.ofNullable(this.configurationStorageRepository
+                .findByConfCategIdLikeAndConfIdLike(
+                        xpathDefinition.getIdOAP(),
+                        xpathDefinition.getSimulationCode()))
+                .orElseThrow(() -> new NotFoundException(
+                        this.notFoundMessage.toString(xpathDefinition.getIdOAP(),xpathDefinition.getSimulationCode())));
+    }
 }

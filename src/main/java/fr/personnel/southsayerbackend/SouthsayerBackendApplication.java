@@ -6,6 +6,11 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+/**
+ * @author Farouk KABOUCHE
+ * API to manage OAP OracleDB LM
+ * @version 1.0
+ */
 @SpringBootApplication(scanBasePackages = {"fr.personnel.southsayerbackend"})
 @EnableJpaRepositories("fr.personnel.southsayerdatabase.repository")
 @EntityScan("fr.personnel.southsayerdatabase.entity")

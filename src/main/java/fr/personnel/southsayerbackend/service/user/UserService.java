@@ -2,6 +2,7 @@ package fr.personnel.southsayerbackend.service.user;
 
 
 import fr.personnel.exceptions.handling.WebClientError.NotFoundException;
+import fr.personnel.southsayerbackend.configuration.message.NotFoundMessage;
 import fr.personnel.southsayerdatabase.entity.user.User;
 import fr.personnel.southsayerdatabase.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -9,39 +10,41 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author Farouk KABOUCHE
- * <p>
  * User Service
+ * @version 1.0
  */
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
+    private final NotFoundMessage notFoundMessage;
 
     /**
      * Save User
      *
-     * @param user : User
-     * @return {@link User}
+     * @param users : List of Users
+     * @return {@link List<User>}
      */
-    public User save(User user) {
-        return this.userRepository.save(user);
+    public List<User> save(List<User> users) {
+        return users.stream().map(this.userRepository::save).collect(Collectors.toList());
     }
 
     /**
-     * Delete a User
+     * Delete a Users
      *
      * @param ldap : LDAP
      */
     @Transactional
-    public void deleteOne(String ldap) {
-        this.userRepository.deleteUserByIdUser(ldap);
+    public void deleteByIdUser(String ldap) {
+        this.userRepository.deleteByIdUser(ldap);
     }
 
     /**
@@ -53,7 +56,7 @@ public class UserService {
     public User findOne(String ldap) {
         Optional<User> user = this.userRepository.findByIdUser(ldap);
 
-        if (!user.isPresent()) throw new NotFoundException("LDAP : " + ldap + " is not found.");
+        if (!user.isPresent()) throw new NotFoundException(this.notFoundMessage.toString(ldap));
 
         return user.get();
 

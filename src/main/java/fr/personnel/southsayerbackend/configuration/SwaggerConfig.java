@@ -10,8 +10,8 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
  * @author Farouk KABOUCHE
- *
  * Swagger Config
+ * @version 1.0
  */
 @Configuration
 @EnableSwagger2

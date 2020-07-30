@@ -1,27 +1,33 @@
 package fr.personnel.southsayerbackend.model.simulation;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.With;
 
 /**
  * @author Farouk KABOUCHE
- *
  * Price Line
+ * @version 1.0
  */
 @Data
+@With
+@AllArgsConstructor
+@NoArgsConstructor
 public class PriceLine {
     private String identifiant;
-    private String detail_prestation;
+    private String detailPrestation;
     private String quantite;
-    private String tarif_unitaire;
-    private String tarif_prestation;
-    private String type_prestation;
-    private String prestation_de;
-    private String tva_reduite;
-    private String tva_inter;
-    private String tva_normale;
-    private String code_49;
-    private String cod_type_prestation;
-    private String temp_pose;
+    private String tarifUnitaire;
+    private String tarifPrestation;
+    private String typePrestation;
+    private String prestationDe;
+    private String tvaReduite;
+    private String tvaInter;
+    private String tvaNormale;
+    private String code49;
+    private String cod_typePrestation;
+    private String tempPose;
     private String ordre;
     private double totalPriceHT;
     private double totalPriceTVAReduite;

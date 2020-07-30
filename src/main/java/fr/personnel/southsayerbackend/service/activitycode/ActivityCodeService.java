@@ -1,8 +1,9 @@
-package fr.personnel.southsayerbackend.service.activityCode;
+package fr.personnel.southsayerbackend.service.activitycode;
 
 import fr.personnel.exceptions.handling.WebClientError.NotFoundException;
-import fr.personnel.southsayerdatabase.entity.activityCode.ActivityCode;
-import fr.personnel.southsayerdatabase.repository.activityCode.ActivityCodeRepository;
+import fr.personnel.southsayerbackend.configuration.message.NotFoundMessage;
+import fr.personnel.southsayerdatabase.entity.activitycode.ActivityCode;
+import fr.personnel.southsayerdatabase.repository.activitycode.ActivityCodeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -13,8 +14,8 @@ import java.util.stream.Collectors;
 
 /**
  * @author Farouk KABOUCHE
- * <p>
  * Activity Code Service
+ * @version 1.0
  */
 
 @Slf4j
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 public class ActivityCodeService {
 
     private final ActivityCodeRepository activityCodeRepository;
+    final NotFoundMessage notFoundMessage;
 
     /**
      * Get all AC
@@ -42,7 +44,8 @@ public class ActivityCodeService {
     public List<ActivityCode> getByCodActivite(String codActivite) {
         Optional<List<ActivityCode>> activityCodes = this.activityCodeRepository.findByCodActivite(codActivite);
 
-        if (!activityCodes.isPresent()) throw new NotFoundException("\"" + codActivite + "\" was not found.");
+        if (!activityCodes.isPresent()) throw new NotFoundException(this.notFoundMessage.toString(codActivite));
+
         return activityCodes.get();
     }
 
@@ -55,7 +58,7 @@ public class ActivityCodeService {
     public List<ActivityCode> getByLib1(String lib1) {
         Optional<List<ActivityCode>> activityCodes = this.activityCodeRepository.findByLib1Like(lib1);
 
-        if (!activityCodes.isPresent()) throw new NotFoundException("\"" + lib1 + "\" was not found.");
+        if (!activityCodes.isPresent()) throw new NotFoundException(this.notFoundMessage.toString(lib1));
         return activityCodes.get();
     }
 
@@ -68,7 +71,7 @@ public class ActivityCodeService {
     public List<ActivityCode> getByIdRayon(Long idRayon) {
         Optional<List<ActivityCode>> activityCodes = this.activityCodeRepository.findByIdRayon(idRayon);
 
-        if (!activityCodes.isPresent()) throw new NotFoundException("\"" + idRayon + "\" was not found.");
+        if (!activityCodes.isPresent()) throw new NotFoundException(this.notFoundMessage.toLong(idRayon));
         return activityCodes.get();
     }
 
@@ -81,7 +84,20 @@ public class ActivityCodeService {
     public List<ActivityCode> getByRayon(String rayon) {
         Optional<List<ActivityCode>> activityCodes = this.activityCodeRepository.findByRayon(rayon);
 
-        if (!activityCodes.isPresent()) throw new NotFoundException("\"" + rayon + "\" was not found.");
+        if (!activityCodes.isPresent()) throw new NotFoundException(this.notFoundMessage.toString(rayon));
+        return activityCodes.get();
+    }
+
+    /**
+     * Get all AC by rayon
+     *
+     * @param idOAP : idOAP
+     * @return {@link List<ActivityCode>}
+     */
+    public List<ActivityCode> getByIdOAP(String idOAP) {
+        Optional<List<ActivityCode>> activityCodes = this.activityCodeRepository.findByIdOap(idOAP);
+
+        if (!activityCodes.isPresent()) throw new NotFoundException(this.notFoundMessage.toString(idOAP));
         return activityCodes.get();
     }
 
@@ -105,6 +121,5 @@ public class ActivityCodeService {
     public void deleteByCodActivite(List<String> listCodActivite) {
         listCodActivite.forEach(this.activityCodeRepository::deleteByCodActivite);
     }
-
 
 }

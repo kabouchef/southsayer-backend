@@ -1,8 +1,10 @@
 package fr.personnel.southsayerbackend.service.simulation.core;
 
 import fr.personnel.southsayerbackend.model.simulation.PriceLine;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.With;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -13,13 +15,15 @@ import static fr.personnel.southsayerbackend.utils.MathUtils.multiplyDouble;
 
 /**
  * @author Farouk KABOUCHE
- * <p>
  * Total Prices Service
+ * @version 1.0
  */
 @Slf4j
 @Service
 @Data
+@With
 @NoArgsConstructor
+@AllArgsConstructor
 public class TotalPricesService {
     double totalPriceHT = 0;
     double totalPriceTVAReduce = 0;
@@ -31,17 +35,17 @@ public class TotalPricesService {
     public void getTotalPrice(List<PriceLine> tarifPrestation) {
         totalPriceHT =
                 tarifPrestation.stream()
-                .map(x -> Double.parseDouble(x.getTarif_prestation()))
-                .reduce(0.0d, (x, y) -> x + y);
+                .map(x -> Double.parseDouble(x.getTarifPrestation()))
+                .reduce(0.0d, Double::sum);
 
         tvaReduceForbidden =
                 tarifPrestation.stream()
-                        .map(x -> Double.parseDouble(x.getTva_reduite()))
+                        .map(x -> Double.parseDouble(x.getTvaReduite()))
                         .filter(x -> x < 1).count();
 
         tvaInterForbidden =
                 tarifPrestation.stream()
-                        .map(x -> Double.parseDouble(x.getTva_inter()))
+                        .map(x -> Double.parseDouble(x.getTvaInter()))
                         .filter(x -> x < 1).count();
 
         if (tvaReduceForbidden == 0)

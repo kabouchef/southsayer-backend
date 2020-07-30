@@ -1,4 +1,4 @@
-package fr.personnel.southsayerbackend.model.simulation;
+package fr.personnel.southsayerbackend.model.simulation.rate;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,15 +7,15 @@ import lombok.With;
 
 /**
  * @author Farouk KABOUCHE
- * Xpath definition
+ * Conversion Rate
  * @version 1.0
  */
 @Data
 @With
 @AllArgsConstructor
 @NoArgsConstructor
-public class XpathDefinition {
-    private String idOAP;
-    private String simulationCode;
-    private String xpath;
+public class ConversionRate {
+    private double rating;
+    private double valueRate;
+    private double total;
 }
