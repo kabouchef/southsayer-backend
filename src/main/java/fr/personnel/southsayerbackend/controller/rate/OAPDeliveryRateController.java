@@ -2,10 +2,9 @@ package fr.personnel.southsayerbackend.controller.rate;
 
 import fr.personnel.southsayerbackend.service.rate.OAPDeliveryRateService;
 import fr.personnel.southsayerdatabase.entity.rate.OAPDeliveryRateDetails;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -23,7 +22,6 @@ import static fr.personnel.southsayerbackend.configuration.constant.RestConstant
  * @see OAPDeliveryRateService
  */
 @Slf4j
-@Api("API to manage OAP delivery rate lines")
 @RestController
 @RequestMapping(DELIVERY_RATE_PATH)
 @Data
@@ -37,7 +35,7 @@ public class OAPDeliveryRateController {
      *
      * @return {@link List<OAPDeliveryRateDetails>}
      */
-    @ApiOperation(value = "Get all OAP DR")
+    @Operation(summary = "API to manage OAP delivery rate lines", description = "Get all OAP DR")
     @CrossOrigin
     @GetMapping
     public Iterable<OAPDeliveryRateDetails> getAllDR() {
@@ -50,7 +48,7 @@ public class OAPDeliveryRateController {
      * @param id : id
      * @return {@link List<OAPDeliveryRateDetails>}
      */
-    @ApiOperation(value = "Get OAP DR by id")
+    @Operation(summary = "API to manage OAP delivery rate lines", description = "Get OAP DR by id")
     @CrossOrigin
     @GetMapping("/byId")
     public List<OAPDeliveryRateDetails> getDRById(@RequestParam final String id) {
@@ -64,10 +62,12 @@ public class OAPDeliveryRateController {
      * @param libelleId : libelle id
      * @return {@link List<OAPDeliveryRateDetails>}
      */
-    @ApiOperation(value = "Get OAP DR by wording")
+    @Operation(summary = "API to manage OAP delivery rate lines", description = "Get OAP DR by wording")
     @CrossOrigin
     @GetMapping("/byLibelleId")
-    public List<OAPDeliveryRateDetails> getDRByLibelleId(@RequestParam final String id, @RequestParam final String libelleId) {
+    public List<OAPDeliveryRateDetails> getDRByLibelleId(
+            @RequestParam final String id,
+            @RequestParam final String libelleId) {
         return this.oapDeliveryRateService.getByLibelleId(id, libelleId);
     }
 
@@ -78,10 +78,12 @@ public class OAPDeliveryRateController {
      * @param designation : designation of delivery detail
      * @return {@link List<OAPDeliveryRateDetails>}
      */
-    @ApiOperation(value = "Get OAP DR by designation detail")
+    @Operation(summary = "API to manage OAP delivery rate lines", description = "Get OAP DR by designation detail")
     @CrossOrigin
     @GetMapping("/byDesignation")
-    public List<OAPDeliveryRateDetails> getDRByDesignation(@RequestParam final String id, @RequestParam final String designation) {
+    public List<OAPDeliveryRateDetails> getDRByDesignation(
+            @RequestParam final String id,
+            @RequestParam final String designation) {
         return this.oapDeliveryRateService.getByDesignation(id, designation);
     }
 
@@ -91,8 +93,11 @@ public class OAPDeliveryRateController {
      * @param oapDeliveryRateDetails : OAP DR
      * @return {@link List<OAPDeliveryRateDetails>}
      */
-    @ApiOperation(value = "Add a OAP DR")
-    @ApiResponses(value = {@ApiResponse(code = 201, message = "Created"), @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 500, message = "Technical error happened")})
+    @Operation(summary = "API to manage OAP delivery rate lines", description = "Add OAP DR")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Created"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "500", description = "Technical error happened")})
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public List<OAPDeliveryRateDetails> addDR(@RequestBody final List<OAPDeliveryRateDetails> oapDeliveryRateDetails) {
@@ -104,8 +109,10 @@ public class OAPDeliveryRateController {
      *
      * @param listIdentifiant : list identifiant
      */
-    @ApiOperation(value = "Delete")
-    @ApiResponses(value = {@ApiResponse(code = 204, message = "Deleted")})
+    @Operation(summary = "API to manage OAP delivery rate lines", description = "Delete OAP DR")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Deleted"),
+            @ApiResponse(responseCode = "500", description = "Technical error happened")})
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteAll(@RequestParam final List<String> listIdentifiant) {

@@ -1,8 +1,8 @@
 package fr.personnel.southsayerbackend.service.activitycode;
 
-import com.google.common.collect.Lists;
 import fr.personnel.southsayerdatabase.entity.activitycode.ActivityCode;
 import fr.personnel.southsayerdatabase.repository.activitycode.ActivityCodeRepository;
+import org.assertj.core.util.Lists;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;

@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.With;
-import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * @author Farouk KABOUCHE
@@ -18,5 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @NoArgsConstructor
 public class InputRate {
     private XpathDefinition xpathDefinition;
+    private String period;
     private String valueSearched;
+    private String valueDescription;
 }

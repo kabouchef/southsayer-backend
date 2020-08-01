@@ -1,8 +1,8 @@
 package fr.personnel.southsayerbackend.service.rate;
 
-import com.google.common.collect.Lists;
 import fr.personnel.southsayerdatabase.entity.rate.OAPDeliveryRateDetails;
 import fr.personnel.southsayerdatabase.repository.rate.OAPDeliveryRateDetailsRepository;
+import org.assertj.core.util.Lists;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;

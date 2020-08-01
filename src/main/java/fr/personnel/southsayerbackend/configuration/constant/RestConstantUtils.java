@@ -30,6 +30,8 @@ public final class RestConstantUtils {
     public static final String STATIC_DIRECTORY_IMAGES = "src/main/resources/static/images/";
     public static final String XML_EXTENSION = "xml";
     public static final String XLS_EXTENSION = "xls";
+    public static final String STATIC_DIRECTORY_SIMULATION = "simulation";
+    public static final String STATIC_DIRECTORY_CONVERSION_RATE = "conversion_rate";
 
 }
 
