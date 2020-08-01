@@ -2,10 +2,9 @@ package fr.personnel.southsayerbackend.controller.activitycode;
 
 import fr.personnel.southsayerbackend.service.activitycode.ActivityCodeService;
 import fr.personnel.southsayerdatabase.entity.activitycode.ActivityCode;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -23,7 +22,6 @@ import static fr.personnel.southsayerbackend.configuration.constant.RestConstant
  * @see ActivityCodeService
  */
 @Slf4j
-@Api("API to manage OAP Activity Codes")
 @RestController
 @RequestMapping(ACTIVITY_CODE_PATH)
 @RequiredArgsConstructor
@@ -37,7 +35,7 @@ public class ActivityCodeController {
      *
      * @return {@link Iterable<ActivityCode>}
      */
-    @ApiOperation(value = "Get all OAP AC")
+    @Operation(summary = "API to manage OAP Activity Codes", description = "Get all OAP AC")
     @CrossOrigin
     @GetMapping
     public Iterable<ActivityCode> getAllActivityCode() {
@@ -50,7 +48,7 @@ public class ActivityCodeController {
      * @param codActivite : codActivite
      * @return {@link List<ActivityCode>}
      */
-    @ApiOperation(value = "Get OAP AC by code activite")
+    @Operation(summary = "API to manage OAP Activity Codes", description = "Get OAP AC by code activite")
     @CrossOrigin
     @GetMapping("/byCodActivite")
     public List<ActivityCode> getByCodActivite(@RequestParam final String codActivite) {
@@ -63,7 +61,7 @@ public class ActivityCodeController {
      * @param lib1 : lib1
      * @return {@link List<ActivityCode>}
      */
-    @ApiOperation(value = "Get OAP AC by Lib1")
+    @Operation(summary = "API to manage OAP Activity Codes", description = "Get OAP AC by Lib1")
     @CrossOrigin
     @GetMapping("/byLib1")
     public List<ActivityCode> getByLib1(@RequestParam final String lib1) {
@@ -76,7 +74,7 @@ public class ActivityCodeController {
      * @param idRayon : idRayon
      * @return {@link List<ActivityCode>}
      */
-    @ApiOperation(value = "Get OAP AC by IdRayon")
+    @Operation(summary = "API to manage OAP Activity Codes", description = "Get OAP AC by IdRayon")
     @CrossOrigin
     @GetMapping("/byIdRayon")
     public List<ActivityCode> getByIdRayon(@RequestParam final Long idRayon) {
@@ -89,7 +87,7 @@ public class ActivityCodeController {
      * @param rayon : rayon
      * @return {@link List<ActivityCode>}
      */
-    @ApiOperation(value = "Get OAP AC by rayon")
+    @Operation(summary = "API to manage OAP Activity Codes", description = "Get OAP AC by rayon")
     @CrossOrigin
     @GetMapping("/byRayon")
     public List<ActivityCode> getByRayon(@RequestParam final String rayon) {
@@ -102,8 +100,11 @@ public class ActivityCodeController {
      * @param activityCodes : OAP AC
      * @return {@link List<ActivityCode>}
      */
-    @ApiOperation(value = "Add OAP AC")
-    @ApiResponses(value = {@ApiResponse(code = 201, message = "Created"), @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 500, message = "Technical error happened")})
+    @Operation(summary = "API to manage OAP Activity Codes", description = "Add OAP AC")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Created"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "500", description = "Technical error happened")})
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public List<ActivityCode> addActivityCode(@RequestBody final List<ActivityCode> activityCodes) {
@@ -113,13 +114,15 @@ public class ActivityCodeController {
     /**
      * Delete AC
      *
-     * @param listCodActivite : list CodActivite
+     * @param listCodActivity : list CodActivity
      */
-    @ApiOperation(value = "Delete OAP AC")
-    @ApiResponses(value = {@ApiResponse(code = 204, message = "Deleted")})
+    @Operation(summary = "API to manage OAP Activity Codes", description = "Delete OAP AC")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Deleted"),
+            @ApiResponse(responseCode = "500", description = "Technical error happened")})
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteActivityCode(@RequestParam final List<String> listCodActivite) {
-        this.activityCodeService.deleteByCodActivite(listCodActivite);
+    public void deleteActivityCode(@RequestParam final List<String> listCodActivity) {
+        this.activityCodeService.deleteByCodActivite(listCodActivity);
     }
 }

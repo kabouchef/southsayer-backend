@@ -1,12 +1,10 @@
 package fr.personnel.southsayerbackend.controller.rate;
 
-import fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils;
 import fr.personnel.southsayerbackend.service.rate.OAPTypeRateService;
 import fr.personnel.southsayerdatabase.entity.rate.OAPDeliveryType;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -24,7 +22,6 @@ import static fr.personnel.southsayerbackend.configuration.constant.RestConstant
  * @see OAPTypeRateService
  */
 @Slf4j
-@Api("API to manage OAP delivery type")
 @RestController
 @RequestMapping(TYPE_RATE_PATH)
 @RequiredArgsConstructor
@@ -38,7 +35,7 @@ public class OAPTypeRateController {
      *
      * @return {@link Iterable<OAPDeliveryType>}
      */
-    @ApiOperation(value = "Get all OAP DT")
+    @Operation(summary = "API to manage OAP delivery type", description = "Get all OAP DT")
     @CrossOrigin
     @GetMapping
     public Iterable<OAPDeliveryType> getAllDT() {
@@ -51,7 +48,7 @@ public class OAPTypeRateController {
      * @param codTypePrestation : Code Type Prestation
      * @return {@link List<OAPDeliveryType>}
      */
-    @ApiOperation(value = "Get all OAP DT by Code type prestation")
+    @Operation(summary = "API to manage OAP delivery type", description = "Get all OAP DT by Code type prestation")
     @CrossOrigin
     @GetMapping("/byCodTypePrestation")
     public List<OAPDeliveryType> getDTByCodTypePrestation(
@@ -65,7 +62,7 @@ public class OAPTypeRateController {
      * @param wording : wording
      * @return {@link List<OAPDeliveryType>}
      */
-    @ApiOperation(value = "Get all OAP DT by Libelle Type Prestation")
+    @Operation(summary = "API to manage OAP delivery type", description = "Get all OAP DT by Libelle Type Prestation")
     @CrossOrigin
     @GetMapping("/byWording")
     public List<OAPDeliveryType> getDTByWording(
@@ -79,7 +76,7 @@ public class OAPTypeRateController {
      * @param idOAP : Code Type Prestation
      * @return {@link List<OAPDeliveryType>}
      */
-    @ApiOperation(value = "Get all by idOAP")
+    @Operation(summary = "API to manage OAP delivery type", description = "Get all by idOAP")
     @CrossOrigin
     @GetMapping("/byIdOAP")
     public List<OAPDeliveryType> getDTByIdOAP(
@@ -93,11 +90,11 @@ public class OAPTypeRateController {
      * @param oapDeliveryType : Delivery Type to add
      * @return {@link List<OAPDeliveryType>}
      */
-    @ApiOperation(value = "Add OAP DT")
+    @Operation(summary = "API to manage OAP delivery type", description = "Add OAP DT")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Added"),
-            @ApiResponse(code = 401, message = "Unauthorized"),
-            @ApiResponse(code = 500, message = "Technical error happened")})
+            @ApiResponse(responseCode = "201", description = "Added"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "500", description = "Technical error happened")})
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public List<OAPDeliveryType> addDT(
@@ -110,9 +107,10 @@ public class OAPTypeRateController {
      *
      * @param codTypePrestation : Code Type Prestation
      */
-    @ApiOperation(value = "Delete OAP DT")
+    @Operation(summary = "API to manage OAP delivery type", description = "Delete OAP DT")
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Deleted")})
+            @ApiResponse(responseCode = "204", description = "Deleted"),
+            @ApiResponse(responseCode = "500", description = "Technical error happened")})
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteDT(@RequestParam final List<String> codTypePrestation) {
