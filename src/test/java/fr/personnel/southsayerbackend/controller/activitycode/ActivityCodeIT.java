@@ -1,8 +1,8 @@
 package fr.personnel.southsayerbackend.controller.activitycode;
 
-import com.google.common.collect.Lists;
 import fr.personnel.southsayerbackend.service.activitycode.ActivityCodeService;
 import fr.personnel.southsayerdatabase.entity.activitycode.ActivityCode;
+import org.assertj.core.util.Lists;
 import org.junit.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;

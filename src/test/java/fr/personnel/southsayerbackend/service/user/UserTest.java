@@ -1,8 +1,8 @@
 package fr.personnel.southsayerbackend.service.user;
 
-import com.google.common.collect.Lists;
 import fr.personnel.southsayerdatabase.entity.user.User;
 import fr.personnel.southsayerdatabase.repository.user.UserRepository;
+import org.assertj.core.util.Lists;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
@@ -11,7 +11,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -111,7 +110,9 @@ public class UserTest {
     }
 
     private List<User> createListUsers() {
-        return Lists.newArrayList(createUser("10001000"), createUser("10001001"));
+        return Lists.newArrayList(
+                createUser("10001000"),
+                createUser("10001001"));
     }
 
 
