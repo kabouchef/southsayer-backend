@@ -6,7 +6,7 @@ import fr.personnel.southsayerbackend.model.simulation.PriceLine;
 import fr.personnel.southsayerbackend.model.simulation.rate.ConversionRate;
 import fr.personnel.southsayerbackend.model.simulation.rate.InputRate;
 import fr.personnel.southsayerbackend.service.simulation.core.ExtractFromDatabaseService;
-import fr.personnel.southsayerbackend.service.simulation.core.XmlToExcelService;
+import fr.personnel.southsayerbackend.service.simulation.core.ExcelConverterService;
 import fr.personnel.southsayerbackend.service.simulation.core.XmlWriterService;
 import fr.personnel.southsayerbackend.utils.MathUtils;
 import fr.personnel.southsayerdatabase.entity.simulation.ConfigurationStorage;
@@ -24,8 +24,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils.STATIC_DIRECTORY_FILES;
-import static fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils.XML_EXTENSION;
+import static fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils.*;
 
 /**
  * @author Farouk KABOUCHE
@@ -41,15 +40,19 @@ public class SimulationService {
 
     private final ExtractFromDatabaseService extractFromDatabaseService;
     private final XmlWriterService xmlWriterService;
-    private final XmlToExcelService xmlToExcelService;
+    private final ExcelConverterService excelConverterService;
 
     private final ConfigurationStorageRepository configurationStorageRepository;
     private final NotFoundMessage notFoundMessage;
 
 
-    public List<PriceLine> getSimulationOffer(String simulationCode, String environment, String databaseEnvSchema) throws IOException {
+    public List<PriceLine> getSimulationOffer(String simulationCode, String environment, String databaseEnvSchema)
+            throws IOException {
 
-        String path =  STATIC_DIRECTORY_FILES + environment + "/" + databaseEnvSchema + "/" + XML_EXTENSION;
+        String path =
+                STATIC_DIRECTORY_FILES + environment + "/" + databaseEnvSchema +
+                        "/" + XML_EXTENSION + "/" + STATIC_DIRECTORY_SIMULATION;
+
         List<PriceLine> tabPriceElement = null;
         simulationCode = simulationCode.replace(" ", "");
         FileUtils.cleanDirectory(new File(path));
@@ -67,7 +70,7 @@ public class SimulationService {
              * Create Excel File PRICE_FROM_simulationCode.xls
              * File which present price lines of the simulation
              */
-            tabPriceElement = this.xmlToExcelService.generateExcel(simulationCode, environment, databaseEnvSchema);
+            tabPriceElement = this.excelConverterService.generatePriceLinesExcel(simulationCode, environment, databaseEnvSchema);
 
         } catch (IOException | ParserConfigurationException | SAXException e) {
             e.printStackTrace();
@@ -79,7 +82,8 @@ public class SimulationService {
         return this.configurationStorageRepository.countByConfCategIdLikeAndConfIdLike(confCategId, confId);
     }
 
-    public ConversionRate conversionRateByInputRate(InputRate inputRate) {
+    public ConversionRate conversionRateByInputRate(InputRate inputRate, String environment, String databaseEnvSchema)
+            throws IOException{
 
         double totalRate = this.countAllByConfCategIdLikeConfIdLike(
                         inputRate.getXpathDefinition().getIdOAP(),
@@ -87,10 +91,16 @@ public class SimulationService {
 
         double valueRate = this.extractFromDatabaseService.countSimulationsByValueByXpath(inputRate);
 
+        double rate = MathUtils.calculatePercentage(valueRate, totalRate);
+
+
+        this.excelConverterService
+                .generateConversionRateExcel(totalRate, valueRate, rate, inputRate, environment, databaseEnvSchema);
+
         return new ConversionRate()
                 .withTotal(totalRate)
                 .withValueRate(valueRate)
-                .withRating(MathUtils.calculatePercentage(valueRate, totalRate));
+                .withRating(rate);
     }
 
     public List<String> getSimCodebyConfCategIdLike(String confCategId) {

@@ -192,4 +192,23 @@ public class StyleOfCellsService {
         style.setDataFormat(df.getFormat(StyleCellConstant.FORMAT_EURO));
         return style;
     }
+
+    public HSSFCellStyle getCustomConversionRate(HSSFWorkbook wb){
+        HSSFCellStyle style = wb.createCellStyle();
+        DataFormat df = wb.createDataFormat();
+        HSSFPalette palette = wb.getCustomPalette();
+        HSSFColor myColor = palette.findSimilarColor(124, 178, 32);
+        short palIndex = myColor.getIndex();
+        HSSFFont font = wb.createFont();
+        font.setColor(palIndex);
+        font.setFontName(StyleCellConstant.LEROY_MERLIN_SANS_BOLD);
+        font.setFontHeightInPoints((short) 12);
+        style.setFont(font);
+        style.setBorderRight(BorderStyle.MEDIUM);
+        style.setBorderTop(BorderStyle.MEDIUM);
+        style.setBorderLeft(BorderStyle.MEDIUM);
+        style.setBorderBottom(BorderStyle.MEDIUM);
+        style.setDataFormat(df.getFormat(StyleCellConstant.FORMAT_PERCENTAGE_2));
+        return style;
+    }
 }

@@ -1,8 +1,10 @@
 package fr.personnel.southsayerbackend.service.simulation.core;
 
-
 import fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils;
 import fr.personnel.southsayerbackend.model.simulation.PriceLine;
+import fr.personnel.southsayerbackend.model.simulation.WorkbookDTO;
+import fr.personnel.southsayerbackend.model.simulation.rate.InputRate;
+import fr.personnel.southsayerbackend.utils.MathUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
@@ -22,7 +24,9 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils.*;
@@ -35,37 +39,31 @@ import static fr.personnel.southsayerbackend.configuration.constant.RestConstant
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class XmlToExcelService {
+public class ExcelConverterService {
 
     private final StyleOfCellsService styleOfCellsService;
 
-    public List<PriceLine> generateExcel(String simulationCode, String environment, String databaseEnvSchema)
+    public List<PriceLine> generatePriceLinesExcel(String simulationCode, String environment, String databaseEnvSchema)
             throws ParserConfigurationException, IOException, SAXException {
-        /**
-         * Drain static repository
-         */
-        String path = RestConstantUtils.STATIC_DIRECTORY_FILES + environment + "/" + databaseEnvSchema + "/";
 
-        FileUtils.cleanDirectory(new File(path + XLS_EXTENSION));
-
-        String nameDefaultFile = path + XML_EXTENSION + "/" + simulationCode + "." + XML_EXTENSION;
-
-        String priceLines = null;
+        String path =
+                RestConstantUtils.STATIC_DIRECTORY_FILES + environment + "/" + databaseEnvSchema + "/" ;
+        String nameDefaultFile =
+                path + XML_EXTENSION + "/" + STATIC_DIRECTORY_SIMULATION + "/" + simulationCode + "." + XML_EXTENSION;
+        String fileTitle = "PRICE_FROM_" + simulationCode;
+        String priceLines;
         List<PriceLine> priceLineList = new ArrayList<PriceLine>();
-
-        String[] priceElement = new String[0];
-
+        String[] priceElement;
         FileOutputStream fos = null;
 
-        try {// Creating a Workbook
-            HSSFWorkbook wb = new HSSFWorkbook();
-            HSSFSheet spreadSheet = wb.createSheet(simulationCode);
+        // Drain static repository
+        FileUtils.cleanDirectory(new File(path + XLS_EXTENSION + "/" + STATIC_DIRECTORY_SIMULATION));
 
-            for (int i = 0; i < 14; i++) {
-                if (i == 0) spreadSheet.setColumnWidth(i, 500 * 25);
-                else if (i == 2 || i == 3) spreadSheet.setColumnWidth(i, 156 * 25);
-                else spreadSheet.setColumnWidth(i, 256 * 25);
-            }
+        try {
+            //Init Worbook
+            WorkbookDTO workbookDTO =
+                    this.workbookInit(simulationCode, fileTitle);
+
             // Parsing XML Document
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
@@ -74,70 +72,42 @@ public class XmlToExcelService {
             /**
              * Definition of Cells Style
              */
-
             // Style of Title Cell
-            HSSFCellStyle styleTitle = this.styleOfCellsService.getCustomStyleTitle(wb, spreadSheet);
-
-            // Style of Title Cell
-            HSSFCellStyle styleHead = this.styleOfCellsService.getCustomStyleHead(wb);
+            HSSFCellStyle styleHead =
+                    this.styleOfCellsService.getCustomStyleHead(workbookDTO.getHssfWorkbook());
 
             // Style of Global Content Cells
-            HSSFCellStyle styleGlobalContent = this.styleOfCellsService.getCustomGlobalContent(wb);
+            HSSFCellStyle styleGlobalContent =
+                    this.styleOfCellsService.getCustomGlobalContent(workbookDTO.getHssfWorkbook());
 
             // Style of Price Content Cells
-            HSSFCellStyle stylePriceContent = this.styleOfCellsService.getCustomPriceContent(wb);
+            HSSFCellStyle stylePriceContent =
+                    this.styleOfCellsService.getCustomPriceContent(workbookDTO.getHssfWorkbook());
 
             // Style of Quantifier Content Cells
-            HSSFCellStyle styleQuantifyContent = this.styleOfCellsService.getCustomQuantifyContent(wb);
+            HSSFCellStyle styleQuantifyContent =
+                    this.styleOfCellsService.getCustomQuantifyContent(workbookDTO.getHssfWorkbook());
 
             // Style of Head Total Price Effected Cells
-            HSSFCellStyle styleHeadTotalPriceEffected = this.styleOfCellsService.getCustomHeadTotalPriceEffected(wb);
+            HSSFCellStyle styleHeadTotalPriceEffected =
+                    this.styleOfCellsService.getCustomHeadTotalPriceEffected(workbookDTO.getHssfWorkbook());
 
             // Style of Total Price Effected Cells
-            HSSFCellStyle styleTotalPriceEffected = this.styleOfCellsService.getCustomTotalPriceEffected(wb);
+            HSSFCellStyle styleTotalPriceEffected =
+                    this.styleOfCellsService.getCustomTotalPriceEffected(workbookDTO.getHssfWorkbook());
 
             // Style of Head Total Price Cells
-            HSSFCellStyle styleHeadTotalPrice = this.styleOfCellsService.getCustomHeadTotalPrice(wb);
+            HSSFCellStyle styleHeadTotalPrice =
+                    this.styleOfCellsService.getCustomHeadTotalPrice(workbookDTO.getHssfWorkbook());
 
             // Style of Total Price Cells
-            HSSFCellStyle styleTotalPrice = this.styleOfCellsService.getCustomTotalPrice(wb);
+            HSSFCellStyle styleTotalPrice =
+                    this.styleOfCellsService.getCustomTotalPrice(workbookDTO.getHssfWorkbook());
 
-            /**
-             * Création of Title and Head Rows
-             */
-            // Creating Row of Title
-            HSSFRow row0 = spreadSheet.createRow(0);
-            HSSFCell cell = row0.createCell(0);
-            row0.setHeight((short) 1400);
-            cell.setCellValue("LEROY MERLIN - OAP - PRICE_FROM_" + simulationCode);
-            cell.setCellStyle(styleTitle);
-
-            //Ajout du logo LM
-            HSSFCell cellPicture = row0.createCell(1);
-            // Lire l'image à l'aide d'un stream
-            InputStream inputStream = new FileInputStream(STATIC_DIRECTORY_IMAGES + "1200px-Leroy_Merlin.svg.jpeg");
-            byte[] bytes = IOUtils.toByteArray(inputStream);
-            //Ajouter l'image au classeur
-            int pictureIdx = wb.addPicture(bytes, Workbook.PICTURE_TYPE_JPEG);
-            //fermer le stream
-            inputStream.close();
-
-            //Gérer l'aspect affichage de l'image
-            CreationHelper helper = wb.getCreationHelper();
-            Drawing drawing = spreadSheet.createDrawingPatriarch();
-            ClientAnchor anchor = helper.createClientAnchor();
-            anchor.setCol1(4);
-            anchor.setRow1(0);
-
-            Picture pict = drawing.createPicture(anchor, pictureIdx);
-            pict.getPreferredSize();
-
-            // créer une ligne de à l'index 2 dans la feuille Excel
-            Row myRow = null;
-            myRow = spreadSheet.createRow(2);
 
             //Entete
-            HSSFRow row = spreadSheet.createRow(2);
+            HSSFRow row = workbookDTO.getHssfSheet().createRow(2);
+            HSSFCell cell = workbookDTO.getHssfCell();
             String[] head = {"IDENTIFIANT", "DETAIL_PRESTATION", "QUANTITE", "TARIF_UNITAIRE", "TARIF_PRESTATION", "TYPE_PRESTATION", "PRESTATION_DE", "TVA_REDUITE", "TVA_INTER", "TVA_NORMALE", "CODE_49", "COD_TYPE_PRESTATION", "TEMP_POSE", "ORDRE"};
 
             // Creating Row of Head
@@ -162,7 +132,7 @@ public class XmlToExcelService {
                  */
                 String cible = "//*[@name='fpPriceHtChiffragePrecisSurrogate']//Value[" + i + "]/longTextValue";
 
-                HSSFRow row1 = spreadSheet.createRow(i + 2);
+                HSSFRow row1 = workbookDTO.getHssfSheet().createRow(i + 2);
                 priceLines = xPath.compile(cible).evaluate(xmlDocument, XPathConstants.STRING).toString();
                 priceElement = priceLines.split("#");
 
@@ -210,7 +180,7 @@ public class XmlToExcelService {
             priceLineList.forEach(x -> x.setTotalPriceTVANormale(totalPricesService.getTotalPriceTVANormal()));
 
 
-            Sheet sheet = wb.getSheetAt(0);
+            Sheet sheet = workbookDTO.getHssfWorkbook().getSheetAt(0);
 
             boolean tvaReduceAllowed = true;
             boolean tvaInterAllowed = true;
@@ -234,7 +204,7 @@ public class XmlToExcelService {
              * Calcul of HT Price
              */
             int index = nbPriceLines + 5;
-            HSSFRow rowTotalHT = spreadSheet.createRow(index);
+            HSSFRow rowTotalHT = workbookDTO.getHssfSheet().createRow(index);
             cell = rowTotalHT.createCell(3);
             cell.setCellValue("Prix HT");
             cell.setCellStyle(styleHeadTotalPrice);
@@ -247,7 +217,7 @@ public class XmlToExcelService {
              * Calcul of TVA 5.5% Price
              */
             index++;
-            HSSFRow rowTotalReduite = spreadSheet.createRow(index);
+            HSSFRow rowTotalReduite = workbookDTO.getHssfSheet().createRow(index);
             cell = rowTotalReduite.createCell(3);
             cell.setCellValue("Prix TVA 5.5%");
             if (!tvaReduceAllowed) cell.setCellStyle(styleHeadTotalPrice);
@@ -263,7 +233,7 @@ public class XmlToExcelService {
              * Calcul of TVA 10% Price
              */
             index++;
-            HSSFRow rowTotalInter = spreadSheet.createRow(index);
+            HSSFRow rowTotalInter = workbookDTO.getHssfSheet().createRow(index);
             cell = rowTotalInter.createCell(3);
             cell.setCellValue("Prix TVA 10%");
             if (!tvaReduceAllowed) cell.setCellStyle(styleHeadTotalPriceEffected);
@@ -277,7 +247,7 @@ public class XmlToExcelService {
              * Calcul of TVA 20% Price
              */
             index++;
-            HSSFRow rowTotalNormale = spreadSheet.createRow(index);
+            HSSFRow rowTotalNormale = workbookDTO.getHssfSheet().createRow(index);
             cell = rowTotalNormale.createCell(3);
             cell.setCellValue("Prix TVA 20%");
             if (!tvaReduceAllowed && !tvaInterAllowed) cell.setCellStyle(styleHeadTotalPriceEffected);
@@ -288,15 +258,15 @@ public class XmlToExcelService {
             if (tvaReduceAllowed || tvaInterAllowed) cell.setCellStyle(styleTotalPrice);
 
             //Hidding column not useful to display
-            for (int i = 5; i < 20; i++) spreadSheet.setColumnHidden(i, true);
+            for (int i = 5; i < 20; i++) workbookDTO.getHssfSheet().setColumnHidden(i, true);
 
 
             /**
              * Outputting to Excel spreadsheet
              */
-            fos = new FileOutputStream(new File(path + XLS_EXTENSION +
+            fos = new FileOutputStream(new File(path + XLS_EXTENSION + "/" + STATIC_DIRECTORY_SIMULATION +
                     "/PRICE_FROM_" + simulationCode + "." + XLS_EXTENSION));
-            wb.write(fos);
+            workbookDTO.getHssfWorkbook().write(fos);
 
         }catch (XPathExpressionException e) {
             e.printStackTrace();
@@ -304,7 +274,7 @@ public class XmlToExcelService {
             fos.flush();
             fos.close();
             log.info("*******************************");
-            File file = new File(path + XLS_EXTENSION +
+            File file = new File(path + XLS_EXTENSION + "/" + STATIC_DIRECTORY_SIMULATION +
                     "/PRICE_FROM_" + simulationCode + "." + XLS_EXTENSION);
             if (file.exists()) {
                 log.info("The file \"PRICE_FROM_" + simulationCode + "." + XLS_EXTENSION +
@@ -318,5 +288,173 @@ public class XmlToExcelService {
 
         }
         return priceLineList;
+    }
+
+    public void generateConversionRateExcel(
+            double totalRate, double valueRate, double rate,
+            InputRate inputRate, String environment, String databaseEnvSchema) throws IOException {
+        /**
+         * Drain static repository
+         */
+        FileOutputStream fos;
+        String currentDate =
+                new SimpleDateFormat("yyyyMMdd-HHmmss").format(new Date(System.currentTimeMillis()));
+        String path = RestConstantUtils.STATIC_DIRECTORY_FILES + environment + "/" + databaseEnvSchema + "/" ;
+        String fileTitle = "LM - Conversion Rate";
+        String fileName = fileTitle + " - " + currentDate + "." + XLS_EXTENSION;
+        String pathOutputName = path + XLS_EXTENSION + "/" + STATIC_DIRECTORY_CONVERSION_RATE;
+
+        FileUtils.cleanDirectory(new File(path + XLS_EXTENSION + "/" + STATIC_DIRECTORY_CONVERSION_RATE));
+
+        //Init Worbook
+        WorkbookDTO workbookDTO =
+                this.workbookInit(inputRate.getXpathDefinition().getSimulationCode(), fileTitle);
+
+        /**
+         * Definition of Cells Style
+         */
+        // Style of Title Cell
+        HSSFCellStyle styleHead =
+                this.styleOfCellsService.getCustomStyleHead(workbookDTO.getHssfWorkbook());
+
+        // Style of Price Content Cells
+        HSSFCellStyle stylePriceContent =
+                this.styleOfCellsService.getCustomPriceContent(workbookDTO.getHssfWorkbook());
+
+        // Style of Head Total Price Effected Cells
+        HSSFCellStyle styleHeadTotalPriceEffected =
+                this.styleOfCellsService.getCustomHeadTotalPriceEffected(workbookDTO.getHssfWorkbook());
+
+        // Style of Head Total Price Cells
+        HSSFCellStyle styleHeadTotalPrice =
+                this.styleOfCellsService.getCustomHeadTotalPrice(workbookDTO.getHssfWorkbook());
+
+        // Style of Total Price Effected Cells
+        HSSFCellStyle styleConversionRate =
+                this.styleOfCellsService.getCustomConversionRate(workbookDTO.getHssfWorkbook());
+
+        //Entete
+        HSSFRow rowHead = workbookDTO.getHssfSheet().createRow(2);
+        HSSFRow rowInput = workbookDTO.getHssfSheet().createRow(3);
+        HSSFRow rowSimulation = workbookDTO.getHssfSheet().createRow(5);
+        HSSFRow rowValueRate = workbookDTO.getHssfSheet().createRow(6);
+        HSSFRow rowTotalRate = workbookDTO.getHssfSheet().createRow(7);
+        HSSFRow rowRating = workbookDTO.getHssfSheet().createRow(8);
+
+        String[] head = {"PERIODE", "VALEUR RECHERCHÉE", "OUTIL"};
+        String[] input = {
+                inputRate.getPeriod(),
+                inputRate.getValueDescription(),
+                inputRate.getXpathDefinition().getIdOAP()};
+
+        HSSFCell cell = workbookDTO.getHssfCell();
+
+        // Creating Row of Head
+        for (int a = 0; a < head.length; a++) {
+            cell = rowHead.createCell(a);
+            cell.setCellValue(head[a]);
+            cell.setCellStyle(styleHead);
+        }
+        // Creating Row of Input
+        for (int a = 0; a < input.length; a++) {
+            cell = rowInput.createCell(a);
+            cell.setCellValue(input[a]);
+            cell.setCellStyle(stylePriceContent);
+        }
+
+        //Title
+        cell = rowSimulation.createCell(0);
+        cell.setCellValue("SIMULATION");
+        cell.setCellStyle(styleHead);
+
+        //Value Rate
+        cell = rowValueRate.createCell(0);
+        cell.setCellValue("Avec " + inputRate.getValueDescription());
+        cell.setCellStyle(styleHeadTotalPrice);
+        cell = rowValueRate.createCell(1);
+        cell.setCellValue(valueRate);
+        cell.setCellStyle(styleHeadTotalPrice);
+
+        //Total Rate
+        cell = rowTotalRate.createCell(0);
+        cell.setCellValue("Total");
+        cell.setCellStyle(styleHeadTotalPrice);
+        cell = rowTotalRate.createCell(1);
+        cell.setCellValue(totalRate);
+        cell.setCellStyle(styleHeadTotalPrice);
+
+        //Conversion Rate
+        cell = rowRating.createCell(0);
+        cell.setCellValue("Taux de conversion");
+        cell.setCellStyle(styleHeadTotalPriceEffected);
+        cell = rowRating.createCell(1);
+        cell.setCellValue(MathUtils.arrondiMathematique(rate, 2) + "%");
+        cell.setCellFormula("B7/B8");
+        cell.setCellStyle(styleConversionRate);
+
+        //Outputting to Excel spreadsheet
+        fos = new FileOutputStream(pathOutputName + "/" + fileName);
+        workbookDTO.getHssfWorkbook().write(fos);
+        fos.flush();
+        fos.close();
+
+        log.info("*******************************");
+        File file = new File(pathOutputName + "/" + fileName);
+        if (file.exists()) {
+            log.info("The file \"" + fileName + "\" has been created in :");
+            log.info(pathOutputName);
+        } else {
+            log.info("The file \"" + fileName + "\" has not been created...");
+        }
+        log.info("*******************************");
+    }
+
+    /**
+     * Initialization of WorkBook
+     */
+    private WorkbookDTO workbookInit(String sheetName, String title)
+            throws IOException {
+
+        HSSFWorkbook workbook = new HSSFWorkbook();
+        HSSFSheet spreadSheet = workbook.createSheet(sheetName);
+        HSSFRow row0 = spreadSheet.createRow(0);
+        HSSFCell cell = row0.createCell(0);
+
+        for (int i = 0; i < 14; i++) {
+            if (i == 0) spreadSheet.setColumnWidth(i, 500 * 25);
+            else if (i == 2 || i == 3) spreadSheet.setColumnWidth(i, 156 * 25);
+            else spreadSheet.setColumnWidth(i, 256 * 25);
+        }
+
+        // Style of Title Cell
+        HSSFCellStyle styleTitle = this.styleOfCellsService.getCustomStyleTitle(workbook, spreadSheet);
+
+        // Creating Row of Title
+        row0.setHeight((short) 1400);
+        cell.setCellValue(title);
+        cell.setCellStyle(styleTitle);
+
+        //Ajout du logo LM
+        HSSFCell cellPicture = row0.createCell(1);
+        // Lire l'image à l'aide d'un stream
+        InputStream inputStream = new FileInputStream(STATIC_DIRECTORY_IMAGES + "1200px-Leroy_Merlin.svg.jpeg");
+        byte[] bytes = IOUtils.toByteArray(inputStream);
+        //Ajouter l'image au classeur
+        int pictureIdx = workbook.addPicture(bytes, Workbook.PICTURE_TYPE_JPEG);
+        //fermer le stream
+        inputStream.close();
+
+        //Gérer l'aspect affichage de l'image
+        ClientAnchor anchor = workbook.getCreationHelper().createClientAnchor();
+        anchor.setCol1(4);
+        anchor.setRow1(0);
+        Picture pict = spreadSheet.createDrawingPatriarch().createPicture(anchor, pictureIdx);
+        pict.getPreferredSize();
+
+        return new WorkbookDTO()
+                .withHssfWorkbook(workbook)
+                .withHssfSheet(spreadSheet)
+                .withHssfCell(cell)
+                .withHssfRow(row0);
     }
 }
