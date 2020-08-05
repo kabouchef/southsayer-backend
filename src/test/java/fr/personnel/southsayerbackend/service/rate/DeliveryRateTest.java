@@ -147,7 +147,7 @@ public class DeliveryRateTest {
                 "S_Pose_m2_Sol_souple", (long) 7.50,(long) 8.70,"m2",
                 (long) 0, null, (long) 0, (long) 0,(long) 0.00, (long) 0, (long) 0.00,
                 (long) 0, (long) 0.00, "0", "TOUS", (long) 20180104, null,
-                (long) 0, (long) 1, (long) 1, null, "ARTISAN_LM", "TOUS",
+                (long) 0, (long) 1, (long) 1, null, "ARTISAN_LM",
                 "FR", (long) 26 );
     }
 

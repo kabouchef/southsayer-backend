@@ -1,9 +1,6 @@
 package fr.personnel.southsayerbackend.service.simulation.core;
 
-import ch.qos.logback.classic.net.SimpleSocketServer;
-import fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +8,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import static fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils.STATIC_DIRECTORY_FILES;
+import static fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils.STATIC_DIRECTORY_SIMULATION;
 import static fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils.XML_EXTENSION;
 
 /**
@@ -22,12 +19,13 @@ import static fr.personnel.southsayerbackend.configuration.constant.RestConstant
 @Slf4j
 @Service
 @Data
-@NoArgsConstructor
 public class XmlWriterService {
 
-    public void generateXML(String stringToXML,
-                            String path,
-                            String simulationCode) throws IOException {
+    private final StaticPathService staticPathService;
+
+    public void generateXML(String stringToXML, String simulationCode) throws IOException {
+
+        String path = this.staticPathService.getPath(XML_EXTENSION, STATIC_DIRECTORY_SIMULATION);
 
         String defaultFile = path + "/XML_CONF.xml";
 

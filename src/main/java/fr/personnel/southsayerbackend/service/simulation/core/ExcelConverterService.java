@@ -1,6 +1,5 @@
 package fr.personnel.southsayerbackend.service.simulation.core;
 
-import fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils;
 import fr.personnel.southsayerbackend.model.simulation.PriceLine;
 import fr.personnel.southsayerbackend.model.simulation.WorkbookDTO;
 import fr.personnel.southsayerbackend.model.simulation.rate.InputRate;
@@ -12,6 +11,7 @@ import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellReference;
 import org.apache.poi.util.IOUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
@@ -42,32 +42,32 @@ import static fr.personnel.southsayerbackend.configuration.constant.RestConstant
 public class ExcelConverterService {
 
     private final StyleOfCellsService styleOfCellsService;
+    private final StaticPathService staticPathService;
 
-    public List<PriceLine> generatePriceLinesExcel(String simulationCode, String environment, String databaseEnvSchema)
+
+    public List<PriceLine> generatePriceLinesExcel(String simulationCode)
             throws ParserConfigurationException, IOException, SAXException {
 
-        String path =
-                RestConstantUtils.STATIC_DIRECTORY_FILES + environment + "/" + databaseEnvSchema + "/" ;
-        String nameDefaultFile =
-                path + XML_EXTENSION + "/" + STATIC_DIRECTORY_SIMULATION + "/" + simulationCode + "." + XML_EXTENSION;
-        String fileTitle = "PRICE_FROM_" + simulationCode;
+        String pathXmlSimulation = this.staticPathService.getPath(XML_EXTENSION, STATIC_DIRECTORY_SIMULATION);
+        String pathXlsSimulation = this.staticPathService.getPath(XLS_EXTENSION, STATIC_DIRECTORY_SIMULATION);
+
         String priceLines;
         List<PriceLine> priceLineList = new ArrayList<PriceLine>();
         String[] priceElement;
         FileOutputStream fos = null;
 
         // Drain static repository
-        FileUtils.cleanDirectory(new File(path + XLS_EXTENSION + "/" + STATIC_DIRECTORY_SIMULATION));
+        FileUtils.cleanDirectory(new File(pathXlsSimulation));
 
         try {
             //Init Worbook
             WorkbookDTO workbookDTO =
-                    this.workbookInit(simulationCode, fileTitle);
+                    this.workbookInit(simulationCode, "PRICE_FROM_" + simulationCode);
 
             // Parsing XML Document
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
-            Document xmlDocument = builder.parse(nameDefaultFile);
+            Document xmlDocument = builder.parse(pathXmlSimulation + "/" + simulationCode + "." + XML_EXTENSION);
 
             /**
              * Definition of Cells Style
@@ -107,8 +107,22 @@ public class ExcelConverterService {
 
             //Entete
             HSSFRow row = workbookDTO.getHssfSheet().createRow(2);
-            HSSFCell cell = workbookDTO.getHssfCell();
-            String[] head = {"IDENTIFIANT", "DETAIL_PRESTATION", "QUANTITE", "TARIF_UNITAIRE", "TARIF_PRESTATION", "TYPE_PRESTATION", "PRESTATION_DE", "TVA_REDUITE", "TVA_INTER", "TVA_NORMALE", "CODE_49", "COD_TYPE_PRESTATION", "TEMP_POSE", "ORDRE"};
+            HSSFCell cell;
+            String[] head = {
+                    "IDENTIFIANT",
+                    "DETAIL_PRESTATION",
+                    "QUANTITE",
+                    "TARIF_UNITAIRE",
+                    "TARIF_PRESTATION",
+                    "TYPE_PRESTATION",
+                    "PRESTATION_DE",
+                    "TVA_REDUITE",
+                    "TVA_INTER",
+                    "TVA_NORMALE",
+                    "CODE_49",
+                    "COD_TYPE_PRESTATION",
+                    "TEMP_POSE",
+                    "ORDRE"};
 
             // Creating Row of Head
             for (int a = 0; a < head.length; a++) {
@@ -120,7 +134,8 @@ public class ExcelConverterService {
             /**
              * Getting Price Lines
              */
-            String nbLines = "count(//*[@name='fpPriceHtChiffragePrecisSurrogate']" + "//Value[not(preceding-sibling::Value = .)])";
+            String nbLines = "count(//*[@name='fpPriceHtChiffragePrecisSurrogate']" +
+                    "//Value[not(preceding-sibling::Value = .)])";
 
             XPath xPath = XPathFactory.newInstance().newXPath();
             String nbPrice = xPath.compile(nbLines).evaluate(xmlDocument, XPathConstants.STRING).toString();
@@ -264,22 +279,22 @@ public class ExcelConverterService {
             /**
              * Outputting to Excel spreadsheet
              */
-            fos = new FileOutputStream(new File(path + XLS_EXTENSION + "/" + STATIC_DIRECTORY_SIMULATION +
-                    "/PRICE_FROM_" + simulationCode + "." + XLS_EXTENSION));
+            fos = new FileOutputStream(
+                    new File(
+                            pathXlsSimulation + "/PRICE_FROM_" + simulationCode + "." + XLS_EXTENSION));
             workbookDTO.getHssfWorkbook().write(fos);
+            fos.flush();
+            fos.close();
 
         }catch (XPathExpressionException e) {
             e.printStackTrace();
         }finally {
-            fos.flush();
-            fos.close();
             log.info("*******************************");
-            File file = new File(path + XLS_EXTENSION + "/" + STATIC_DIRECTORY_SIMULATION +
-                    "/PRICE_FROM_" + simulationCode + "." + XLS_EXTENSION);
+            File file = new File(pathXlsSimulation + "/PRICE_FROM_" + simulationCode + "." + XLS_EXTENSION);
             if (file.exists()) {
                 log.info("The file \"PRICE_FROM_" + simulationCode + "." + XLS_EXTENSION +
                         "\" has been created in :");
-                log.info(path + XLS_EXTENSION);
+                log.info(pathXlsSimulation);
             } else {
                 log.info("The file \"PRICE_FROM_" + simulationCode + "." + XLS_EXTENSION +
                         "\" has not been created...");
@@ -292,23 +307,25 @@ public class ExcelConverterService {
 
     public void generateConversionRateExcel(
             double totalRate, double valueRate, double rate,
-            InputRate inputRate, String environment, String databaseEnvSchema) throws IOException {
+            InputRate inputRate) throws IOException {
         /**
          * Drain static repository
          */
         FileOutputStream fos;
         String currentDate =
                 new SimpleDateFormat("yyyyMMdd-HHmmss").format(new Date(System.currentTimeMillis()));
-        String path = RestConstantUtils.STATIC_DIRECTORY_FILES + environment + "/" + databaseEnvSchema + "/" ;
-        String fileTitle = "LM - Conversion Rate";
-        String fileName = fileTitle + " - " + currentDate + "." + XLS_EXTENSION;
-        String pathOutputName = path + XLS_EXTENSION + "/" + STATIC_DIRECTORY_CONVERSION_RATE;
+        String pathXlsCR = this.staticPathService.getPath(XLS_EXTENSION, STATIC_DIRECTORY_CONVERSION_RATE);
 
-        FileUtils.cleanDirectory(new File(path + XLS_EXTENSION + "/" + STATIC_DIRECTORY_CONVERSION_RATE));
+        String fileName = "LM - Conversion Rate";
+
+
+        FileUtils.cleanDirectory(new File(pathXlsCR));
 
         //Init Worbook
         WorkbookDTO workbookDTO =
-                this.workbookInit(inputRate.getXpathDefinition().getSimulationCode(), fileTitle);
+                this.workbookInit(inputRate.getXpathDefinition().getSimulationCode(), fileName);
+
+        fileName = fileName + " - " + currentDate + "." + XLS_EXTENSION;
 
         /**
          * Definition of Cells Style
@@ -393,16 +410,16 @@ public class ExcelConverterService {
         cell.setCellStyle(styleConversionRate);
 
         //Outputting to Excel spreadsheet
-        fos = new FileOutputStream(pathOutputName + "/" + fileName);
+        fos = new FileOutputStream(pathXlsCR + "/" + fileName);
         workbookDTO.getHssfWorkbook().write(fos);
         fos.flush();
         fos.close();
 
         log.info("*******************************");
-        File file = new File(pathOutputName + "/" + fileName);
+        File file = new File(pathXlsCR + "/" + fileName);
         if (file.exists()) {
             log.info("The file \"" + fileName + "\" has been created in :");
-            log.info(pathOutputName);
+            log.info(pathXlsCR);
         } else {
             log.info("The file \"" + fileName + "\" has not been created...");
         }
@@ -437,7 +454,8 @@ public class ExcelConverterService {
         //Ajout du logo LM
         HSSFCell cellPicture = row0.createCell(1);
         // Lire l'image à l'aide d'un stream
-        InputStream inputStream = new FileInputStream(STATIC_DIRECTORY_IMAGES + "1200px-Leroy_Merlin.svg.jpeg");
+        InputStream inputStream = new FileInputStream(
+                STATIC_DIRECTORY_IMAGES + "/" + "1200px-Leroy_Merlin.svg.jpeg");
         byte[] bytes = IOUtils.toByteArray(inputStream);
         //Ajouter l'image au classeur
         int pictureIdx = workbook.addPicture(bytes, Workbook.PICTURE_TYPE_JPEG);

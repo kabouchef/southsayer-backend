@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 import static fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils.DELIVERY_RATE_PATH;
 
@@ -85,6 +86,20 @@ public class OAPDeliveryRateController {
             @RequestParam final String id,
             @RequestParam final String designation) {
         return this.oapDeliveryRateService.getByDesignation(id, designation);
+    }
+
+    /**
+     * Get all OAP DR corrupt by id
+     *
+     * @param id : id
+     * @return {@link List<OAPDeliveryRateDetails>}
+     */
+    @Operation(summary = "API to manage OAP delivery rate lines", description = "Get all OAP DR corrupt by id")
+    @CrossOrigin
+    @GetMapping("/corruptPrice")
+    public List<OAPDeliveryRateDetails> getAllCorruptPrice(
+            @RequestParam final String id) {
+        return this.oapDeliveryRateService.getCorruptPrice(id);
     }
 
     /**
