@@ -34,7 +34,7 @@ public class OAPDeliveryRateService {
     private final NotFoundMessage notFoundMessage;
     private final StaticPathService staticPathService;
 
-    String fileName = "LM - " + this.getClass().getSimpleName();
+    String fileName = "LM - " + this.getClass().getSimpleName().replace("Service","");
 
     /**
      * Get Path to export file
@@ -47,7 +47,7 @@ public class OAPDeliveryRateService {
     /**
      * get all DR
      *
-     * @return {@link List<OAPDeliveryRateDetails>}
+     * @return {@link Iterable<OAPDeliveryRateDetails>}
      */
     public Iterable<OAPDeliveryRateDetails> getAll() throws IOException {
 

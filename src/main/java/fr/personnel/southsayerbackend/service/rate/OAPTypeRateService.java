@@ -16,8 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils.STATIC_DIRECTORY_DELIVERY_RATE;
-import static fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils.XLS_EXTENSION;
+import static fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils.*;
 
 /**
  * @author Farouk KABOUCHE
@@ -34,14 +33,14 @@ public class OAPTypeRateService {
     private final NotFoundMessage notFoundMessage;
     private final StaticPathService staticPathService;
 
-    String fileName = "LM - " + this.getClass().getSimpleName();
+    String fileName = "LM - " + this.getClass().getSimpleName().replace("Service","");
 
     /**
      * Get Path to export file
      * @return {@link String}
      */
     private String getPath(){
-        return this.staticPathService.getPath(XLS_EXTENSION, STATIC_DIRECTORY_DELIVERY_RATE);
+        return this.staticPathService.getPath(XLS_EXTENSION, STATIC_DIRECTORY_TYPE_RATE);
     }
 
     /**

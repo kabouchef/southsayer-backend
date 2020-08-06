@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,7 +45,7 @@ public class TypeRateTest {
     @Test
     @Tag("GetTypeRateServiceTests")
     @DisplayName("Get All OAP TR")
-    public void getAll_TypeRate_Test() {
+    public void getAll_TypeRate_Test() throws IOException {
         when(oapDeliveryTypeRepository.findAll()).thenReturn(createListTypeRates());
 
         Iterable<OAPDeliveryType> oapDeliveryTypes = typeRateService.getAll();
@@ -59,7 +60,7 @@ public class TypeRateTest {
     @Test
     @Tag("GetTypeRateServiceTests")
     @DisplayName("Get OAP TR by code type prestation")
-    public void get_TypeRate_ByCodTypePrestation_Test() {
+    public void get_TypeRate_ByCodTypePrestation_Test() throws IOException {
         when(oapDeliveryTypeRepository
                 .findByCodTypePrestationLike(anyString()))
                 .thenReturn(Optional.of(createListTypeRates()));
@@ -79,7 +80,7 @@ public class TypeRateTest {
     @Test
     @Tag("GetTypeRateServiceTests")
     @DisplayName("Get OAP TR by WordingDT")
-    public void get_TypeRate_ByWordingDT_Test() {
+    public void get_TypeRate_ByWordingDT_Test() throws IOException {
         when(oapDeliveryTypeRepository
                 .findByLibTypePrestationLike(anyString()))
                 .thenReturn(Optional.of(createListTypeRates()));
@@ -99,7 +100,7 @@ public class TypeRateTest {
     @Test
     @Tag("GetTypeRateServiceTests")
     @DisplayName("Get OAP TR by WordingDT")
-    public void get_TypeRate_ByIdOAP_Test() {
+    public void get_TypeRate_ByIdOAP_Test() throws IOException {
         when(oapDeliveryTypeRepository
                 .findByIdOap(anyLong()))
                 .thenReturn(Optional.of(createListTypeRates()));
