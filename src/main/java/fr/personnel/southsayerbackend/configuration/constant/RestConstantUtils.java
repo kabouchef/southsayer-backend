@@ -33,6 +33,7 @@ public final class RestConstantUtils {
     public static final String XLS_EXTENSION = "xls";
     public static final String STATIC_DIRECTORY_SIMULATION = "simulation";
     public static final String STATIC_DIRECTORY_CONVERSION_RATE = "conversion_rate";
+    public static final String STATIC_DIRECTORY_DELIVERY_RATE = "delivery_rate";
 
 
 

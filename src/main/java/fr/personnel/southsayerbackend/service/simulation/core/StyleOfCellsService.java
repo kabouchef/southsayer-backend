@@ -28,7 +28,7 @@ public class StyleOfCellsService {
      * @param wb : wb
      * @return {@link HSSFCellStyle}
      */
-    public HSSFCellStyle getCustomStyleTitle(HSSFWorkbook wb, HSSFSheet spreadSheet){
+    public static HSSFCellStyle getCustomStyleTitle(HSSFWorkbook wb, HSSFSheet spreadSheet){
         HSSFFont font = wb.createFont();
         spreadSheet.addMergedRegion(new CellRangeAddress(0,0,0,3));
         HSSFCellStyle style = wb.createCellStyle();
@@ -49,7 +49,7 @@ public class StyleOfCellsService {
      * @param wb : wb
      * @return {@link HSSFCellStyle}
      */
-    public HSSFCellStyle getCustomStyleHead(HSSFWorkbook wb){
+    public static HSSFCellStyle getCustomStyleHead(HSSFWorkbook wb){
         HSSFCellStyle style = wb.createCellStyle();
         HSSFPalette palette = wb.getCustomPalette();
         palette.setColorAtIndex(HSSFColor.HSSFColorPredefined.GREEN.getIndex(), (byte) 124, (byte) 178, (byte) 32);
@@ -70,7 +70,7 @@ public class StyleOfCellsService {
      * @param wb : wb
      * @return {@link HSSFCellStyle}
      */
-    public HSSFCellStyle getCustomGlobalContent(HSSFWorkbook wb){
+    public static HSSFCellStyle getCustomGlobalContent(HSSFWorkbook wb){
         HSSFCellStyle style = wb.createCellStyle();
         HSSFFont font = wb.createFont();
         font.setColor(HSSFColor.HSSFColorPredefined.GREY_80_PERCENT.getIndex());
@@ -84,7 +84,7 @@ public class StyleOfCellsService {
      * @param wb : wb
      * @return {@link HSSFCellStyle}
      */
-    public HSSFCellStyle getCustomPriceContent(HSSFWorkbook wb){
+    public static HSSFCellStyle getCustomPriceContent(HSSFWorkbook wb){
         HSSFCellStyle style = wb.createCellStyle();
         DataFormat df = wb.createDataFormat();
         HSSFFont font = wb.createFont();
@@ -100,7 +100,7 @@ public class StyleOfCellsService {
      * @param wb : wb
      * @return {@link HSSFCellStyle}
      */
-    public HSSFCellStyle getCustomQuantifyContent(HSSFWorkbook wb){
+    public static HSSFCellStyle getCustomQuantifyContent(HSSFWorkbook wb){
         HSSFCellStyle style = wb.createCellStyle();
         HSSFFont font = wb.createFont();
         font.setColor(HSSFColor.HSSFColorPredefined.GREY_80_PERCENT.getIndex());
@@ -115,7 +115,7 @@ public class StyleOfCellsService {
      * @param wb : wb
      * @return {@link HSSFCellStyle}
      */
-    public HSSFCellStyle getCustomHeadTotalPriceEffected(HSSFWorkbook wb){
+    public static HSSFCellStyle getCustomHeadTotalPriceEffected(HSSFWorkbook wb){
         HSSFCellStyle style = wb.createCellStyle();
         HSSFPalette palette = wb.getCustomPalette();
         HSSFColor myColor = palette.findSimilarColor(124, 178, 32);
@@ -136,7 +136,7 @@ public class StyleOfCellsService {
      * @param wb : wb
      * @return {@link HSSFCellStyle}
      */
-    public HSSFCellStyle getCustomTotalPriceEffected(HSSFWorkbook wb){
+    public static HSSFCellStyle getCustomTotalPriceEffected(HSSFWorkbook wb){
         HSSFCellStyle style = wb.createCellStyle();
         DataFormat df = wb.createDataFormat();
         HSSFPalette palette = wb.getCustomPalette();
@@ -160,7 +160,7 @@ public class StyleOfCellsService {
      * @param wb : wb
      * @return {@link HSSFCellStyle}
      */
-    public HSSFCellStyle getCustomHeadTotalPrice(HSSFWorkbook wb){
+    public static HSSFCellStyle getCustomHeadTotalPrice(HSSFWorkbook wb){
         HSSFCellStyle style = wb.createCellStyle();
         HSSFFont font = wb.createFont();
         font.setColor(HSSFColor.HSSFColorPredefined.GREY_80_PERCENT.getIndex());
@@ -178,7 +178,7 @@ public class StyleOfCellsService {
      * @param wb : wb
      * @return {@link HSSFCellStyle}
      */
-    public HSSFCellStyle getCustomTotalPrice(HSSFWorkbook wb){
+    public static HSSFCellStyle getCustomTotalPrice(HSSFWorkbook wb){
         HSSFCellStyle style = wb.createCellStyle();
         DataFormat df = wb.createDataFormat();
         HSSFFont font = wb.createFont();
@@ -193,7 +193,7 @@ public class StyleOfCellsService {
         return style;
     }
 
-    public HSSFCellStyle getCustomConversionRate(HSSFWorkbook wb){
+    public static HSSFCellStyle getCustomConversionRate(HSSFWorkbook wb){
         HSSFCellStyle style = wb.createCellStyle();
         DataFormat df = wb.createDataFormat();
         HSSFPalette palette = wb.getCustomPalette();
