@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,7 +47,7 @@ public class DeliveryRateTest {
     @Test
     @Tag("GetDeliveryRateServiceTests")
     @DisplayName("Get All OAP DR")
-    public void getAll_DeliveryRate_Test() {
+    public void getAll_DeliveryRate_Test() throws IOException {
         when(deliveryRateDetailsRepository.findAll()).thenReturn(createListDeliveryRates());
 
         Iterable<OAPDeliveryRateDetails> oapDeliveryRateDetails = deliveryRateService.getAll();
@@ -61,7 +62,7 @@ public class DeliveryRateTest {
     @Test
     @Tag("OAPDeliveryRateServiceTests")
     @DisplayName("Get OAP DR by identifiant")
-    public void get_DeliveryRate_ByIdentifiant_Test() {
+    public void get_DeliveryRate_ByIdentifiant_Test() throws IOException {
         when(deliveryRateDetailsRepository
                 .findByIdentifiantLike(anyString()))
                 .thenReturn(Optional.of(createListDeliveryRates()));
@@ -80,7 +81,7 @@ public class DeliveryRateTest {
     @Test
     @Tag("OAPDeliveryRateServiceTests")
     @DisplayName("Get OAP DR by LibelleId")
-    public void get_DeliveryRate_ByLibelleId_Test() {
+    public void get_DeliveryRate_ByLibelleId_Test() throws IOException {
         when(deliveryRateDetailsRepository
                 .findByIdentifiantLikeAndLibelleIdentifiantLike(anyString(), anyString()))
                 .thenReturn(Optional.of(createListDeliveryRates()));
@@ -98,7 +99,7 @@ public class DeliveryRateTest {
     @Test
     @Tag("OAPDeliveryRateServiceTests")
     @DisplayName("Get OAP DR by LibelleId")
-    public void get_DeliveryRate_ByDesignation_Test() {
+    public void get_DeliveryRate_ByDesignation_Test() throws IOException {
         when(deliveryRateDetailsRepository
                 .findByIdentifiantLikeAndDesignationLike(anyString(), anyString()))
                 .thenReturn(Optional.of(createListDeliveryRates()));
@@ -147,7 +148,7 @@ public class DeliveryRateTest {
                 "S_Pose_m2_Sol_souple", (long) 7.50,(long) 8.70,"m2",
                 (long) 0, null, (long) 0, (long) 0,(long) 0.00, (long) 0, (long) 0.00,
                 (long) 0, (long) 0.00, "0", "TOUS", (long) 20180104, null,
-                (long) 0, (long) 1, (long) 1, null, "ARTISAN_LM", "TOUS",
+                (long) 0, (long) 1, (long) 1, null, "ARTISAN_LM",
                 "FR", (long) 26 );
     }
 

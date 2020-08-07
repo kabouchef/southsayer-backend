@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.List;
 
 import static fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils.ACTIVITY_CODE_PATH;
@@ -38,7 +39,7 @@ public class ActivityCodeController {
     @Operation(summary = "API to manage OAP Activity Codes", description = "Get all OAP AC")
     @CrossOrigin
     @GetMapping
-    public Iterable<ActivityCode> getAllActivityCode() {
+    public Iterable<ActivityCode> getAllActivityCode() throws IOException {
         return this.activityCodeService.getAll();
     }
 
@@ -51,7 +52,7 @@ public class ActivityCodeController {
     @Operation(summary = "API to manage OAP Activity Codes", description = "Get OAP AC by code activite")
     @CrossOrigin
     @GetMapping("/byCodActivite")
-    public List<ActivityCode> getByCodActivite(@RequestParam final String codActivite) {
+    public List<ActivityCode> getByCodActivite(@RequestParam final String codActivite) throws IOException {
         return this.activityCodeService.getByCodActivite(codActivite);
     }
 
@@ -64,7 +65,7 @@ public class ActivityCodeController {
     @Operation(summary = "API to manage OAP Activity Codes", description = "Get OAP AC by Lib1")
     @CrossOrigin
     @GetMapping("/byLib1")
-    public List<ActivityCode> getByLib1(@RequestParam final String lib1) {
+    public List<ActivityCode> getByLib1(@RequestParam final String lib1) throws IOException {
         return this.activityCodeService.getByLib1(lib1);
     }
 
@@ -77,7 +78,7 @@ public class ActivityCodeController {
     @Operation(summary = "API to manage OAP Activity Codes", description = "Get OAP AC by IdRayon")
     @CrossOrigin
     @GetMapping("/byIdRayon")
-    public List<ActivityCode> getByIdRayon(@RequestParam final Long idRayon) {
+    public List<ActivityCode> getByIdRayon(@RequestParam final Long idRayon) throws IOException {
         return this.activityCodeService.getByIdRayon(idRayon);
     }
 
@@ -90,7 +91,7 @@ public class ActivityCodeController {
     @Operation(summary = "API to manage OAP Activity Codes", description = "Get OAP AC by rayon")
     @CrossOrigin
     @GetMapping("/byRayon")
-    public List<ActivityCode> getByRayon(@RequestParam final String rayon) {
+    public List<ActivityCode> getByRayon(@RequestParam final String rayon) throws IOException {
         return this.activityCodeService.getByRayon(rayon);
     }
 

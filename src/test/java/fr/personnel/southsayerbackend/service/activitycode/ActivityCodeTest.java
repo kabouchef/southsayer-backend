@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,7 +45,7 @@ public class ActivityCodeTest {
     @Test
     @Tag("GetActivityCodeServiceTests")
     @DisplayName("Get OAP AC by activity code")
-    public void get_ActivityCode_byActivityCode_Test() {
+    public void get_ActivityCode_byActivityCode_Test() throws IOException {
         when(activityCodeRepository.findByCodActivite(anyString())).thenReturn(Optional.of(createListActivityCode()));
 
         List<ActivityCode> activityCodes = activityCodeService.getByCodActivite(anyString());
@@ -61,7 +62,7 @@ public class ActivityCodeTest {
     @Test
     @Tag("GetActivityCodeServiceTests")
     @DisplayName("Get OAP AC by lib1")
-    public void get_ActivityCode_bylib1_Test() {
+    public void get_ActivityCode_bylib1_Test() throws IOException {
         when(activityCodeRepository.findByLib1Like(anyString())).thenReturn(Optional.of(createListActivityCode()));
         String lib1 = "R09-Portail";
 
@@ -79,7 +80,7 @@ public class ActivityCodeTest {
     @Test
     @Tag("GetActivityCodeServiceTests")
     @DisplayName("Get OAP AC by idRayon")
-    public void get_ActivityCode_byIdRayon_Test() {
+    public void get_ActivityCode_byIdRayon_Test() throws IOException {
         when(activityCodeRepository.findByIdRayon(anyLong())).thenReturn(Optional.of(createListActivityCode()));
 
         List<ActivityCode> activityCodes = activityCodeService.getByIdRayon(anyLong());
@@ -96,7 +97,7 @@ public class ActivityCodeTest {
     @Test
     @Tag("GetActivityCodeServiceTests")
     @DisplayName("Get OAP AC by rayon")
-    public void get_ActivityCode_byRayon_Test() {
+    public void get_ActivityCode_byRayon_Test() throws IOException {
         when(activityCodeRepository.findByRayon(anyString())).thenReturn(Optional.of(createListActivityCode()));
         String rayon = "JARDIN";
 
@@ -115,7 +116,7 @@ public class ActivityCodeTest {
     @Test
     @Tag("GetActivityCodeServiceTests")
     @DisplayName("Get OAP AC by idOAP")
-    public void get_ActivityCode_byIdOAP_Test() {
+    public void get_ActivityCode_byIdOAP_Test() throws IOException {
         when(activityCodeRepository.findByIdOap(anyString())).thenReturn(Optional.of(createListActivityCode()));
         String idOAP = "OAP:016";
 

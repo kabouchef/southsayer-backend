@@ -7,6 +7,7 @@ import fr.personnel.southsayerbackend.model.simulation.rate.ConversionRate;
 import fr.personnel.southsayerbackend.model.simulation.rate.InputRate;
 import fr.personnel.southsayerbackend.service.simulation.SimulationService;
 import fr.personnel.southsayerbackend.service.simulation.core.ExtractFromDatabaseService;
+import fr.personnel.southsayerbackend.service.simulation.core.StaticPathService;
 import fr.personnel.southsayerbackend.utils.ExportFileUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -42,12 +43,7 @@ public class SimulationController {
     private final ExportFileUtils exportFileUtils;
     private final SimulationService simulationService;
     private final ExtractFromDatabaseService extractFromDatabaseService;
-
-    @Value("${ENVIRONMENT}")
-    private String environment;
-    @Value("${DATABASE_ENV_SCHEMA}")
-    private String databaseEnvSchema;
-
+    private final StaticPathService staticPathService;
 
     /**
      * Get price lines about simulationCode
@@ -63,7 +59,7 @@ public class SimulationController {
             @Parameter(description = "simulationCode", example = "20191011S49954", required = true)
             @RequestParam(name = "simulationCode") String simulationCode)
             throws IOException {
-        return this.simulationService.getSimulationOffer(simulationCode, environment, databaseEnvSchema);
+        return this.simulationService.getSimulationOffer(simulationCode);
     }
 
 
@@ -77,11 +73,11 @@ public class SimulationController {
             description = "Get the xls file of the simulation submitted by the request '/request'")
     @GetMapping("/downloadPricesFile")
     public ResponseEntity<Resource> downloadFile(@RequestParam(name = "simulationCode") String simulationCode) {
-        String target =
-                STATIC_DIRECTORY_FILES + "/" + XLS_EXTENSION + "/" + STATIC_DIRECTORY_SIMULATION
-                        + "/" + environment + "/" + databaseEnvSchema + "/";
 
-        File file = new File(target + "PRICE_FROM_" + simulationCode + "." + XLS_EXTENSION);
+
+        File file = new File(
+                this.staticPathService.getPath(XLS_EXTENSION, STATIC_DIRECTORY_SIMULATION) +
+                        "PRICE_FROM_" + simulationCode + "." + XLS_EXTENSION);
 
         // Load file as Resource
         Resource resource = this.exportFileUtils.loadFileAsResource(file.getAbsolutePath());
@@ -166,8 +162,11 @@ public class SimulationController {
     @CrossOrigin
     @PostMapping("/conversionRate")
     public ConversionRate getConversionRateByInputRate(@RequestBody InputRate inputRate) throws IOException {
-        return this.simulationService.conversionRateByInputRate(inputRate, environment, databaseEnvSchema);
+        return this.simulationService.conversionRateByInputRate(inputRate);
     }
+
+
+
 
 
 }

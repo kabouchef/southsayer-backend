@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.List;
 
 import static fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils.TYPE_RATE_PATH;
@@ -38,7 +39,7 @@ public class OAPTypeRateController {
     @Operation(summary = "API to manage OAP delivery type", description = "Get all OAP DT")
     @CrossOrigin
     @GetMapping
-    public Iterable<OAPDeliveryType> getAllDT() {
+    public Iterable<OAPDeliveryType> getAllDT() throws IOException {
         return this.oapTypeRateService.getAll();
     }
 
@@ -52,7 +53,7 @@ public class OAPTypeRateController {
     @CrossOrigin
     @GetMapping("/byCodTypePrestation")
     public List<OAPDeliveryType> getDTByCodTypePrestation(
-            @RequestParam final String codTypePrestation) {
+            @RequestParam final String codTypePrestation) throws IOException {
         return this.oapTypeRateService.getByCodTypePrestation(codTypePrestation);
     }
 
@@ -66,7 +67,7 @@ public class OAPTypeRateController {
     @CrossOrigin
     @GetMapping("/byWording")
     public List<OAPDeliveryType> getDTByWording(
-            @RequestParam final String wording) {
+            @RequestParam final String wording) throws IOException {
         return this.oapTypeRateService.getByWordingDT(wording);
     }
 
@@ -80,7 +81,7 @@ public class OAPTypeRateController {
     @CrossOrigin
     @GetMapping("/byIdOAP")
     public List<OAPDeliveryType> getDTByIdOAP(
-            @RequestParam final Long idOAP) {
+            @RequestParam final Long idOAP) throws IOException {
         return this.oapTypeRateService.getByIdOAP(idOAP);
     }
 

@@ -2,15 +2,20 @@ package fr.personnel.southsayerbackend.service.activitycode;
 
 import fr.personnel.exceptions.handling.WebClientError.NotFoundException;
 import fr.personnel.southsayerbackend.configuration.message.NotFoundMessage;
+import fr.personnel.southsayerbackend.service.simulation.core.StaticPathService;
+import fr.personnel.southsayerbackend.utils.ExcelUtils;
 import fr.personnel.southsayerdatabase.entity.activitycode.ActivityCode;
 import fr.personnel.southsayerdatabase.repository.activitycode.ActivityCodeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils.*;
 
 /**
  * @author Farouk KABOUCHE
@@ -24,15 +29,31 @@ import java.util.stream.Collectors;
 public class ActivityCodeService {
 
     private final ActivityCodeRepository activityCodeRepository;
-    final NotFoundMessage notFoundMessage;
+    private final NotFoundMessage notFoundMessage;
+    private final StaticPathService staticPathService;
+
+    String fileName = "LM - " + this.getClass().getSimpleName().replace("Service","");
+
+    /**
+     * Get Path to export file
+     * @return {@link String}
+     */
+    private String getPath(){
+        return this.staticPathService.getPath(XLS_EXTENSION, STATIC_DIRECTORY_ACTIVITY_CODE);
+    }
 
     /**
      * Get all AC
      *
-     * @return {@link List<ActivityCode>}
+     * @return {@link Iterable<ActivityCode>}
      */
-    public Iterable<ActivityCode> getAll() {
-        return this.activityCodeRepository.findAll();
+    public Iterable<ActivityCode> getAll() throws IOException {
+
+        Iterable<ActivityCode> activityCodes = this.activityCodeRepository.findAll();
+
+        ExcelUtils.writeToExcel((List<ActivityCode>) activityCodes, fileName, this.getPath(), "all");
+
+        return activityCodes;
     }
 
     /**
@@ -41,10 +62,12 @@ public class ActivityCodeService {
      * @param codActivite : codActivite
      * @return {@link List<ActivityCode>}
      */
-    public List<ActivityCode> getByCodActivite(String codActivite) {
+    public List<ActivityCode> getByCodActivite(String codActivite) throws IOException {
         Optional<List<ActivityCode>> activityCodes = this.activityCodeRepository.findByCodActivite(codActivite);
 
         if (!activityCodes.isPresent()) throw new NotFoundException(this.notFoundMessage.toString(codActivite));
+
+        ExcelUtils.writeToExcel(activityCodes.get(), fileName, this.getPath(), codActivite);
 
         return activityCodes.get();
     }
@@ -55,10 +78,13 @@ public class ActivityCodeService {
      * @param lib1 : lib1
      * @return {@link List<ActivityCode>}
      */
-    public List<ActivityCode> getByLib1(String lib1) {
+    public List<ActivityCode> getByLib1(String lib1) throws IOException {
         Optional<List<ActivityCode>> activityCodes = this.activityCodeRepository.findByLib1Like(lib1);
 
         if (!activityCodes.isPresent()) throw new NotFoundException(this.notFoundMessage.toString(lib1));
+
+        ExcelUtils.writeToExcel(activityCodes.get(), fileName, this.getPath(), lib1);
+
         return activityCodes.get();
     }
 
@@ -68,10 +94,13 @@ public class ActivityCodeService {
      * @param idRayon : idRayon
      * @return {@link List<ActivityCode>}
      */
-    public List<ActivityCode> getByIdRayon(Long idRayon) {
+    public List<ActivityCode> getByIdRayon(Long idRayon) throws IOException {
         Optional<List<ActivityCode>> activityCodes = this.activityCodeRepository.findByIdRayon(idRayon);
 
         if (!activityCodes.isPresent()) throw new NotFoundException(this.notFoundMessage.toLong(idRayon));
+
+        ExcelUtils.writeToExcel(activityCodes.get(), fileName, this.getPath(), idRayon.toString());
+
         return activityCodes.get();
     }
 
@@ -81,10 +110,13 @@ public class ActivityCodeService {
      * @param rayon : rayon
      * @return {@link List<ActivityCode>}
      */
-    public List<ActivityCode> getByRayon(String rayon) {
+    public List<ActivityCode> getByRayon(String rayon) throws IOException {
         Optional<List<ActivityCode>> activityCodes = this.activityCodeRepository.findByRayon(rayon);
 
         if (!activityCodes.isPresent()) throw new NotFoundException(this.notFoundMessage.toString(rayon));
+
+        ExcelUtils.writeToExcel(activityCodes.get(), fileName, this.getPath(), rayon);
+
         return activityCodes.get();
     }
 
@@ -94,10 +126,13 @@ public class ActivityCodeService {
      * @param idOAP : idOAP
      * @return {@link List<ActivityCode>}
      */
-    public List<ActivityCode> getByIdOAP(String idOAP) {
+    public List<ActivityCode> getByIdOAP(String idOAP) throws IOException {
         Optional<List<ActivityCode>> activityCodes = this.activityCodeRepository.findByIdOap(idOAP);
 
         if (!activityCodes.isPresent()) throw new NotFoundException(this.notFoundMessage.toString(idOAP));
+
+        ExcelUtils.writeToExcel(activityCodes.get(), fileName, this.getPath(), idOAP);
+
         return activityCodes.get();
     }
 
