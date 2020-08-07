@@ -53,7 +53,8 @@ public class OAPDeliveryRateService {
 
         Iterable<OAPDeliveryRateDetails> oapDeliveryRateDetails = this.oapDeliveryRateDetailsRepository.findAll();
 
-        ExcelUtils.writeToExcel((List<OAPDeliveryRateDetails>) oapDeliveryRateDetails, fileName, this.getPath());
+        ExcelUtils.writeToExcel(
+                (List<OAPDeliveryRateDetails>) oapDeliveryRateDetails, fileName, this.getPath(), "all");
 
         return oapDeliveryRateDetails;
     }
@@ -68,7 +69,7 @@ public class OAPDeliveryRateService {
 
         List<OAPDeliveryRateDetails> oapDeliveryRateDetails = this.getDRDetails(id);
 
-        ExcelUtils.writeToExcel(oapDeliveryRateDetails, fileName, this.getPath());
+        ExcelUtils.writeToExcel(oapDeliveryRateDetails, fileName, this.getPath(), id);
 
         return oapDeliveryRateDetails;
     }
@@ -101,7 +102,7 @@ public class OAPDeliveryRateService {
         if (!oapCorruptDRD.isPresent())
             throw new NotFoundException(this.notFoundMessage.toString(id));
 
-        ExcelUtils.writeToExcel(oapCorruptDRD.get(), fileName, this.getPath());
+        ExcelUtils.writeToExcel(oapCorruptDRD.get(), fileName, this.getPath(), id);
         return oapCorruptDRD.get();
     }
 
@@ -119,7 +120,7 @@ public class OAPDeliveryRateService {
         if (!oapDeliveryRateDetails.isPresent())
             throw new NotFoundException(this.notFoundMessage.toString(id, libelleId));
 
-        ExcelUtils.writeToExcel(oapDeliveryRateDetails.get(), fileName, this.getPath());
+        ExcelUtils.writeToExcel(oapDeliveryRateDetails.get(), fileName, this.getPath(), id + "#" + libelleId);
         return oapDeliveryRateDetails.get();
     }
 
@@ -138,7 +139,7 @@ public class OAPDeliveryRateService {
         if (!oapDeliveryRateDetails.isPresent())
             throw new NotFoundException(this.notFoundMessage.toString(id, designation));
 
-        ExcelUtils.writeToExcel(oapDeliveryRateDetails.get(), fileName, this.getPath());
+        ExcelUtils.writeToExcel(oapDeliveryRateDetails.get(), fileName, this.getPath(), id + "#" + designation);
         return oapDeliveryRateDetails.get();
     }
 

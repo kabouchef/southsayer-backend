@@ -51,7 +51,7 @@ public class ActivityCodeService {
 
         Iterable<ActivityCode> activityCodes = this.activityCodeRepository.findAll();
 
-        ExcelUtils.writeToExcel((List<ActivityCode>) activityCodes, fileName, this.getPath());
+        ExcelUtils.writeToExcel((List<ActivityCode>) activityCodes, fileName, this.getPath(), "all");
 
         return activityCodes;
     }
@@ -67,7 +67,7 @@ public class ActivityCodeService {
 
         if (!activityCodes.isPresent()) throw new NotFoundException(this.notFoundMessage.toString(codActivite));
 
-        ExcelUtils.writeToExcel(activityCodes.get(), fileName, this.getPath());
+        ExcelUtils.writeToExcel(activityCodes.get(), fileName, this.getPath(), codActivite);
 
         return activityCodes.get();
     }
@@ -83,7 +83,7 @@ public class ActivityCodeService {
 
         if (!activityCodes.isPresent()) throw new NotFoundException(this.notFoundMessage.toString(lib1));
 
-        ExcelUtils.writeToExcel(activityCodes.get(), fileName, this.getPath());
+        ExcelUtils.writeToExcel(activityCodes.get(), fileName, this.getPath(), lib1);
 
         return activityCodes.get();
     }
@@ -99,7 +99,7 @@ public class ActivityCodeService {
 
         if (!activityCodes.isPresent()) throw new NotFoundException(this.notFoundMessage.toLong(idRayon));
 
-        ExcelUtils.writeToExcel(activityCodes.get(), fileName, this.getPath());
+        ExcelUtils.writeToExcel(activityCodes.get(), fileName, this.getPath(), idRayon.toString());
 
         return activityCodes.get();
     }
@@ -115,7 +115,7 @@ public class ActivityCodeService {
 
         if (!activityCodes.isPresent()) throw new NotFoundException(this.notFoundMessage.toString(rayon));
 
-        ExcelUtils.writeToExcel(activityCodes.get(), fileName, this.getPath());
+        ExcelUtils.writeToExcel(activityCodes.get(), fileName, this.getPath(), rayon);
 
         return activityCodes.get();
     }
@@ -131,7 +131,7 @@ public class ActivityCodeService {
 
         if (!activityCodes.isPresent()) throw new NotFoundException(this.notFoundMessage.toString(idOAP));
 
-        ExcelUtils.writeToExcel(activityCodes.get(), fileName, this.getPath());
+        ExcelUtils.writeToExcel(activityCodes.get(), fileName, this.getPath(), idOAP);
 
         return activityCodes.get();
     }

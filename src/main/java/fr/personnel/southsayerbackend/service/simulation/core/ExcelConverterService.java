@@ -44,7 +44,6 @@ public class ExcelConverterService {
 
     private final StaticPathService staticPathService;
 
-
     public List<PriceLine> generatePriceLinesExcel(String simulationCode)
             throws ParserConfigurationException, IOException, SAXException {
 

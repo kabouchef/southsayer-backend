@@ -193,6 +193,21 @@ public class StyleOfCellsService {
         return style;
     }
 
+    public static HSSFCellStyle getCustomFilterValue(HSSFWorkbook wb){
+        HSSFCellStyle style = wb.createCellStyle();
+        DataFormat df = wb.createDataFormat();
+        HSSFFont font = wb.createFont();
+        font.setColor(HSSFColor.HSSFColorPredefined.GREY_80_PERCENT.getIndex());
+        font.setFontName(StyleCellConstant.LEROY_MERLIN_SANS);
+        style.setFont(font);
+        style.setBorderRight(BorderStyle.MEDIUM);
+        style.setBorderTop(BorderStyle.MEDIUM);
+        style.setBorderLeft(BorderStyle.MEDIUM);
+        style.setBorderBottom(BorderStyle.MEDIUM);
+        style.setAlignment(HorizontalAlignment.CENTER);
+        return style;
+    }
+
     public static HSSFCellStyle getCustomConversionRate(HSSFWorkbook wb){
         HSSFCellStyle style = wb.createCellStyle();
         DataFormat df = wb.createDataFormat();

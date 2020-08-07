@@ -27,7 +27,8 @@ import static fr.personnel.southsayerbackend.configuration.constant.RestConstant
 /**
  * @author Farouk KABOUCHE
  * <p>
- * Clob To String Utils
+ * Excel Utils
+ * @version 1.0
  */
 @Slf4j
 @Component
@@ -84,7 +85,7 @@ public class ExcelUtils {
                 .withHssfRow(row0);
     }
 
-    public static <T> void writeToExcel(List<T> data, String sheetName, String path) throws IOException {
+    public static <T> void writeToExcel(List<T> data, String sheetName, String path, String filterValue) throws IOException {
         FileOutputStream fos = null;
         HSSFWorkbook workbook = null;
 
@@ -102,15 +103,24 @@ public class ExcelUtils {
 
         // Style of Title Cell
         HSSFCellStyle styleHead =  StyleOfCellsService.getCustomStyleHead(workbookDTO.getHssfWorkbook());
-        // Style of Title Cell
+        // Style of Global Content Cell
         HSSFCellStyle styleGlobalContent =  StyleOfCellsService.getCustomGlobalContent(workbookDTO.getHssfWorkbook());
-
+        // Style of Filter Value Cell
+        HSSFCellStyle styleFilterValue = StyleOfCellsService.getCustomFilterValue(workbookDTO.getHssfWorkbook());
 
         try {
             workbook = workbookDTO.getHssfWorkbook();
             Sheet sheet = workbookDTO.getHssfSheet();
             List<String> fieldNames = getFieldNamesForClass(data.get(0).getClass());
-            int rowCount = 3;
+            Row rowFilterValue = sheet.createRow(3);
+            Cell cellHeadFilterValue = rowFilterValue.createCell(0);
+            cellHeadFilterValue.setCellValue("filterValue");
+            cellHeadFilterValue.setCellStyle(styleHead);
+            Cell cellFilterValue = rowFilterValue.createCell(1);
+            cellFilterValue.setCellValue(filterValue);
+            cellFilterValue.setCellStyle(styleFilterValue);
+
+            int rowCount = 6;
             int columnCount = 0;
             Row row = sheet.createRow(rowCount++);
             for (String fieldName : fieldNames) {

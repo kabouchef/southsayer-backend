@@ -9,6 +9,7 @@ import fr.personnel.southsayerbackend.service.simulation.core.ExcelConverterServ
 import fr.personnel.southsayerbackend.service.simulation.core.ExtractFromDatabaseService;
 import fr.personnel.southsayerbackend.service.simulation.core.StaticPathService;
 import fr.personnel.southsayerbackend.service.simulation.core.XmlWriterService;
+import fr.personnel.southsayerbackend.utils.ExcelUtils;
 import fr.personnel.southsayerbackend.utils.MathUtils;
 import fr.personnel.southsayerdatabase.entity.simulation.ConfigurationStorage;
 import fr.personnel.southsayerdatabase.repository.simulation.ConfigurationStorageRepository;
@@ -21,12 +22,13 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils.STATIC_DIRECTORY_SIMULATION;
-import static fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils.XML_EXTENSION;
+import static fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils.*;
+import static fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils.STATIC_DIRECTORY_TYPE_RATE;
 
 /**
  * @author Farouk KABOUCHE
@@ -47,6 +49,17 @@ public class SimulationService {
     private final ConfigurationStorageRepository configurationStorageRepository;
     private final NotFoundMessage notFoundMessage;
     private final StaticPathService staticPathService;
+
+    String fileName = "LM - " + this.getClass().getSimpleName().replace("Service","");
+
+    /**
+     * Get Path to export file
+     * @return {@link String}
+     */
+    private String getPath(){
+        return this.staticPathService.getPath(XLS_EXTENSION, STATIC_DIRECTORY_CONVERSION_RATE);
+    }
+
 
 
 
@@ -93,14 +106,19 @@ public class SimulationService {
 
         double rate = MathUtils.calculatePercentage(valueRate, totalRate);
 
+        /*this.excelConverterService
+                .generateConversionRateExcel(totalRate, valueRate, rate, inputRate);*/
 
-        this.excelConverterService
-                .generateConversionRateExcel(totalRate, valueRate, rate, inputRate);
-
-        return new ConversionRate()
+        ConversionRate conversionRate = new ConversionRate()
                 .withTotal(totalRate)
                 .withValueRate(valueRate)
                 .withRating(rate);
+        List<ConversionRate> conversionRateList = new ArrayList<>();
+        conversionRateList.add(conversionRate);
+
+        ExcelUtils.writeToExcel(conversionRateList, fileName, this.getPath(), inputRate.getValueDescription());
+
+        return conversionRate;
     }
 
     public List<String> getSimCodebyConfCategIdLike(String confCategId) {

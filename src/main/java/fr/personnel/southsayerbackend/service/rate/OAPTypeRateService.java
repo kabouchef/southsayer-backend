@@ -52,7 +52,7 @@ public class OAPTypeRateService {
 
         Iterable<OAPDeliveryType> oapDeliveryTypes = this.oapDeliveryTypeRepository.findAll();
 
-        ExcelUtils.writeToExcel((List<OAPDeliveryType>) oapDeliveryTypes, fileName, this.getPath());
+        ExcelUtils.writeToExcel((List<OAPDeliveryType>) oapDeliveryTypes, fileName, this.getPath(), "all");
 
         return oapDeliveryTypes;
     }
@@ -70,7 +70,7 @@ public class OAPTypeRateService {
         if (!oapDeliveryTypes.isPresent())
             throw new NotFoundException(this.notFoundMessage.toString(codTypePrestation));
 
-        ExcelUtils.writeToExcel(oapDeliveryTypes.get(), fileName, this.getPath());
+        ExcelUtils.writeToExcel(oapDeliveryTypes.get(), fileName, this.getPath(), codTypePrestation);
         return oapDeliveryTypes.get();
     }
 
@@ -84,7 +84,7 @@ public class OAPTypeRateService {
         Optional<List<OAPDeliveryType>> oapDeliveryTypes =
                 this.oapDeliveryTypeRepository.findByLibTypePrestationLike(wording);
         if (!oapDeliveryTypes.isPresent()) throw new NotFoundException(this.notFoundMessage.toString(wording));
-        ExcelUtils.writeToExcel(oapDeliveryTypes.get(), fileName, this.getPath());
+        ExcelUtils.writeToExcel(oapDeliveryTypes.get(), fileName, this.getPath(), wording);
         return oapDeliveryTypes.get();
     }
 
@@ -98,7 +98,7 @@ public class OAPTypeRateService {
         Optional<List<OAPDeliveryType>> oapDeliveryTypes = this.oapDeliveryTypeRepository.findByIdOap(idOAP);
         if (!oapDeliveryTypes.isPresent()) throw new NotFoundException(this.notFoundMessage.toLong(idOAP));
 
-        ExcelUtils.writeToExcel(oapDeliveryTypes.get(), fileName, this.getPath());
+        ExcelUtils.writeToExcel(oapDeliveryTypes.get(), fileName, this.getPath(), idOAP.toString());
 
         return oapDeliveryTypes.get();
     }
