@@ -1,4 +1,4 @@
-package fr.personnel.southsayerbackend.model.simulation.rate;
+package fr.personnel.southsayerbackend.model.simulation;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

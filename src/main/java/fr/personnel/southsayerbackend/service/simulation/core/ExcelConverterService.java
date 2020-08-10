@@ -1,19 +1,19 @@
 package fr.personnel.southsayerbackend.service.simulation.core;
 
 import fr.personnel.southsayerbackend.model.simulation.PriceLine;
-import fr.personnel.southsayerbackend.model.simulation.WorkbookDTO;
-import fr.personnel.southsayerbackend.model.simulation.rate.InputRate;
+import fr.personnel.southsayerbackend.model.excel.WorkbookDTO;
+import fr.personnel.southsayerbackend.model.simulation.InputRate;
 import fr.personnel.southsayerbackend.utils.ExcelUtils;
 import fr.personnel.southsayerbackend.utils.MathUtils;
-import fr.personnel.southsayerdatabase.entity.rate.OAPDeliveryRateDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FileUtils;
-import org.apache.poi.hssf.usermodel.*;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.util.CellReference;
-import org.apache.poi.util.IOUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
@@ -25,12 +25,16 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import static fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils.*;
+import static org.apache.commons.io.FileUtils.cleanDirectory;
 
 /**
  * @author Farouk KABOUCHE
@@ -56,7 +60,7 @@ public class ExcelConverterService {
         FileOutputStream fos = null;
 
         // Drain static repository
-        FileUtils.cleanDirectory(new File(pathXlsSimulation));
+        cleanDirectory(new File(pathXlsSimulation));
 
         try {
             //Init Worbook
@@ -318,7 +322,7 @@ public class ExcelConverterService {
         String fileName = "LM - Conversion Rate";
 
 
-        FileUtils.cleanDirectory(new File(pathXlsCR));
+        cleanDirectory(new File(pathXlsCR));
 
         //Init Worbook
         WorkbookDTO workbookDTO =

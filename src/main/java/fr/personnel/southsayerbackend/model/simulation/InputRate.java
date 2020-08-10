@@ -1,6 +1,5 @@
-package fr.personnel.southsayerbackend.model.simulation.rate;
+package fr.personnel.southsayerbackend.model.simulation;
 
-import fr.personnel.southsayerbackend.model.simulation.XpathDefinition;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,7 +7,7 @@ import lombok.With;
 
 /**
  * @author Farouk KABOUCHE
- * Conversion Rate
+ * Input Rate
  * @version 1.0
  */
 @Data

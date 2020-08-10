@@ -2,9 +2,8 @@ package fr.personnel.southsayerbackend.utils;
 
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.Reader;
+import javax.sql.rowset.serial.SerialClob;
+import java.io.*;
 import java.sql.Clob;
 import java.sql.SQLException;
 
@@ -12,10 +11,12 @@ import java.sql.SQLException;
  * @author Farouk KABOUCHE
  * <p>
  * Clob To String Utils
+ * @version 1.0
  */
 @Slf4j
 public class ClobToStringUtils {
-    public String clobToString(Clob clob) {
+
+    public static String clobToString(Clob clob) {
         final StringBuilder sb = new StringBuilder();
         try {
             final Reader reader = clob.getCharacterStream();
@@ -31,6 +32,19 @@ public class ClobToStringUtils {
             return e.toString();
         }
         return sb.toString();
+    }
+
+    public static Clob stringToClob(String source)
+    {
+        try
+        {
+            return new SerialClob(source.toCharArray());
+        }
+        catch (Exception e)
+        {
+            log.error("Could not convert string to a CLOB",e);
+            return null;
+        }
     }
 
 }

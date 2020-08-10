@@ -96,7 +96,7 @@ public class ActivityCodeController {
     }
 
     /**
-     * Post OAP AC
+     * Add OAP AC
      *
      * @param activityCodes : OAP AC
      * @return {@link List<ActivityCode>}

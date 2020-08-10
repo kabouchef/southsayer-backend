@@ -1,10 +1,13 @@
 package fr.personnel.southsayerbackend.utils;
 
-import fr.personnel.southsayerbackend.model.simulation.WorkbookDTO;
-import fr.personnel.southsayerbackend.service.simulation.core.StaticPathService;
+import fr.personnel.southsayerbackend.model.excel.WorkbookDTO;
 import fr.personnel.southsayerbackend.service.simulation.core.StyleOfCellsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.hssf.usermodel.*;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.util.IOUtils;
+import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.lang.reflect.Field;
@@ -14,15 +17,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.poi.hssf.usermodel.*;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.util.IOUtils;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.stereotype.*;
-
 import static fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils.STATIC_DIRECTORY_IMAGES;
 import static fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils.XLS_EXTENSION;
+import static org.apache.commons.io.FileUtils.cleanDirectory;
 
 /**
  * @author Farouk KABOUCHE
@@ -97,7 +94,7 @@ public class ExcelUtils {
         File file = new File(path + "/" +fileName);
 
         //Drain Static directory
-        FileUtils.cleanDirectory(new File(path));
+        cleanDirectory(new File(path));
 
         WorkbookDTO workbookDTO = workbookInit(sheetName, fileName);
 

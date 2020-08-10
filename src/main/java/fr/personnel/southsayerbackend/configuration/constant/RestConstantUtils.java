@@ -36,6 +36,7 @@ public final class RestConstantUtils {
     public static final String STATIC_DIRECTORY_DELIVERY_RATE = "delivery_rate";
     public static final String STATIC_DIRECTORY_TYPE_RATE = "type_rate";
     public static final String STATIC_DIRECTORY_ACTIVITY_CODE = "activity_code";
+    public static final String STATIC_DIRECTORY_OUTPUT_FILE = "output_file";
 
 
 
