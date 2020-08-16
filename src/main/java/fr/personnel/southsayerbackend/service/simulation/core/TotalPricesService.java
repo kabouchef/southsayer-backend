@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static fr.personnel.southsayerbackend.utils.MathUtils.arrondiMathematique;
-import static fr.personnel.southsayerbackend.utils.MathUtils.multiplyDouble;
+import static fr.personnel.southsayerbackend.utils.global.MathUtils.arrondiMathematique;
+import static fr.personnel.southsayerbackend.utils.global.MathUtils.multiplyDouble;
 
 /**
  * @author Farouk KABOUCHE

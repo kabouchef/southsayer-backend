@@ -153,6 +153,13 @@
             <version>1</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.sun.xml.ws</groupId>
+            <artifactId>jaxws-ri</artifactId>
+            <version>2.3.0</version>
+            <type>pom</type>
+        </dependency>
+
         <!--SOAP CONSUMER-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -164,9 +171,16 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
+        <!--SFTP UPLOAD-->
+        <dependency>
+            <groupId>com.hierynomus</groupId>
+            <artifactId>sshj</artifactId>
+            <version>0.27.0</version>
+        </dependency>
     </dependencies>
 
-    <profiles>
+    <!--<profiles>
         <profile>
             <id>java8</id>
             <activation>
@@ -180,7 +194,7 @@
                 </dependency>
             </dependencies>
         </profile>
-    </profiles>
+    </profiles>-->
 
     <build>
         <plugins>

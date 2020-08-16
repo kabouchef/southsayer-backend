@@ -1,7 +1,6 @@
-package fr.personnel.southsayerbackend.utils;
+package fr.personnel.southsayerbackend.utils.xls;
 
 import fr.personnel.southsayerbackend.model.excel.WorkbookDTO;
-import fr.personnel.southsayerbackend.service.simulation.core.StyleOfCellsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.usermodel.*;
@@ -50,7 +49,7 @@ public class ExcelUtils {
         }
 
         // Style of Title Cell
-        HSSFCellStyle styleTitle = StyleOfCellsService.getCustomStyleTitle(workbook, spreadSheet);
+        HSSFCellStyle styleTitle = StyleOfCellsUtils.getCustomStyleTitle(workbook, spreadSheet);
 
         // Creating Row of Title
         row0.setHeight((short) 1400);
@@ -99,11 +98,11 @@ public class ExcelUtils {
         WorkbookDTO workbookDTO = workbookInit(sheetName, fileName);
 
         // Style of Title Cell
-        HSSFCellStyle styleHead =  StyleOfCellsService.getCustomStyleHead(workbookDTO.getHssfWorkbook());
+        HSSFCellStyle styleHead =  StyleOfCellsUtils.getCustomStyleHead(workbookDTO.getHssfWorkbook());
         // Style of Global Content Cell
-        HSSFCellStyle styleGlobalContent =  StyleOfCellsService.getCustomGlobalContent(workbookDTO.getHssfWorkbook());
+        HSSFCellStyle styleGlobalContent =  StyleOfCellsUtils.getCustomGlobalContent(workbookDTO.getHssfWorkbook());
         // Style of Filter Value Cell
-        HSSFCellStyle styleFilterValue = StyleOfCellsService.getCustomFilterValue(workbookDTO.getHssfWorkbook());
+        HSSFCellStyle styleFilterValue = StyleOfCellsUtils.getCustomFilterValue(workbookDTO.getHssfWorkbook());
 
         try {
             workbook = workbookDTO.getHssfWorkbook();

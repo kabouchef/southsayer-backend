@@ -2,8 +2,8 @@ package fr.personnel.southsayerbackend.service.rate;
 
 import fr.personnel.exceptions.handling.WebClientError.NotFoundException;
 import fr.personnel.southsayerbackend.configuration.message.NotFoundMessage;
-import fr.personnel.southsayerbackend.service.simulation.core.StaticPathService;
-import fr.personnel.southsayerbackend.utils.ExcelUtils;
+import fr.personnel.southsayerbackend.utils.global.StaticPathUtils;
+import fr.personnel.southsayerbackend.utils.xls.ExcelUtils;
 import fr.personnel.southsayerdatabase.entity.rate.OAPDeliveryRateDetails;
 import fr.personnel.southsayerdatabase.repository.rate.OAPDeliveryRateDetailsRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +32,7 @@ public class OAPDeliveryRateService {
 
     private final OAPDeliveryRateDetailsRepository oapDeliveryRateDetailsRepository;
     private final NotFoundMessage notFoundMessage;
-    private final StaticPathService staticPathService;
+    private final StaticPathUtils staticPathUtils;
 
     String fileName = "LM - " + this.getClass().getSimpleName().replace("Service","");
 
@@ -41,7 +41,7 @@ public class OAPDeliveryRateService {
      * @return {@link String}
      */
     private String getPath(){
-        return this.staticPathService.getPath(XLS_EXTENSION, STATIC_DIRECTORY_DELIVERY_RATE);
+        return this.staticPathUtils.getPath(XLS_EXTENSION, STATIC_DIRECTORY_DELIVERY_RATE);
     }
 
     /**

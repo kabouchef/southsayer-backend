@@ -1,5 +1,6 @@
 package fr.personnel.southsayerbackend.controller.simulation;
 
+import com.sun.tools.ws.wsdl.document.Input;
 import fr.personnel.southsayerbackend.model.simulation.PriceLine;
 import fr.personnel.southsayerbackend.model.simulation.ValueXmlSimulation;
 import fr.personnel.southsayerbackend.model.simulation.XpathDefinition;
@@ -8,12 +9,14 @@ import fr.personnel.southsayerbackend.model.simulation.InputRate;
 import fr.personnel.southsayerbackend.model.simulation.UpdateValueDTO;
 import fr.personnel.southsayerbackend.service.simulation.SimulationService;
 import fr.personnel.southsayerbackend.service.simulation.core.ExtractFromDatabaseService;
-import fr.personnel.southsayerbackend.service.simulation.core.StaticPathService;
-import fr.personnel.southsayerbackend.utils.ExportFileUtils;
+import fr.personnel.southsayerbackend.utils.global.StaticPathUtils;
+import fr.personnel.southsayerbackend.utils.global.ExportFileUtils;
+import fr.personnel.southsayerbackend.utils.xml.XmlUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.models.media.XML;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
@@ -46,7 +49,8 @@ public class SimulationController {
     private final ExportFileUtils exportFileUtils;
     private final SimulationService simulationService;
     private final ExtractFromDatabaseService extractFromDatabaseService;
-    private final StaticPathService staticPathService;
+    private final StaticPathUtils staticPathUtils;
+    private final XmlUtils xmlUtils;
 
     /**
      * Get price lines about simulationCode
@@ -79,7 +83,7 @@ public class SimulationController {
 
 
         File file = new File(
-                this.staticPathService.getPath(XLS_EXTENSION, STATIC_DIRECTORY_SIMULATION) +
+                this.staticPathUtils.getPath(XLS_EXTENSION, STATIC_DIRECTORY_SIMULATION) +
                         "PRICE_FROM_" + simulationCode + "." + XLS_EXTENSION);
 
         // Load file as Resource
@@ -101,12 +105,12 @@ public class SimulationController {
      * @return {@link List<String>}
      */
     @Operation(summary = "API to extract OAP simulation",
-            description = "Retrieves the list of code simulations by iDOAP")
+            description = "Retrieves the list of code simulations by idOAP")
     @CrossOrigin
     @GetMapping("/byIdOAP")
     @ResponseBody
     public List<String> getSimulationCodes(
-            @Parameter(description = "idOAP", example = "OPA:016", required = true)
+            @Parameter(description = "idOAP", example = "OAP:016", required = true)
             @RequestParam(name = "idOAP") String idOAP) {
 
         return this.simulationService.getSimCodeByConfCategIdLike(idOAP);
@@ -177,7 +181,7 @@ public class SimulationController {
     @CrossOrigin
     @PostMapping("/convertToRT")
     public String convertOfferToRT(
-            @Parameter(description = "simulationCode", example = "20200807S52522", required = true)
+            @Parameter(description = "simulationCode", example = "20200810S52546", required = true)
             @RequestParam String simulationCode) {
         return this.simulationService.convertSimulationToRT(simulationCode);
     }
@@ -204,8 +208,49 @@ public class SimulationController {
         return this.simulationService.save(updateValueDTOS);
     }
 
+    /**
+     * Upload To Server
+     * @param simulationCode : simulationCode
+     * @param target : target
+     * @return {@link boolean}
+     * @throws IOException : IOException
+     */
+    @Operation(summary = "API to extract OAP simulation", description = "Upload To Server")
+    @CrossOrigin
+    @PostMapping("/uploadToServer")
+    public List<PriceLine> uploadToServer(
+            @Parameter(description = "simulationCode", example = "20191011S49954", required = true)
+            @RequestParam String simulationCode,
+            @Parameter(description = "target", example = "/home1/edge/conf/run/settings/configurator", required = true)
+            @RequestParam String target) throws IOException {
 
+        List<PriceLine> priceLines = this.simulationService.getSimulationOffer(simulationCode);
 
+        this.xmlUtils.replaceValueIntoXMLFileByXpath(
+                simulationCode,
+                "//*[@cpe='CPE.Settings.Session.Debug']/@value",
+                "true");
 
+        this.simulationService.uploadToSFTPServer(simulationCode, target);
 
+        return priceLines;
+    }
+
+    /**
+     * Download To Server
+     * @param simulationCode : simulationCode
+     * @param target : target
+     * @return {@link boolean}
+     * @throws IOException : IOException
+     */
+    @Operation(summary = "API to extract OAP simulation", description = "Download To Server")
+    @CrossOrigin
+    @PostMapping("/downloadToServer")
+    public boolean downloadToServer(
+            @Parameter(description = "simulationCode", example = "20191011S49954", required = true)
+            @RequestParam String simulationCode,
+            @Parameter(description = "target", example = "/home1/edge/conf/run/settings/configurator", required = true)
+            @RequestParam String target) throws IOException {
+        return this.simulationService.downloadToSFTPServer(simulationCode, target);
+    }
 }

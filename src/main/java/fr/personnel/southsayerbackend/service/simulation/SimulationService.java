@@ -2,6 +2,7 @@ package fr.personnel.southsayerbackend.service.simulation;
 
 import fr.personnel.exceptions.handling.WebClientError.MethodNotAllowedException;
 import fr.personnel.exceptions.handling.WebClientError.NotFoundException;
+import fr.personnel.southsayerbackend.configuration.constant.WebServiceClient;
 import fr.personnel.southsayerbackend.configuration.message.NotFoundMessage;
 import fr.personnel.southsayerbackend.model.simulation.ConversionRate;
 import fr.personnel.southsayerbackend.model.simulation.InputRate;
@@ -9,10 +10,11 @@ import fr.personnel.southsayerbackend.model.simulation.PriceLine;
 import fr.personnel.southsayerbackend.model.simulation.UpdateValueDTO;
 import fr.personnel.southsayerbackend.service.simulation.core.ExcelConverterService;
 import fr.personnel.southsayerbackend.service.simulation.core.ExtractFromDatabaseService;
-import fr.personnel.southsayerbackend.service.simulation.core.StaticPathService;
-import fr.personnel.southsayerbackend.utils.ExcelUtils;
-import fr.personnel.southsayerbackend.utils.MathUtils;
-import fr.personnel.southsayerbackend.utils.XmlUtils;
+import fr.personnel.southsayerbackend.utils.global.StaticPathUtils;
+import fr.personnel.southsayerbackend.utils.sftp.SFTPFileUtils;
+import fr.personnel.southsayerbackend.utils.xls.ExcelUtils;
+import fr.personnel.southsayerbackend.utils.global.MathUtils;
+import fr.personnel.southsayerbackend.utils.xml.XmlUtils;
 import fr.personnel.southsayerdatabase.entity.simulation.ConfigurationStorage;
 import fr.personnel.southsayerdatabase.repository.simulation.ConfigurationStorageRepository;
 import lombok.Data;
@@ -29,7 +31,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils.*;
-import static fr.personnel.southsayerbackend.utils.ClobToStringUtils.stringToClob;
+import static fr.personnel.southsayerbackend.utils.database.ClobToStringUtils.stringToClob;
 import static org.apache.commons.io.FileUtils.cleanDirectory;
 
 /**
@@ -48,7 +50,9 @@ public class SimulationService {
     private final XmlUtils xmlUtils;
     private final ConfigurationStorageRepository configurationStorageRepository;
     private final NotFoundMessage notFoundMessage;
-    private final StaticPathService staticPathService;
+    private final StaticPathUtils staticPathUtils;
+    private final WebServiceClient webServiceClient;
+    private final SFTPFileUtils sftpFileUtils;
 
     String fileName = "LM - " + this.getClass().getSimpleName().replace("Service","");
 
@@ -57,7 +61,7 @@ public class SimulationService {
      * @return {@link String}
      */
     private String getPath(){
-        return this.staticPathService.getPath(XLS_EXTENSION, STATIC_DIRECTORY_CONVERSION_RATE);
+        return this.staticPathUtils.getPath(XLS_EXTENSION, STATIC_DIRECTORY_CONVERSION_RATE);
     }
 
 
@@ -71,7 +75,7 @@ public class SimulationService {
 
         List<PriceLine> tabPriceElement = null;
         simulationCode = simulationCode.replace(" ", "");
-        cleanDirectory(new File(this.staticPathService.getPath(XML_EXTENSION, STATIC_DIRECTORY_SIMULATION)));
+        cleanDirectory(new File(this.staticPathUtils.getPath(XML_EXTENSION, STATIC_DIRECTORY_SIMULATION)));
 
         try {
             // Create file XML_CONF.xml from data extracted
@@ -81,6 +85,7 @@ public class SimulationService {
 
             // Create Excel File PRICE_FROM_simulationCode.xls
             // File which present price lines of the simulation
+            // And calculate totalPriceHT, totalPriceTVAReduite, totalPriceTVAInter, and totalPriceTVANormale
             tabPriceElement = this.excelConverterService.generatePriceLinesExcel(simulationCode);
 
         } catch (IOException | ParserConfigurationException | SAXException e) {
@@ -182,30 +187,31 @@ public class SimulationService {
                 .collect(Collectors.toList());
     }
 
-
     /**
      * Convert Simulation To RT
      * @return {@link String}
      */
     public String convertSimulationToRT(String simulationCode) {
-        return this.associateOfferTransaction(this.getOffers(simulationCode));
+        return this.webServiceClient.associateOfferTransaction(this.webServiceClient.getOffers(simulationCode));
     }
 
-    // TODO 6 - Post getOffers with simulationCode
     /**
-     * Get Offers
-     * @return {@link String}
+     * Upload To SFTP Server
+     * @return {@link boolean}
      */
-    private String getOffers(String simulationCode){
-        return simulationCode;
+    public boolean uploadToSFTPServer(String simulationCode, String target) throws IOException {
+        return this.sftpFileUtils.uploadSFTP(
+                this.staticPathUtils.getPath(XML_EXTENSION, STATIC_DIRECTORY_SIMULATION),
+                simulationCode + "." + XML_EXTENSION, target);
     }
 
-    // TODO 7 - Post associateOfferTransaction with idOffer from getOffers' result
     /**
-     * Associate Offer Transaction
-     * @return {@link String}
+     * Download To SFTP Server
+     * @return {@link boolean}
      */
-    private String associateOfferTransaction(String idOffer){
-        return idOffer;
+    public boolean downloadToSFTPServer(String simulationCode, String target) throws IOException {
+        return this.sftpFileUtils.downloadSFTP(
+                this.staticPathUtils.getPath(XML_EXTENSION, STATIC_DIRECTORY_SIMULATION),
+                simulationCode + "." + XML_EXTENSION, target);
     }
 }

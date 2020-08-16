@@ -1,8 +1,9 @@
 package fr.personnel.southsayerbackend.configuration.constant;
 
+import com.adeo.spc.ws3.*;
+import com.adeo.spc.ws3.storage.dto.GetOffersDTO;
 import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
 
-import javax.xml.bind.JAXBElement;
 import java.util.List;
 
 /**
@@ -11,24 +12,43 @@ import java.util.List;
  * Web Service Client
  * @version 1.0
  */
-//TODO 4 - Configure WebServiceClient
 public final class WebServiceClient extends WebServiceGatewaySupport {
+    /**
+     * Get Offers
+     *
+     * @param simulationCode : simulationCode
+     * @return {@link String}
+     */
+    public String getOffers(final String simulationCode) {
+        final GetOffers request = new GetOffers();
+        /*request.getTransactions().get(0).setCode(simulationCode);*/
+
+        List<GetOffersDTO> transactions = request.getTransactions();
+        GetOffersDTO getOffersDTO = new GetOffersDTO();
+        getOffersDTO.setCode(simulationCode);
+        getOffersDTO.setVersion(0);
+        transactions.add(getOffersDTO);
+
+        final GetOffers requestJaxb = new ObjectFactory().createGetOffers();
+        requestJaxb.getTransactions().add(getOffersDTO);
+        GetOffersResponse response = (GetOffersResponse) getWebServiceTemplate().marshalSendAndReceive(requestJaxb);
+
+        return response.getOffers().get(0).getIdOffer();
+    }
 
     /**
-     * Get Prestation Type By Store
+     * Associate Offer Transaction
      *
-     * @param id : id
-     * @return {@link List < DomaineCompetenceLightDTO >}
+     * @param idOffer : idOffer from Get Offer
+     * @return {@link String}
      */
-    public /*List<DomaineCompetenceLightDTO>*/ String getPrestationTypeByStore(final String id) {
-        /*final GetTypePrestationByMagasin request = new GetTypePrestationByMagasin();
-        request.setArg0(id);
-        final JAXBElement<GetTypePrestationByMagasin> requestJaxb = new ObjectFactory().createGetTypePrestationByMagasin(request);
+    public String associateOfferTransaction(final String idOffer) {
+        final AssociateOfferTransaction request = new AssociateOfferTransaction();
+        request.getTransactions().get(0).setIdOffer(Long.parseLong(idOffer));
 
-        final JAXBElement<GetTypePrestationByMagasinResponse> responseJaxb = (JAXBElement<GetTypePrestationByMagasinResponse>) getWebServiceTemplate().marshalSendAndReceive(requestJaxb);
-        return responseJaxb.getValue().getReturn();*/
+        final AssociateOfferTransaction requestJaxb = new ObjectFactory().createAssociateOfferTransaction();
+        AssociateOfferTransactionResponse response = (AssociateOfferTransactionResponse) getWebServiceTemplate().marshalSendAndReceive(requestJaxb);
 
-        return id;
-
+        return response.getOut();
     }
 }

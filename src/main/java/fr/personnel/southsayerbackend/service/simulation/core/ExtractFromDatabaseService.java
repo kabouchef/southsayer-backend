@@ -7,7 +7,7 @@ import fr.personnel.southsayerbackend.model.simulation.ValueXmlSimulation;
 import fr.personnel.southsayerbackend.model.simulation.XpathDefinition;
 import fr.personnel.southsayerbackend.model.simulation.ConversionRate;
 import fr.personnel.southsayerbackend.model.simulation.InputRate;
-import fr.personnel.southsayerbackend.utils.XmlUtils;
+import fr.personnel.southsayerbackend.utils.xml.XmlUtils;
 import fr.personnel.southsayerdatabase.entity.simulation.ConfigurationStorage;
 import fr.personnel.southsayerdatabase.repository.simulation.ConfigurationStorageRepository;
 import lombok.Data;
@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static fr.personnel.southsayerbackend.utils.ClobToStringUtils.clobToString;
+import static fr.personnel.southsayerbackend.utils.database.ClobToStringUtils.clobToString;
 
 /**
  * @author Farouk KABOUCHE

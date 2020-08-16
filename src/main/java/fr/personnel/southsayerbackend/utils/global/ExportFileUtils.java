@@ -1,4 +1,4 @@
-package fr.personnel.southsayerbackend.utils;
+package fr.personnel.southsayerbackend.utils.global;
 
 
 import fr.personnel.exceptions.handling.WebClientError.NotFoundException;

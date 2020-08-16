@@ -1,4 +1,4 @@
-package fr.personnel.southsayerbackend.utils;
+package fr.personnel.southsayerbackend.utils.database;
 
 import lombok.extern.slf4j.Slf4j;
 

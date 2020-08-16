@@ -1,4 +1,4 @@
-package fr.leroymerlin.oapcoreartyws.config;
+package fr.personnel.southsayerbackend.configuration.soap;
 
 import fr.personnel.southsayerbackend.configuration.constant.SoapConstant;
 import fr.personnel.southsayerbackend.configuration.constant.WebServiceClient;
@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
+
+import static fr.personnel.southsayerbackend.configuration.constant.SoapConstant.NAME_PACKAGE;
 
 
 /**
@@ -18,7 +20,7 @@ import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 @Slf4j
 public class SoapConnector {
 
-    @Value("${arty.storage.service.url}")
+    @Value("${spc.storage.service.url}")
     private String urlWS;
 
     /**
@@ -29,7 +31,7 @@ public class SoapConnector {
     @Bean
     public Jaxb2Marshaller marshaller() {
         Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
-        marshaller.setContextPath(SoapConstant.NAME_PACKAGE);
+        marshaller.setContextPath(NAME_PACKAGE);
         return marshaller;
     }
 

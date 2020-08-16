@@ -1,4 +1,4 @@
-package fr.personnel.southsayerbackend.service.simulation.core;
+package fr.personnel.southsayerbackend.utils.global;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +15,7 @@ import static fr.personnel.southsayerbackend.configuration.constant.RestConstant
 @Slf4j
 @Service
 @Data
-public class StaticPathService {
+public class StaticPathUtils {
 
     @Value("${ENVIRONMENT}")
     private String environment;

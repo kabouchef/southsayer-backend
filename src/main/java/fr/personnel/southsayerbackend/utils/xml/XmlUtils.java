@@ -1,15 +1,11 @@
-package fr.personnel.southsayerbackend.utils;
+package fr.personnel.southsayerbackend.utils.xml;
 
-import fr.personnel.southsayerbackend.service.simulation.core.StaticPathService;
-import fr.personnel.southsayerbackend.service.simulation.core.XmlFormatterService;
+import fr.personnel.southsayerbackend.utils.global.StaticPathUtils;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -18,9 +14,6 @@ import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
@@ -31,7 +24,6 @@ import javax.xml.xpath.XPathFactory;
 import java.io.*;
 
 import static fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils.*;
-import static org.apache.commons.io.FileUtils.cleanDirectory;
 
 /**
  * @author Farouk KABOUCHE
@@ -46,7 +38,7 @@ public class XmlUtils {
     @Value("${ENVIRONMENT}")
     private String environment;
 
-    private final StaticPathService staticPathService;
+    private final StaticPathUtils staticPathUtils;
 
     /**
      * Returns the value returned by the xpath for resultSet.
@@ -84,7 +76,7 @@ public class XmlUtils {
      */
     public String replaceValueIntoXMLByXpath(String xmlString, String xpath, String updatingValue) {
         try {
-        // 0- Prepare Output
+            // 0- Prepare Output
         /*String path = this.staticPathService.getPath(XML_EXTENSION, STATIC_DIRECTORY_OUTPUT_FILE);
         String target = "Output.xml";
         cleanDirectory(new File(path));*/
@@ -111,50 +103,56 @@ public class XmlUtils {
     }
 
     /**
-     * Read into XML
-     *
+     * Replace Value Into XML File By Xpath
+     * @param fileName : fileName
      * @param xpath : xpath
+     * @param updatingValue : updatingValue
      * @return {@link String}
      */
-    public String readIntoXML(String xpath) {
-        String searchValue = "";
-        String nameDefaultFile = STATIC_DIRECTORY_FILES + "/" + XML_EXTENSION + "/" + environment + "/" + "XML_CONF." + XML_EXTENSION;
+    public boolean replaceValueIntoXMLFileByXpath(String fileName, String xpath, String updatingValue) {
         try {
-            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            /**
-             * xmlDocument correspond au document xml parsé
-             */
-            dBuilder.parse(nameDefaultFile);
+            boolean result = false;
+            // 0- Prepare Output
+            String filePath = this.staticPathUtils.getPath(XML_EXTENSION, STATIC_DIRECTORY_SIMULATION) + "/" +
+                    fileName + "." + XML_EXTENSION;
 
-            /**
-             * Recherche du resultat du xpath dans le xmlDocument
-             */
+            // 1- Build the doc from the XML file
+            Document doc = DocumentBuilderFactory.newInstance()
+                    .newDocumentBuilder().parse(new InputSource(filePath));
+            // 2- Locate the node(s) with xpath
             XPath xPath = XPathFactory.newInstance().newXPath();
-            /**
-             * @offerCode : Récupération du numéro de simulation de l'offre
-             */
-            searchValue = xPath.compile(xpath).evaluate(dBuilder.parse(nameDefaultFile), XPathConstants.STRING).toString();
-            log.info("*******************************");
-            log.info("Numéro de simulation : " + searchValue);
-            log.info("*******************************");
+            NodeList nodes = (NodeList) xPath.evaluate(xpath, doc, XPathConstants.NODESET);
+            // 3- Make the change on the selected nodes
+            for (int idx = 0; idx < nodes.getLength(); idx++) {
+                nodes.item(idx).setTextContent(updatingValue);
+            }
 
-        } catch (Exception e) {
-            e.printStackTrace();
+
+            // 4- Save the result to a new XML doc
+            File file = new File(filePath);
+            TransformerFactory.newInstance().newTransformer().transform(new DOMSource(doc), new StreamResult(file));
+            if(file.exists()) {
+                log.info("\"" + updatingValue + "\" corresponding to " + xpath + " has been updating in " + file);
+                result = true;
+            }
+
+            return result;
+
+        } catch (Exception ex) {
+            throw new RuntimeException("Error converting to String : ", ex);
         }
-        return searchValue;
     }
 
     public void generateXML(String stringToXML, String simulationCode) throws IOException {
 
-        String path = this.staticPathService.getPath(XML_EXTENSION, STATIC_DIRECTORY_SIMULATION);
+        String path = this.staticPathUtils.getPath(XML_EXTENSION, STATIC_DIRECTORY_SIMULATION);
 
         String defaultFile = path + "/XML_CONF.xml";
 
         FileWriter fw = null;
         try {
             fw = new FileWriter(new File(defaultFile));
-            XmlFormatterService formatter = new XmlFormatterService();
+            XmlFormatterUtils formatter = new XmlFormatterUtils();
             fw.write(formatter.format(stringToXML));
 
         } catch (IOException e) {

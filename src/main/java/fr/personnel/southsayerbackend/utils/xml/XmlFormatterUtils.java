@@ -1,4 +1,4 @@
-package fr.personnel.southsayerbackend.service.simulation.core;
+package fr.personnel.southsayerbackend.utils.xml;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ import java.io.StringWriter;
  */
 @Slf4j
 @Service
-public class XmlFormatterService {
+public class XmlFormatterUtils {
 
     public String format(String input) {
         return prettyFormat(input, "2");
