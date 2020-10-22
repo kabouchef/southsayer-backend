@@ -11,10 +11,13 @@ import org.springframework.beans.factory.annotation.Value;
 @UtilityClass
 public final class RestConstantUtils {
 
+   /* @Value("${spring.application.environment}")
+    public static String environment;*/
+
     /**
      * Default Path
      */
-    public static final String DEFAULT_PATH = "api/v1";
+    public static final String DEFAULT_PATH = "api/v1/" /*+ environment*/;
     /**
      * Endpoints
      */

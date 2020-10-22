@@ -35,7 +35,7 @@ body:before {
     position: fixed;
     top: 0;
     left: 0;
-    background: #7cb220;
+    background: $color-primary;
     content: "";
     z-index: 0;
 }
@@ -86,7 +86,7 @@ button {
 
 
 button.primary {
-    background-color: #7cb220;
+    background-color: $color-primary;
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.12);
     color: #fff;
 }
@@ -98,7 +98,7 @@ input {
 }
 
 input[type="file"] {
-    border: 1px solid #7cb220;
+    border: 1px solid $color-primary;
     padding: 6px;
     max-width: 100%;
 }
@@ -144,13 +144,13 @@ input[type="file"] {
 /*.single-upload {
     padding-bottom: 20px;
     margin-bottom: 20px;
-    border-bottom: 1px solid #7cb220;
+    border-bottom: 1px solid $color-primary;
 }*/
 
 .multiple-upload {
     padding-bottom: 20px;
     margin-bottom: 20px;
-    border-bottom: 1px solid #7cb220;
+    border-bottom: 1px solid $color-primary;
 }
 
 .upload-response {
@@ -191,7 +191,7 @@ button {
 {
     padding-bottom: 20px;
     margin-bottom: 20px;
-    border-bottom: 1px solid #7cb220;
+    border-bottom: 1px solid $color-primary;
 }
 
 .loader-container{
@@ -230,15 +230,15 @@ th {
     color: #ffffff;
     text-align: center;
     font-size: 80%;
-    border: thin solid #7cb220;
+    border: thin solid $color-primary;
     width: 50%;
     padding: 5px;
-    background-color: #7cb220;
+    background-color: $color-primary;
 }
 td {
     text-align: center;
     font-size: 80%;
-    border: thin solid #7cb220;
+    border: thin solid $color-primary;
     width: 50%;
     padding: 5px;
     text-align: center;
@@ -348,7 +348,7 @@ iframe{
     width: 120px;
     height: 120px;
     border: 16px solid #e5e5e5;
-    border-top: 16px solid #7cb220;
+    border-top: 16px solid $color-primary;
     box-shadow: 0 0 6px 2px rgba(0,0,0,0.2);
     border-radius: 50%;
     position: absolute;

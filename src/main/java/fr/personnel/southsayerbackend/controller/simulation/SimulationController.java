@@ -28,6 +28,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 import static fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils.*;
@@ -73,18 +75,25 @@ public class SimulationController {
     /**
      * Get price_from_simulationCode.xls after the GetMapping "/request"
      *
-     * @param simulationCode : simulation code
      * @return {@link ResponseEntity<Resource>}
      */
     @Operation(summary = "API to extract OAP simulation",
             description = "Get the xls file of the simulation submitted by the request '/request'")
-    @GetMapping("/downloadPricesFile")
-    public ResponseEntity<Resource> downloadFile(@RequestParam(name = "simulationCode") String simulationCode) {
+    @GetMapping("/download/{extension}/{staticDirectory}")
+    public ResponseEntity<Resource> downloadFile(@PathVariable final String extension,
+                                                 @PathVariable final String staticDirectory) {
 
+        File directory = new File(this.staticPathUtils.getPath(extension, staticDirectory) + "/");
+        File[] listFiles = directory.listFiles();
 
-        File file = new File(
-                this.staticPathUtils.getPath(XLS_EXTENSION, STATIC_DIRECTORY_SIMULATION) +
-                        "PRICE_FROM_" + simulationCode + "." + XLS_EXTENSION);
+        String completePath = "";
+        for(File item : listFiles) {
+            if (item.isFile()) {
+                completePath = directory + "/" + item.getName();
+            }
+        }
+
+        File file = new File(completePath);
 
         // Load file as Resource
         Resource resource = this.exportFileUtils.loadFileAsResource(file.getAbsolutePath());
@@ -156,7 +165,11 @@ public class SimulationController {
     @Operation(summary = "API to extract OAP simulation", description = "Count simulations by idOAP")
     @CrossOrigin
     @GetMapping("/count")
-    public int countAllByConfCategIdLikeConfIdLike(@RequestParam String confCategId, @RequestParam String confId) {
+    public int countAllByConfCategIdLikeConfIdLike(
+            @Parameter(description = "idOAP", example = "OAP:016", required = true)
+            @RequestParam String confCategId,
+            @Parameter(description = "simulationCode", example = "20200%", required = true)
+            @RequestParam String confId) {
         return this.simulationService.countAllByConfCategIdLikeConfIdLike(confCategId, confId);
     }
 
@@ -208,6 +221,7 @@ public class SimulationController {
         return this.simulationService.save(updateValueDTOS);
     }
 
+    // TODO 1 - Make frontUI for uploadToServer
     /**
      * Upload To Server
      * @param simulationCode : simulationCode
