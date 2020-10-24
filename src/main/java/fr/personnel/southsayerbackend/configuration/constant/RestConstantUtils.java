@@ -11,21 +11,18 @@ import org.springframework.beans.factory.annotation.Value;
 @UtilityClass
 public final class RestConstantUtils {
 
-   /* @Value("${spring.application.environment}")
-    public static String environment;*/
-
     /**
      * Default Path
      */
-    public static final String DEFAULT_PATH = "api/v1/" /*+ environment*/;
+    public static final String DEFAULT_PATH = "api/v1/";
     /**
      * Endpoints
      */
-    public static final String ACTIVITY_CODE_PATH = DEFAULT_PATH + "/activity-code";
-    public static final String DELIVERY_RATE_PATH = DEFAULT_PATH + "/delivery-rate";
-    public static final String TYPE_RATE_PATH = DEFAULT_PATH + "/type-rate";
-    public static final String SIMULATION_PATH = DEFAULT_PATH + "/simulation";
-    public static final String USER_PATH = DEFAULT_PATH + "/user";
+    public static final String ACTIVITY_CODE_PATH = DEFAULT_PATH + "activity-code";
+    public static final String DELIVERY_RATE_PATH = DEFAULT_PATH + "delivery-rate";
+    public static final String TYPE_RATE_PATH = DEFAULT_PATH + "type-rate";
+    public static final String SIMULATION_PATH = DEFAULT_PATH + "simulation";
+    public static final String USER_PATH = DEFAULT_PATH + "user";
 
     /**
      * Statics

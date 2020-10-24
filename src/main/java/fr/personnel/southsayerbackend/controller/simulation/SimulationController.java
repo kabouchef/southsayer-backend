@@ -1,22 +1,15 @@
 package fr.personnel.southsayerbackend.controller.simulation;
 
-import com.sun.tools.ws.wsdl.document.Input;
-import fr.personnel.southsayerbackend.model.simulation.PriceLine;
-import fr.personnel.southsayerbackend.model.simulation.ValueXmlSimulation;
-import fr.personnel.southsayerbackend.model.simulation.XpathDefinition;
-import fr.personnel.southsayerbackend.model.simulation.ConversionRate;
-import fr.personnel.southsayerbackend.model.simulation.InputRate;
-import fr.personnel.southsayerbackend.model.simulation.UpdateValueDTO;
+import fr.personnel.southsayerbackend.model.simulation.*;
 import fr.personnel.southsayerbackend.service.simulation.SimulationService;
 import fr.personnel.southsayerbackend.service.simulation.core.ExtractFromDatabaseService;
-import fr.personnel.southsayerbackend.utils.global.StaticPathUtils;
 import fr.personnel.southsayerbackend.utils.global.ExportFileUtils;
+import fr.personnel.southsayerbackend.utils.global.StaticPathUtils;
 import fr.personnel.southsayerbackend.utils.xml.XmlUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.models.media.XML;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
@@ -28,11 +21,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
-import static fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils.*;
+import static fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils.SIMULATION_PATH;
 import static org.springframework.http.HttpHeaders.CONTENT_DISPOSITION;
 
 /**
