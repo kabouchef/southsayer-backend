@@ -4,10 +4,7 @@ import fr.personnel.exceptions.handling.WebClientError.MethodNotAllowedException
 import fr.personnel.exceptions.handling.WebClientError.NotFoundException;
 import fr.personnel.southsayerbackend.configuration.constant.WebServiceClient;
 import fr.personnel.southsayerbackend.configuration.message.NotFoundMessage;
-import fr.personnel.southsayerbackend.model.simulation.ConversionRate;
-import fr.personnel.southsayerbackend.model.simulation.InputRate;
-import fr.personnel.southsayerbackend.model.simulation.PriceLine;
-import fr.personnel.southsayerbackend.model.simulation.UpdateValueDTO;
+import fr.personnel.southsayerbackend.model.simulation.*;
 import fr.personnel.southsayerbackend.service.simulation.core.ExcelConverterService;
 import fr.personnel.southsayerbackend.service.simulation.core.ExtractFromDatabaseService;
 import fr.personnel.southsayerbackend.utils.global.StaticPathUtils;
@@ -200,6 +197,8 @@ public class SimulationService {
      * @return {@link boolean}
      */
     public boolean uploadToSFTPServer(String simulationCode, String target) throws IOException {
+        log.info(this.staticPathUtils.getPath(XML_EXTENSION, STATIC_DIRECTORY_SIMULATION));
+        log.info(target);
         return this.sftpFileUtils.uploadSFTP(
                 this.staticPathUtils.getPath(XML_EXTENSION, STATIC_DIRECTORY_SIMULATION),
                 simulationCode + "." + XML_EXTENSION, target);
@@ -214,4 +213,25 @@ public class SimulationService {
                 this.staticPathUtils.getPath(XML_EXTENSION, STATIC_DIRECTORY_SIMULATION),
                 simulationCode + "." + XML_EXTENSION, target);
     }
+
+    /**
+     * Find Value which retrieves by xpath in each simulation
+     * @param simulationCodes : List of simulationCode
+     * @param xpath : xpath
+     * @return {@link List<ValueXmlSimulation>}
+     */
+    public List<ValueXmlSimulation> findValuesSimCodeByXpath(List<String> simulationCodes, String xpath) throws IOException {
+
+        List<ValueXmlSimulation> valueXmlSimulations = extractFromDatabaseService.findValuesSimCodeByXpath(simulationCodes, xpath);
+
+        ExcelUtils.writeToExcel(
+                valueXmlSimulations,
+                fileName,
+                this.staticPathUtils.getPath(XLS_EXTENSION, STATIC_DIRECTORY_OUTPUT_FILE),
+                xpath);
+
+        return valueXmlSimulations;
+    }
+
+
 }

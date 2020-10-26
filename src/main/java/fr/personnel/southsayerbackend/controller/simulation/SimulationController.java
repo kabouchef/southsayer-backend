@@ -22,6 +22,7 @@ import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils.SIMULATION_PATH;
 import static org.springframework.http.HttpHeaders.CONTENT_DISPOSITION;
@@ -134,16 +135,35 @@ public class SimulationController {
     /**
      * Returns the value returned by the xpath for each simulation.
      *
-     * @param xpathDefinition : Definition of xpath which permit to find value searched in xml's offer
+     * @param xpathDefinitions : Definition of xpath which permit to find value searched in xml's offer
      * @return {@link List<ValueXmlSimulation>}
      */
     @Operation(summary = "API to extract OAP simulation",
             description = "Returns the value returned by the xpath for each simulation.")
     @CrossOrigin
     @PostMapping("/findByCPE")
-    public List<ValueXmlSimulation> getValueInSimulationByCPE(@RequestBody XpathDefinition xpathDefinition) {
+    public List<List<ValueXmlSimulation>> getValueInSimulationByCPE(@RequestBody List<XpathDefinition> xpathDefinitions) {
+        return xpathDefinitions
+                .stream()
+                .map(x -> this.extractFromDatabaseService.findValueInSimulationByXpath(x))
+                .collect(Collectors.toList());
+    }
 
-        return this.extractFromDatabaseService.findValueInSimulationByXpath(xpathDefinition);
+    /**
+     * Returns the value returned by the xpath for each simulation.
+     * @param simulationCodes : List of simulationCode
+     * @param xpath : xpath
+     * @return {@link List<ValueXmlSimulation>}
+     */
+    @Operation(summary = "API to extract OAP simulation",
+            description = "Returns the value returned by the xpath for each simulation.")
+    @CrossOrigin
+    @PostMapping("/findValuesByCPE")
+    public List<ValueXmlSimulation> getValuesInSimByCPE(
+            @RequestBody List<String> simulationCodes,
+            @Parameter(description = "xpath", example = "//*[contains(@cpe, 'fpModeVente')]//textValue", required = true)
+            @RequestParam String xpath) throws IOException {
+        return this.simulationService.findValuesSimCodeByXpath(simulationCodes, xpath);
     }
 
     /**

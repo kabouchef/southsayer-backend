@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -77,7 +78,8 @@ public class ExtractFromDatabaseService {
                                 clobToString(x.getXmlConf()),
                                 inputRate.getXpathDefinition().getXpath()))
                         .withIdOAP(x.getConfCategId())
-                        .withValue(inputRate.getValueSearched())).collect(Collectors.toList());
+                        .withValue(inputRate.getValueSearched()))
+                .collect(Collectors.toList());
     }
 
     /**
@@ -96,6 +98,25 @@ public class ExtractFromDatabaseService {
                                 clobToString(x.getXmlConf()),xpathDefinition.getXpath())))
                 .collect(Collectors.toList());
     }
+
+    /**
+     * Find Value which retrieves by xpath in each simulation
+     * @param simulationCodes : List of simulationCode
+     * @param xpath : xpath
+     * @return {@link List<ValueXmlSimulation>}
+     */
+    public List<ValueXmlSimulation> findValuesSimCodeByXpath(List<String> simulationCodes, String xpath) {
+        return this.getSimulationListBySimCode(simulationCodes)
+                .stream()
+                .map(x -> new ValueXmlSimulation()
+                        .withSimulationCode(x.getConfId())
+                        .withIdOAP(x.getConfCategId())
+                        .withValue(this.xmlUtils.readIntoXMLByXpath(
+                                clobToString(x.getXmlConf()),xpath)))
+                .collect(Collectors.toList());
+    }
+
+
 
     /**
      * Update Value By Xpath and retrieves String
@@ -134,5 +155,15 @@ public class ExtractFromDatabaseService {
                         xpathDefinition.getSimulationCode()))
                 .orElseThrow(() -> new NotFoundException(
                         this.notFoundMessage.toString(xpathDefinition.getIdOAP(),xpathDefinition.getSimulationCode())));
+    }
+
+    private List<ConfigurationStorage> getSimulationListBySimCode(List<String> simulationCodes) {
+        return simulationCodes
+                .stream()
+                .map(x -> Optional.ofNullable(
+                        this.configurationStorageRepository.findByConfIdLike(x))
+                        .orElseThrow(() -> new NotFoundException(
+                                this.notFoundMessage.toString(x))))
+                .collect(Collectors.toList());
     }
 }
