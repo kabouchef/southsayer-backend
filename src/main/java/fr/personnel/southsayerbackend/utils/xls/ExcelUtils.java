@@ -1,10 +1,12 @@
-package fr.personnel.southsayerbackend.utils;
+package fr.personnel.southsayerbackend.utils.xls;
 
-import fr.personnel.southsayerbackend.model.simulation.WorkbookDTO;
-import fr.personnel.southsayerbackend.service.simulation.core.StaticPathService;
-import fr.personnel.southsayerbackend.service.simulation.core.StyleOfCellsService;
+import fr.personnel.southsayerbackend.model.excel.WorkbookDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.hssf.usermodel.*;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.util.IOUtils;
+import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.lang.reflect.Field;
@@ -14,15 +16,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.poi.hssf.usermodel.*;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.util.IOUtils;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.stereotype.*;
-
 import static fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils.STATIC_DIRECTORY_IMAGES;
 import static fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils.XLS_EXTENSION;
+import static org.apache.commons.io.FileUtils.cleanDirectory;
 
 /**
  * @author Farouk KABOUCHE
@@ -53,7 +49,7 @@ public class ExcelUtils {
         }
 
         // Style of Title Cell
-        HSSFCellStyle styleTitle = StyleOfCellsService.getCustomStyleTitle(workbook, spreadSheet);
+        HSSFCellStyle styleTitle = StyleOfCellsUtils.getCustomStyleTitle(workbook, spreadSheet);
 
         // Creating Row of Title
         row0.setHeight((short) 1400);
@@ -97,16 +93,16 @@ public class ExcelUtils {
         File file = new File(path + "/" +fileName);
 
         //Drain Static directory
-        FileUtils.cleanDirectory(new File(path));
+        cleanDirectory(new File(path));
 
         WorkbookDTO workbookDTO = workbookInit(sheetName, fileName);
 
         // Style of Title Cell
-        HSSFCellStyle styleHead =  StyleOfCellsService.getCustomStyleHead(workbookDTO.getHssfWorkbook());
+        HSSFCellStyle styleHead =  StyleOfCellsUtils.getCustomStyleHead(workbookDTO.getHssfWorkbook());
         // Style of Global Content Cell
-        HSSFCellStyle styleGlobalContent =  StyleOfCellsService.getCustomGlobalContent(workbookDTO.getHssfWorkbook());
+        HSSFCellStyle styleGlobalContent =  StyleOfCellsUtils.getCustomGlobalContent(workbookDTO.getHssfWorkbook());
         // Style of Filter Value Cell
-        HSSFCellStyle styleFilterValue = StyleOfCellsService.getCustomFilterValue(workbookDTO.getHssfWorkbook());
+        HSSFCellStyle styleFilterValue = StyleOfCellsUtils.getCustomFilterValue(workbookDTO.getHssfWorkbook());
 
         try {
             workbook = workbookDTO.getHssfWorkbook();

@@ -38,7 +38,7 @@ body {
     margin-left: 10%;
     font-size: 0.8rem;
     line-height: 1.58;
-    background-color: #7cb220;
+    background-color: $color-primary;
 }
 th, .c1{
     display: none;

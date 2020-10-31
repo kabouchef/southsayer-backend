@@ -1,0 +1,934 @@
+<wsdl:definitions xmlns:ns1="http://ws3.spc.adeo.com/storage/dto" xmlns:ns2="http://cxf.apache.org/bindings/xformat" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://ws3.spc.adeo.com/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="WsSpcStorageServiceV3" targetNamespace="http://ws3.spc.adeo.com/">
+    <wsdl:types>
+        <xs:schema xmlns:tns="http://ws3.spc.adeo.com/storage/dto" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://ws3.spc.adeo.com/storage/dto" version="1.0">
+            <xs:element name="entryCodeVersionDTO">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="code" type="xs:string"/>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="version" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="resultSimVersionDTO">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="entryCodeVersionDTO" nillable="true">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="code" type="xs:string"/>
+                                    <xs:element maxOccurs="unbounded" minOccurs="0" name="version" type="xs:int"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="simulationVersionDTO">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" name="codeSimulation" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:complexType name="userDTO">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="id" type="xs:long"/>
+                    <xs:element minOccurs="0" name="customerId" type="xs:string"/>
+                    <xs:element minOccurs="0" name="ldap" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="simulationDTO">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="code" type="xs:string"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="configurations" nillable="true" type="tns:configurationDTO"/>
+                    <xs:element minOccurs="0" name="customerId" type="xs:string"/>
+                    <xs:element minOccurs="0" name="customerFirstname" type="xs:string"/>
+                    <xs:element minOccurs="0" name="customerLastname" type="xs:string"/>
+                    <xs:element minOccurs="0" name="customerTitle" type="xs:string"/>
+                    <xs:element minOccurs="0" name="id" type="xs:long"/>
+                    <xs:element minOccurs="0" name="label" type="xs:string"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="offers" nillable="true" type="tns:offerDTO"/>
+                    <xs:element minOccurs="0" name="projectNumber" type="xs:string"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="simulationEventTracks" nillable="true" type="tns:simulationEventTrackDTO"/>
+                    <xs:element name="state" type="xs:string"/>
+                    <xs:element name="storeId" type="xs:string"/>
+                    <xs:element minOccurs="0" name="storeLabel" type="xs:string"/>
+                    <xs:element name="type" type="xs:string"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="links" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="version" type="xs:int"/>
+                    <xs:element minOccurs="0" name="type_vente" type="xs:int"/>
+                    <xs:element minOccurs="0" name="statut" type="xs:int"/>
+                    <xs:element minOccurs="0" name="rayon" type="xs:string"/>
+                    <xs:element minOccurs="0" name="hoursLifetime" type="xs:float"/>
+                    <xs:element minOccurs="0" name="eligibleReducedVat" type="xs:boolean"/>
+                    <xs:element minOccurs="0" name="sitePostalCode" type="xs:string"/>
+                    <xs:element minOccurs="0" name="siteCity" type="xs:string"/>
+                    <xs:element minOccurs="0" name="storeLinked" type="xs:boolean"/>
+                    <xs:element minOccurs="0" name="canal" type="xs:string"/>
+                    <xs:element minOccurs="0" name="tauxTva" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="configurationDTO">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="characteristics" nillable="true">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element maxOccurs="unbounded" minOccurs="0" name="entry" nillable="true">
+                                    <xs:complexType>
+                                        <xs:sequence>
+                                            <xs:element minOccurs="0" name="key" type="xs:string"/>
+                                            <xs:element minOccurs="0" name="value" type="tns:characteristicDTO"/>
+                                        </xs:sequence>
+                                    </xs:complexType>
+                                </xs:element>
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element minOccurs="0" name="id" type="xs:long"/>
+                    <xs:element minOccurs="0" name="label" type="xs:string"/>
+                    <xs:element minOccurs="0" name="scenarioVersion" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="characteristicDTO">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="answers" nillable="true" type="tns:answerDTO"/>
+                    <xs:element minOccurs="0" name="id" type="xs:long"/>
+                    <xs:element minOccurs="0" name="question" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="answerDTO">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="answer" type="xs:string"/>
+                    <xs:element minOccurs="0" name="id" type="xs:long"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="offerDTO">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="id" type="xs:long"/>
+                    <xs:element name="creationDate" type="xs:dateTime"/>
+                    <xs:element name="label" type="xs:string"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="offerItems" nillable="true" type="tns:offerItemDTO"/>
+                    <xs:element name="state" type="xs:string"/>
+                    <xs:element minOccurs="0" name="numcdecli" type="xs:string"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="documents" nillable="true" type="tns:docLinkDTO"/>
+                    <xs:element minOccurs="0" name="transaction" type="xs:long"/>
+                    <xs:element minOccurs="0" name="topAdditionalProducts" type="xs:boolean"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="offerItemDTO">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="id" type="xs:long"/>
+                    <xs:element name="productId" type="xs:string"/>
+                    <xs:element minOccurs="0" name="productLabel" type="xs:string"/>
+                    <xs:element name="productPrice" type="xs:string"/>
+                    <xs:element name="quantity" type="xs:string"/>
+                    <xs:element minOccurs="0" name="top" type="xs:string"/>
+                    <xs:element minOccurs="0" name="libcompl" type="xs:string"/>
+                    <xs:element minOccurs="0" name="c1" type="xs:string"/>
+                    <xs:element minOccurs="0" name="codrem" type="xs:string"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="detailsOfferItem" nillable="true" type="tns:detailsOfferItemDTO"/>
+                    <xs:element minOccurs="0" name="artisanOffer" type="tns:artisanLigneOffreOAV"/>
+                    <xs:element minOccurs="0" name="normalPrice" type="xs:string"/>
+                    <xs:element minOccurs="0" name="discountEndDate" type="xs:dateTime"/>
+                    <xs:element minOccurs="0" name="numlig" type="xs:int"/>
+                    <xs:element minOccurs="0" name="codeDelai" type="xs:long"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="detailsOfferItemDTO">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="id" type="xs:long"/>
+                    <xs:element minOccurs="0" name="codligdtl" type="xs:long"/>
+                    <xs:element minOccurs="0" name="libligdtl" type="xs:string"/>
+                    <xs:element minOccurs="0" name="numligdtl" type="xs:long"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="artisanLigneOffreOAV">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="type_off" type="xs:integer"/>
+                    <xs:element minOccurs="0" name="type_inioff" type="xs:integer"/>
+                    <xs:element minOccurs="0" name="topcaisse" type="xs:integer"/>
+                    <xs:element minOccurs="0" name="numarty" type="xs:integer"/>
+                    <xs:element minOccurs="0" name="nomarty" type="xs:string"/>
+                    <xs:element minOccurs="0" name="dateprev" type="xs:date"/>
+                    <xs:element minOccurs="0" name="datepose" type="xs:date"/>
+                    <xs:element minOccurs="0" name="montrt" type="xs:decimal"/>
+                    <xs:element minOccurs="0" name="datejour" type="xs:date"/>
+                    <xs:element minOccurs="0" name="idclient" type="xs:integer"/>
+                    <xs:element minOccurs="0" name="delai" type="xs:integer"/>
+                    <xs:element minOccurs="0" name="mtpresta" type="xs:decimal"/>
+                    <xs:element minOccurs="0" name="nomcv" type="xs:string"/>
+                    <xs:element minOccurs="0" name="codact" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="docLinkDTO">
+                <xs:sequence>
+                    <xs:element name="codeOffer" type="xs:string"/>
+                    <xs:element name="version" type="xs:int"/>
+                    <xs:element minOccurs="0" name="technicalDocs" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="simulationEventTrackDTO">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="id" type="xs:long"/>
+                    <xs:element minOccurs="0" name="change" type="xs:string"/>
+                    <xs:element minOccurs="0" name="changeType" type="xs:string"/>
+                    <xs:element minOccurs="0" name="date" type="xs:dateTime"/>
+                    <xs:element minOccurs="0" name="user" type="tns:userDTO"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="simulationCriteriaDTO">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="codeVersions" nillable="true" type="tns:codeVersionDTO"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="customerOwnerIds" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="dirtySimulation" type="xs:boolean"/>
+                    <xs:element minOccurs="0" name="endPosition" type="xs:int"/>
+                    <xs:element minOccurs="0" name="involvedUser" type="tns:userDTO"/>
+                    <xs:element minOccurs="0" name="labelSimulation" type="xs:string"/>
+                    <xs:element minOccurs="0" name="periodBeginDate" type="xs:dateTime"/>
+                    <xs:element minOccurs="0" name="periodEndDate" type="xs:dateTime"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="sortsType" nillable="true" type="tns:simulationSortTypeDTO"/>
+                    <xs:element minOccurs="0" name="startPosition" type="xs:int"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="statesSimulation" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="storeId" type="xs:string"/>
+                    <xs:element minOccurs="0" name="storeLabel" type="xs:string"/>
+                    <xs:element minOccurs="0" name="typeVente" type="xs:int"/>
+                    <xs:element minOccurs="0" name="categorySimulation" type="xs:int"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="typesSimulation" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="codeVersionDTO">
+                <xs:sequence>
+                    <xs:element name="code" type="xs:string"/>
+                    <xs:element minOccurs="0" name="version" type="xs:int"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="linkedSimulationsDTO">
+                <xs:sequence>
+                    <xs:element name="code" type="xs:string"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="simulations" nillable="true" type="tns:simulationDTO"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="transactionDTO">
+                <xs:sequence>
+                    <xs:element name="idOffer" type="xs:long"/>
+                    <xs:element name="versionOffer" type="xs:int"/>
+                    <xs:element name="idTransaction" type="xs:long"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="offerLightDTO">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="idOffer" type="xs:long"/>
+                    <xs:element minOccurs="0" name="versionOffer" type="xs:int"/>
+                    <xs:element minOccurs="0" name="numproj" type="xs:string"/>
+                    <xs:element minOccurs="0" name="datecrea" type="xs:dateTime"/>
+                    <xs:element minOccurs="0" name="datemodif" type="xs:dateTime"/>
+                    <xs:element minOccurs="0" name="utilisateurCreateur" type="xs:string"/>
+                    <xs:element minOccurs="0" name="utilisateurModificateur" type="xs:string"/>
+                    <xs:element minOccurs="0" name="totalAmount" type="xs:double"/>
+                    <xs:element minOccurs="0" name="idcustomer" type="xs:string"/>
+                    <xs:element minOccurs="0" name="customerName" type="xs:string"/>
+                    <xs:element minOccurs="0" name="customerFirstName" type="xs:string"/>
+                    <xs:element minOccurs="0" name="codeOffer" type="xs:string"/>
+                    <xs:element minOccurs="0" name="typeOffer" type="xs:string"/>
+                    <xs:element minOccurs="0" name="typeOffPose" type="xs:integer"/>
+                    <xs:element minOccurs="0" name="nomProjet" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="getOffersDTO">
+                <xs:sequence>
+                    <xs:element name="code" type="xs:string"/>
+                    <xs:element minOccurs="0" name="version" type="xs:int"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="offerOavDTO">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="simCode" type="xs:string"/>
+                    <xs:element minOccurs="0" name="type" type="xs:string"/>
+                    <xs:element minOccurs="0" name="version" type="xs:int"/>
+                    <xs:element minOccurs="0" name="hoursLifetime" type="xs:float"/>
+                    <xs:element minOccurs="0" name="eligibleReducedVat" type="xs:boolean"/>
+                    <xs:element minOccurs="0" name="sitePostalCode" type="xs:string"/>
+                    <xs:element minOccurs="0" name="siteCity" type="xs:string"/>
+                    <xs:element minOccurs="0" name="storeLinked" type="xs:boolean"/>
+                    <xs:element name="state" type="xs:string"/>
+                    <xs:element minOccurs="0" name="idOffer" type="xs:string"/>
+                    <xs:element minOccurs="0" name="idStore" type="xs:string"/>
+                    <xs:element minOccurs="0" name="numproj" type="xs:string"/>
+                    <xs:element minOccurs="0" name="numcdecli" type="xs:string"/>
+                    <xs:element minOccurs="0" name="dateoff" type="xs:dateTime"/>
+                    <xs:element minOccurs="0" name="heuoff" type="xs:string"/>
+                    <xs:element minOccurs="0" name="datecre" type="xs:dateTime"/>
+                    <xs:element minOccurs="0" name="heucre" type="xs:string"/>
+                    <xs:element minOccurs="0" name="user" type="xs:string"/>
+                    <xs:element minOccurs="0" name="idCustomer" type="xs:string"/>
+                    <xs:element minOccurs="0" name="customerName" type="xs:string"/>
+                    <xs:element minOccurs="0" name="customerFirstName" type="xs:string"/>
+                    <xs:element minOccurs="0" name="utilisateurCreateur" type="xs:string"/>
+                    <xs:element minOccurs="0" name="utilisateurModificateur" type="xs:string"/>
+                    <xs:element minOccurs="0" name="nomProjet" type="xs:string"/>
+                    <xs:element minOccurs="0" name="topAdditionalProducts" type="xs:boolean"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="simLink" nillable="true" type="xs:string"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="offerDocs" nillable="true" type="xs:string"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="ligneOffreOAV" nillable="true" type="tns:ligneOffreOAV"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="ligneOffreOAV">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="numlig" type="xs:integer"/>
+                    <xs:element minOccurs="0" name="codlig" type="xs:integer"/>
+                    <xs:element minOccurs="0" name="numligcdecli" type="xs:integer"/>
+                    <xs:element minOccurs="0" name="codeDelai" type="xs:long"/>
+                    <xs:element name="numart" type="xs:string"/>
+                    <xs:element minOccurs="0" name="nivart" type="xs:string"/>
+                    <xs:element minOccurs="0" name="numfou" type="xs:integer"/>
+                    <xs:element name="qte" type="xs:decimal"/>
+                    <xs:element name="prxvte" type="xs:double"/>
+                    <xs:element minOccurs="0" name="c1" type="xs:integer"/>
+                    <xs:element minOccurs="0" name="prxvtepromo" type="xs:decimal"/>
+                    <xs:element minOccurs="0" name="datfinprxvtepromo" type="xs:date"/>
+                    <xs:element minOccurs="0" name="c1promo" type="xs:integer"/>
+                    <xs:element minOccurs="0" name="datfinc1" type="xs:date"/>
+                    <xs:element minOccurs="0" name="liblig" type="xs:string"/>
+                    <xs:element minOccurs="0" name="codrem" type="xs:string"/>
+                    <xs:element minOccurs="0" name="widthCm" type="xs:float"/>
+                    <xs:element minOccurs="0" name="heightCm" type="xs:float"/>
+                    <xs:element minOccurs="0" name="depthCm" type="xs:float"/>
+                    <xs:element minOccurs="0" name="weightKg" type="xs:float"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="detailLigneOffreOAV" nillable="true" type="tns:detailLigneOffreOAV"/>
+                    <xs:element minOccurs="0" name="artisanLigneOffreOAV" type="tns:artisanLigneOffreOAV"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="detailLigneOffreOAV">
+                <xs:sequence>
+                    <xs:element name="numligdtl" type="xs:integer"/>
+                    <xs:element name="codligdtl" type="xs:integer"/>
+                    <xs:element name="libligdtl" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="lineOfferOavDTO">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="idProduct" type="xs:string"/>
+                    <xs:element minOccurs="0" name="quantity" type="xs:int"/>
+                    <xs:element minOccurs="0" name="prxvte" type="xs:double"/>
+                    <xs:element minOccurs="0" name="productlabel" type="xs:string"/>
+                    <xs:element minOccurs="0" name="c1" type="xs:string"/>
+                    <xs:element minOccurs="0" name="c1promo" type="xs:string"/>
+                    <xs:element minOccurs="0" name="datfinc1" type="xs:date"/>
+                    <xs:element minOccurs="0" name="prxvtepromo" type="xs:string"/>
+                    <xs:element minOccurs="0" name="datfinprxvtepromo" type="xs:date"/>
+                    <xs:element minOccurs="0" name="codrem" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="OffreOAV">
+                <xs:sequence>
+                    <xs:element name="nummag" type="xs:integer"/>
+                    <xs:element name="numproj" type="xs:integer"/>
+                    <xs:element name="numoff" type="xs:integer"/>
+                    <xs:element name="codoff" type="xs:string"/>
+                    <xs:element minOccurs="0" name="topsel" type="xs:integer"/>
+                    <xs:element minOccurs="0" name="datoff" type="xs:date"/>
+                    <xs:element minOccurs="0" name="heuoff" type="xs:string"/>
+                    <xs:element minOccurs="0" name="mntoff" type="xs:decimal"/>
+                    <xs:element minOccurs="0" name="numcdecli" type="xs:string"/>
+                    <xs:element minOccurs="0" name="datcdecli" type="xs:date"/>
+                    <xs:element minOccurs="0" name="matcvcc" type="xs:string"/>
+                    <xs:element minOccurs="0" name="matcvoav" type="xs:string"/>
+                    <xs:element minOccurs="0" name="delvalid" type="xs:date"/>
+                    <xs:element minOccurs="0" name="datcre" type="xs:date"/>
+                    <xs:element minOccurs="0" name="heucre" type="xs:string"/>
+                    <xs:element minOccurs="0" name="idclient" type="xs:integer"/>
+                    <xs:element name="lignesOffreOAV" type="tns:lignesOffreOAV"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="lignesOffreOAV">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="ligneOffreOAV" nillable="true" type="tns:ligneOffreOAV"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="simulationHistoDTO">
+                <xs:sequence>
+                    <xs:element name="simCode" type="xs:string"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="numVersion" type="xs:int"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:simpleType name="simulationSortTypeDTO">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="SIMULATION_LABEL_ASC"/>
+                    <xs:enumeration value="SIMULATION_LABEL_DES"/>
+                    <xs:enumeration value="SIMULATION_TYPE_ASC"/>
+                    <xs:enumeration value="SIMULATION_TYPE_DES"/>
+                    <xs:enumeration value="STORE_LABEL_ASC"/>
+                    <xs:enumeration value="STORE_LABEL_DES"/>
+                    <xs:enumeration value="LAST_USER_ASC"/>
+                    <xs:enumeration value="LAST_USER_DES"/>
+                    <xs:enumeration value="DATE_ASC"/>
+                    <xs:enumeration value="DATE_DES"/>
+                    <xs:enumeration value="NONE"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:schema>
+        <xs:schema xmlns:ns1="http://ws3.spc.adeo.com/storage/dto" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://ws3.spc.adeo.com/" version="1.0">
+            <xs:import namespace="http://ws3.spc.adeo.com/storage/dto"/>
+            <xs:element name="associateOffer">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="in" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="associateOfferResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="out" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="associateOfferTransaction">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" name="transactions" type="ns1:transactionDTO"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="associateOfferTransactionResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="out" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="countSimulation">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="criteria" type="ns1:simulationCriteriaDTO"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="countSimulationResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="totalSimulation" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="createOrModifySimulation">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="simulation" type="ns1:simulationDTO"/>
+                        <xs:element name="user" type="ns1:userDTO"/>
+                        <xs:element minOccurs="0" name="upgradeSimulationVersion" type="xs:boolean"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="createOrModifySimulationResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="simulationResponse" type="ns1:simulationDTO"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getLinkedSimulationsForCodes">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" name="simCodes" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getLinkedSimulationsForCodesResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" name="linkedSimulationsForCode" type="ns1:linkedSimulationsDTO"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getOffers">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" name="transactions" type="ns1:getOffersDTO"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getOffersResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="offers" nillable="true" type="ns1:offerOavDTO"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getSimulationType">
+                <xs:complexType>
+                    <xs:sequence/>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getSimulationTypeResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="type" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="integrateTechnicalDocs">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" name="document" type="ns1:docLinkDTO"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="integrateTechnicalDocsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="out" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="linkSimulations">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="simSource" type="xs:string"/>
+                        <xs:element name="simTarget" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="linkSimulationsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="out" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="removeSimulations">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" name="simCodes" type="xs:string"/>
+                        <xs:element minOccurs="0" name="user" type="ns1:userDTO"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="removeSimulationsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="out" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="searchIntegrableOffersLight">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="storeId" type="xs:string"/>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="typeSimulations" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="periodBeginDate" type="xs:dateTime"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="searchIntegrableOffersLightResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="offersLight" nillable="true" type="ns1:offerLightDTO"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="searchSimulation">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="criteria" type="ns1:simulationCriteriaDTO"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="searchSimulationLight">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="criteria" type="ns1:simulationCriteriaDTO"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="searchSimulationLightResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="simulations" nillable="true" type="ns1:simulationDTO"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="searchSimulationResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="simulations" nillable="true" type="ns1:simulationDTO"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="spcBusinessException" type="xs:string"/>
+            <xs:element name="updateCustomersForSimulation">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" name="simCodes" type="xs:string"/>
+                        <xs:element name="customerId" type="xs:string"/>
+                        <xs:element name="user" type="ns1:userDTO"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="updateCustomersForSimulationResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="simulations" nillable="true" type="ns1:simulationDTO"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="updateTvaForSimulation">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="code" type="xs:string"/>
+                        <xs:element name="tauxTva" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="updateTvaForSimulationResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="out" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="searchSimulationLightResponse">
+        <wsdl:part element="tns:searchSimulationLightResponse" name="parameters"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="getSimulationType">
+        <wsdl:part element="tns:getSimulationType" name="parameters"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="searchIntegrableOffersLightResponse">
+        <wsdl:part element="tns:searchIntegrableOffersLightResponse" name="parameters"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="updateTvaForSimulation">
+        <wsdl:part element="tns:updateTvaForSimulation" name="parameters"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="getLinkedSimulationsForCodesResponse">
+        <wsdl:part element="tns:getLinkedSimulationsForCodesResponse" name="parameters"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="associateOfferTransaction">
+        <wsdl:part element="tns:associateOfferTransaction" name="parameters"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="getSimulationTypeResponse">
+        <wsdl:part element="tns:getSimulationTypeResponse" name="parameters"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="searchIntegrableOffersLight">
+        <wsdl:part element="tns:searchIntegrableOffersLight" name="parameters"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="integrateTechnicalDocs">
+        <wsdl:part element="tns:integrateTechnicalDocs" name="parameters"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="createOrModifySimulationResponse">
+        <wsdl:part element="tns:createOrModifySimulationResponse" name="parameters"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="updateTvaForSimulationResponse">
+        <wsdl:part element="tns:updateTvaForSimulationResponse" name="parameters"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="SpcFaultException">
+        <wsdl:part element="tns:spcBusinessException" name="SpcFaultException"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="removeSimulations">
+        <wsdl:part element="tns:removeSimulations" name="parameters"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="countSimulation">
+        <wsdl:part element="tns:countSimulation" name="parameters"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="associateOfferTransactionResponse">
+        <wsdl:part element="tns:associateOfferTransactionResponse" name="parameters"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="searchSimulationResponse">
+        <wsdl:part element="tns:searchSimulationResponse" name="parameters"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="linkSimulationsResponse">
+        <wsdl:part element="tns:linkSimulationsResponse" name="parameters"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="searchSimulationLight">
+        <wsdl:part element="tns:searchSimulationLight" name="parameters"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="updateCustomersForSimulationResponse">
+        <wsdl:part element="tns:updateCustomersForSimulationResponse" name="parameters"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="searchSimulation">
+        <wsdl:part element="tns:searchSimulation" name="parameters"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="getLinkedSimulationsForCodes">
+        <wsdl:part element="tns:getLinkedSimulationsForCodes" name="parameters"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="getOffers">
+        <wsdl:part element="tns:getOffers" name="parameters"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="createOrModifySimulation">
+        <wsdl:part element="tns:createOrModifySimulation" name="parameters"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="getSimulationVersionsResponse">
+        <wsdl:part element="ns1:resultSimVersionDTO" name="parameters"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="getOffersResponse">
+        <wsdl:part element="tns:getOffersResponse" name="parameters"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="updateCustomersForSimulation">
+        <wsdl:part element="tns:updateCustomersForSimulation" name="parameters"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="removeSimulationsResponse">
+        <wsdl:part element="tns:removeSimulationsResponse" name="parameters"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="countSimulationResponse">
+        <wsdl:part element="tns:countSimulationResponse" name="parameters"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="getSimulationVersions">
+        <wsdl:part element="ns1:simulationVersionDTO" name="parameters"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="integrateTechnicalDocsResponse">
+        <wsdl:part element="tns:integrateTechnicalDocsResponse" name="parameters"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="linkSimulations">
+        <wsdl:part element="tns:linkSimulations" name="parameters"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:portType name="SpcPortTypeV3">
+        <wsdl:operation name="updateCustomersForSimulation">
+            <wsdl:input message="tns:updateCustomersForSimulation" name="updateCustomersForSimulation"> </wsdl:input>
+            <wsdl:output message="tns:updateCustomersForSimulationResponse" name="updateCustomersForSimulationResponse"> </wsdl:output>
+            <wsdl:fault message="tns:SpcFaultException" name="SpcFaultException"> </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="searchSimulationLight">
+            <wsdl:input message="tns:searchSimulationLight" name="searchSimulationLight"> </wsdl:input>
+            <wsdl:output message="tns:searchSimulationLightResponse" name="searchSimulationLightResponse"> </wsdl:output>
+            <wsdl:fault message="tns:SpcFaultException" name="SpcFaultException"> </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="linkSimulations">
+            <wsdl:input message="tns:linkSimulations" name="linkSimulations"> </wsdl:input>
+            <wsdl:output message="tns:linkSimulationsResponse" name="linkSimulationsResponse"> </wsdl:output>
+            <wsdl:fault message="tns:SpcFaultException" name="SpcFaultException"> </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="integrateTechnicalDocs">
+            <wsdl:input message="tns:integrateTechnicalDocs" name="integrateTechnicalDocs"> </wsdl:input>
+            <wsdl:output message="tns:integrateTechnicalDocsResponse" name="integrateTechnicalDocsResponse"> </wsdl:output>
+            <wsdl:fault message="tns:SpcFaultException" name="SpcFaultException"> </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getLinkedSimulationsForCodes">
+            <wsdl:input message="tns:getLinkedSimulationsForCodes" name="getLinkedSimulationsForCodes"> </wsdl:input>
+            <wsdl:output message="tns:getLinkedSimulationsForCodesResponse" name="getLinkedSimulationsForCodesResponse"> </wsdl:output>
+            <wsdl:fault message="tns:SpcFaultException" name="SpcFaultException"> </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="countSimulation">
+            <wsdl:input message="tns:countSimulation" name="countSimulation"> </wsdl:input>
+            <wsdl:output message="tns:countSimulationResponse" name="countSimulationResponse"> </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="associateOfferTransaction">
+            <wsdl:input message="tns:associateOfferTransaction" name="associateOfferTransaction"> </wsdl:input>
+            <wsdl:output message="tns:associateOfferTransactionResponse" name="associateOfferTransactionResponse"> </wsdl:output>
+            <wsdl:fault message="tns:SpcFaultException" name="SpcFaultException"> </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="searchIntegrableOffersLight">
+            <wsdl:input message="tns:searchIntegrableOffersLight" name="searchIntegrableOffersLight"> </wsdl:input>
+            <wsdl:output message="tns:searchIntegrableOffersLightResponse" name="searchIntegrableOffersLightResponse"> </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="createOrModifySimulation">
+            <wsdl:input message="tns:createOrModifySimulation" name="createOrModifySimulation"> </wsdl:input>
+            <wsdl:output message="tns:createOrModifySimulationResponse" name="createOrModifySimulationResponse"> </wsdl:output>
+            <wsdl:fault message="tns:SpcFaultException" name="SpcFaultException"> </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getSimulationVersions">
+            <wsdl:input message="tns:getSimulationVersions" name="getSimulationVersions"> </wsdl:input>
+            <wsdl:output message="tns:getSimulationVersionsResponse" name="getSimulationVersionsResponse"> </wsdl:output>
+            <wsdl:fault message="tns:SpcFaultException" name="SpcFaultException"> </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getOffers">
+            <wsdl:input message="tns:getOffers" name="getOffers"> </wsdl:input>
+            <wsdl:output message="tns:getOffersResponse" name="getOffersResponse"> </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getSimulationType">
+            <wsdl:input message="tns:getSimulationType" name="getSimulationType"> </wsdl:input>
+            <wsdl:output message="tns:getSimulationTypeResponse" name="getSimulationTypeResponse"> </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="updateTvaForSimulation">
+            <wsdl:input message="tns:updateTvaForSimulation" name="updateTvaForSimulation"> </wsdl:input>
+            <wsdl:output message="tns:updateTvaForSimulationResponse" name="updateTvaForSimulationResponse"> </wsdl:output>
+            <wsdl:fault message="tns:SpcFaultException" name="SpcFaultException"> </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="removeSimulations">
+            <wsdl:input message="tns:removeSimulations" name="removeSimulations"> </wsdl:input>
+            <wsdl:output message="tns:removeSimulationsResponse" name="removeSimulationsResponse"> </wsdl:output>
+            <wsdl:fault message="tns:SpcFaultException" name="SpcFaultException"> </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="searchSimulation">
+            <wsdl:input message="tns:searchSimulation" name="searchSimulation"> </wsdl:input>
+            <wsdl:output message="tns:searchSimulationResponse" name="searchSimulationResponse"> </wsdl:output>
+            <wsdl:fault message="tns:SpcFaultException" name="SpcFaultException"> </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="WsSpcStorageServiceV3SoapBinding" type="tns:SpcPortTypeV3">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="updateCustomersForSimulation">
+            <soap:operation soapAction="" style="document"/>
+            <wsdl:input name="updateCustomersForSimulation">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="updateCustomersForSimulationResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="SpcFaultException">
+                <soap:fault name="SpcFaultException" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="searchSimulationLight">
+            <soap:operation soapAction="" style="document"/>
+            <wsdl:input name="searchSimulationLight">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="searchSimulationLightResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="SpcFaultException">
+                <soap:fault name="SpcFaultException" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="linkSimulations">
+            <soap:operation soapAction="" style="document"/>
+            <wsdl:input name="linkSimulations">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="linkSimulationsResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="SpcFaultException">
+                <soap:fault name="SpcFaultException" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="integrateTechnicalDocs">
+            <soap:operation soapAction="" style="document"/>
+            <wsdl:input name="integrateTechnicalDocs">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="integrateTechnicalDocsResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="SpcFaultException">
+                <soap:fault name="SpcFaultException" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getLinkedSimulationsForCodes">
+            <soap:operation soapAction="" style="document"/>
+            <wsdl:input name="getLinkedSimulationsForCodes">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="getLinkedSimulationsForCodesResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="SpcFaultException">
+                <soap:fault name="SpcFaultException" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="countSimulation">
+            <soap:operation soapAction="" style="document"/>
+            <wsdl:input name="countSimulation">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="countSimulationResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="associateOfferTransaction">
+            <soap:operation soapAction="" style="document"/>
+            <wsdl:input name="associateOfferTransaction">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="associateOfferTransactionResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="SpcFaultException">
+                <soap:fault name="SpcFaultException" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="searchIntegrableOffersLight">
+            <soap:operation soapAction="" style="document"/>
+            <wsdl:input name="searchIntegrableOffersLight">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="searchIntegrableOffersLightResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="createOrModifySimulation">
+            <soap:operation soapAction="http://ws3.spc.adeo.com/createOrModifySimulation" style="document"/>
+            <wsdl:input name="createOrModifySimulation">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="createOrModifySimulationResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="SpcFaultException">
+                <soap:fault name="SpcFaultException" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getSimulationVersions">
+            <soap:operation soapAction="" style="document"/>
+            <wsdl:input name="getSimulationVersions">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="getSimulationVersionsResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="SpcFaultException">
+                <soap:fault name="SpcFaultException" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getOffers">
+            <soap:operation soapAction="" style="document"/>
+            <wsdl:input name="getOffers">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="getOffersResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getSimulationType">
+            <soap:operation soapAction="" style="document"/>
+            <wsdl:input name="getSimulationType">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="getSimulationTypeResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="updateTvaForSimulation">
+            <soap:operation soapAction="" style="document"/>
+            <wsdl:input name="updateTvaForSimulation">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="updateTvaForSimulationResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="SpcFaultException">
+                <soap:fault name="SpcFaultException" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="removeSimulations">
+            <soap:operation soapAction="" style="document"/>
+            <wsdl:input name="removeSimulations">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="removeSimulationsResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="SpcFaultException">
+                <soap:fault name="SpcFaultException" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="searchSimulation">
+            <soap:operation soapAction="http://ws3.spc.adeo.com/searchSimulation" style="document"/>
+            <wsdl:input name="searchSimulation">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="searchSimulationResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="SpcFaultException">
+                <soap:fault name="SpcFaultException" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="WsSpcStorageServiceV3">
+        <wsdl:port binding="tns:WsSpcStorageServiceV3SoapBinding" name="spcServicesHttpPort">
+            <soap:address location="http://rfrlmasoaag01.corp.leroymerlin.com:13080/spc-storage-server/services/WsSpcStorageServiceV3"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

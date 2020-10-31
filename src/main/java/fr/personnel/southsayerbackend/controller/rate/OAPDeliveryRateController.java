@@ -45,6 +45,7 @@ public class OAPDeliveryRateController {
         return this.oapDeliveryRateService.getAll();
     }
 
+    // TODO 2 - Make frontUI for getDRById
     /**
      * Get OAP DR by id
      *
@@ -92,6 +93,7 @@ public class OAPDeliveryRateController {
         return this.oapDeliveryRateService.getByDesignation(id, designation);
     }
 
+    // TODO 3 - Make frontUI for getAllCorruptPrice
     /**
      * Get all OAP DR corrupt by id
      *

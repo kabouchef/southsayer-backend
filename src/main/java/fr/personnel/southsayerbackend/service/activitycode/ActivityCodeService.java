@@ -2,8 +2,8 @@ package fr.personnel.southsayerbackend.service.activitycode;
 
 import fr.personnel.exceptions.handling.WebClientError.NotFoundException;
 import fr.personnel.southsayerbackend.configuration.message.NotFoundMessage;
-import fr.personnel.southsayerbackend.service.simulation.core.StaticPathService;
-import fr.personnel.southsayerbackend.utils.ExcelUtils;
+import fr.personnel.southsayerbackend.utils.global.StaticPathUtils;
+import fr.personnel.southsayerbackend.utils.xls.ExcelUtils;
 import fr.personnel.southsayerdatabase.entity.activitycode.ActivityCode;
 import fr.personnel.southsayerdatabase.repository.activitycode.ActivityCodeRepository;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +30,7 @@ public class ActivityCodeService {
 
     private final ActivityCodeRepository activityCodeRepository;
     private final NotFoundMessage notFoundMessage;
-    private final StaticPathService staticPathService;
+    private final StaticPathUtils staticPathUtils;
 
     String fileName = "LM - " + this.getClass().getSimpleName().replace("Service","");
 
@@ -39,7 +39,7 @@ public class ActivityCodeService {
      * @return {@link String}
      */
     private String getPath(){
-        return this.staticPathService.getPath(XLS_EXTENSION, STATIC_DIRECTORY_ACTIVITY_CODE);
+        return this.staticPathUtils.getPath(XLS_EXTENSION, STATIC_DIRECTORY_ACTIVITY_CODE);
     }
 
     /**

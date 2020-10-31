@@ -1,4 +1,4 @@
-package fr.personnel.southsayerbackend.model.simulation;
+package fr.personnel.southsayerbackend.model.excel;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

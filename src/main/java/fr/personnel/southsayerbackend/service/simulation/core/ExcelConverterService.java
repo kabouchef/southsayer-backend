@@ -1,19 +1,21 @@
 package fr.personnel.southsayerbackend.service.simulation.core;
 
 import fr.personnel.southsayerbackend.model.simulation.PriceLine;
-import fr.personnel.southsayerbackend.model.simulation.WorkbookDTO;
-import fr.personnel.southsayerbackend.model.simulation.rate.InputRate;
-import fr.personnel.southsayerbackend.utils.ExcelUtils;
-import fr.personnel.southsayerbackend.utils.MathUtils;
-import fr.personnel.southsayerdatabase.entity.rate.OAPDeliveryRateDetails;
+import fr.personnel.southsayerbackend.model.excel.WorkbookDTO;
+import fr.personnel.southsayerbackend.model.simulation.InputRate;
+import fr.personnel.southsayerbackend.utils.xls.ExcelUtils;
+import fr.personnel.southsayerbackend.utils.global.MathUtils;
+import fr.personnel.southsayerbackend.utils.global.StaticPathUtils;
+import fr.personnel.southsayerbackend.utils.xls.StyleOfCellsUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FileUtils;
-import org.apache.poi.hssf.usermodel.*;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.util.CellReference;
-import org.apache.poi.util.IOUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
@@ -25,12 +27,16 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import static fr.personnel.southsayerbackend.configuration.constant.RestConstantUtils.*;
+import static org.apache.commons.io.FileUtils.cleanDirectory;
 
 /**
  * @author Farouk KABOUCHE
@@ -42,13 +48,13 @@ import static fr.personnel.southsayerbackend.configuration.constant.RestConstant
 @RequiredArgsConstructor
 public class ExcelConverterService {
 
-    private final StaticPathService staticPathService;
+    private final StaticPathUtils staticPathUtils;
 
     public List<PriceLine> generatePriceLinesExcel(String simulationCode)
             throws ParserConfigurationException, IOException, SAXException {
 
-        String pathXmlSimulation = this.staticPathService.getPath(XML_EXTENSION, STATIC_DIRECTORY_SIMULATION);
-        String pathXlsSimulation = this.staticPathService.getPath(XLS_EXTENSION, STATIC_DIRECTORY_SIMULATION);
+        String pathXmlSimulation = this.staticPathUtils.getPath(XML_EXTENSION, STATIC_DIRECTORY_SIMULATION);
+        String pathXlsSimulation = this.staticPathUtils.getPath(XLS_EXTENSION, STATIC_DIRECTORY_SIMULATION);
 
         String priceLines;
         List<PriceLine> priceLineList = new ArrayList<PriceLine>();
@@ -56,7 +62,7 @@ public class ExcelConverterService {
         FileOutputStream fos = null;
 
         // Drain static repository
-        FileUtils.cleanDirectory(new File(pathXlsSimulation));
+        cleanDirectory(new File(pathXlsSimulation));
 
         try {
             //Init Worbook
@@ -73,35 +79,35 @@ public class ExcelConverterService {
              */
             // Style of Title Cell
             HSSFCellStyle styleHead =
-                    StyleOfCellsService.getCustomStyleHead(workbookDTO.getHssfWorkbook());
+                    StyleOfCellsUtils.getCustomStyleHead(workbookDTO.getHssfWorkbook());
 
             // Style of Global Content Cells
             HSSFCellStyle styleGlobalContent =
-                    StyleOfCellsService.getCustomGlobalContent(workbookDTO.getHssfWorkbook());
+                    StyleOfCellsUtils.getCustomGlobalContent(workbookDTO.getHssfWorkbook());
 
             // Style of Price Content Cells
             HSSFCellStyle stylePriceContent =
-                    StyleOfCellsService.getCustomPriceContent(workbookDTO.getHssfWorkbook());
+                    StyleOfCellsUtils.getCustomPriceContent(workbookDTO.getHssfWorkbook());
 
             // Style of Quantifier Content Cells
             HSSFCellStyle styleQuantifyContent =
-                    StyleOfCellsService.getCustomQuantifyContent(workbookDTO.getHssfWorkbook());
+                    StyleOfCellsUtils.getCustomQuantifyContent(workbookDTO.getHssfWorkbook());
 
             // Style of Head Total Price Effected Cells
             HSSFCellStyle styleHeadTotalPriceEffected =
-                    StyleOfCellsService.getCustomHeadTotalPriceEffected(workbookDTO.getHssfWorkbook());
+                    StyleOfCellsUtils.getCustomHeadTotalPriceEffected(workbookDTO.getHssfWorkbook());
 
             // Style of Total Price Effected Cells
             HSSFCellStyle styleTotalPriceEffected =
-                    StyleOfCellsService.getCustomTotalPriceEffected(workbookDTO.getHssfWorkbook());
+                    StyleOfCellsUtils.getCustomTotalPriceEffected(workbookDTO.getHssfWorkbook());
 
             // Style of Head Total Price Cells
             HSSFCellStyle styleHeadTotalPrice =
-                    StyleOfCellsService.getCustomHeadTotalPrice(workbookDTO.getHssfWorkbook());
+                    StyleOfCellsUtils.getCustomHeadTotalPrice(workbookDTO.getHssfWorkbook());
 
             // Style of Total Price Cells
             HSSFCellStyle styleTotalPrice =
-                    StyleOfCellsService.getCustomTotalPrice(workbookDTO.getHssfWorkbook());
+                    StyleOfCellsUtils.getCustomTotalPrice(workbookDTO.getHssfWorkbook());
 
 
             //Entete
@@ -313,12 +319,12 @@ public class ExcelConverterService {
         FileOutputStream fos;
         String currentDate =
                 new SimpleDateFormat("yyyyMMdd-HHmmss").format(new Date(System.currentTimeMillis()));
-        String pathXlsCR = this.staticPathService.getPath(XLS_EXTENSION, STATIC_DIRECTORY_CONVERSION_RATE);
+        String pathXlsCR = this.staticPathUtils.getPath(XLS_EXTENSION, STATIC_DIRECTORY_CONVERSION_RATE);
 
         String fileName = "LM - Conversion Rate";
 
 
-        FileUtils.cleanDirectory(new File(pathXlsCR));
+        cleanDirectory(new File(pathXlsCR));
 
         //Init Worbook
         WorkbookDTO workbookDTO =
@@ -331,23 +337,23 @@ public class ExcelConverterService {
          */
         // Style of Title Cell
         HSSFCellStyle styleHead =
-                StyleOfCellsService.getCustomStyleHead(workbookDTO.getHssfWorkbook());
+                StyleOfCellsUtils.getCustomStyleHead(workbookDTO.getHssfWorkbook());
 
         // Style of Price Content Cells
         HSSFCellStyle stylePriceContent =
-                StyleOfCellsService.getCustomPriceContent(workbookDTO.getHssfWorkbook());
+                StyleOfCellsUtils.getCustomPriceContent(workbookDTO.getHssfWorkbook());
 
         // Style of Head Total Price Effected Cells
         HSSFCellStyle styleHeadTotalPriceEffected =
-                StyleOfCellsService.getCustomHeadTotalPriceEffected(workbookDTO.getHssfWorkbook());
+                StyleOfCellsUtils.getCustomHeadTotalPriceEffected(workbookDTO.getHssfWorkbook());
 
         // Style of Head Total Price Cells
         HSSFCellStyle styleHeadTotalPrice =
-                StyleOfCellsService.getCustomHeadTotalPrice(workbookDTO.getHssfWorkbook());
+                StyleOfCellsUtils.getCustomHeadTotalPrice(workbookDTO.getHssfWorkbook());
 
         // Style of Total Price Effected Cells
         HSSFCellStyle styleConversionRate =
-                StyleOfCellsService.getCustomConversionRate(workbookDTO.getHssfWorkbook());
+                StyleOfCellsUtils.getCustomConversionRate(workbookDTO.getHssfWorkbook());
 
         //Entete
         HSSFRow rowHead = workbookDTO.getHssfSheet().createRow(2);

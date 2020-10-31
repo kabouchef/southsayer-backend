@@ -1,4 +1,4 @@
-package fr.personnel.southsayerbackend.service.simulation.core;
+package fr.personnel.southsayerbackend.utils.xls;
 
 import fr.personnel.southsayerbackend.configuration.constant.StyleCellConstant;
 import lombok.NoArgsConstructor;
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @NoArgsConstructor
-public class StyleOfCellsService {
+public class StyleOfCellsUtils {
 
 
     /**

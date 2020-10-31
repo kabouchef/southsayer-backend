@@ -46,3 +46,18 @@ management:
     web:
       exposure:
         include=*:
+
+---
+# SOAP
+spc:
+  storage.service.url: ${WS_STORAGE_URL:http://rfrlmasoaag01.corp.leroymerlin.com:13080/spc-storage-server/services/WsSpcStorageServiceV3?wsdl}
+
+# Upload to Server
+sftp:
+  username: ${SFTP_USERNAME:cameleon}
+  password: ${SFTP_PASSWORD:DEVcam11r!}
+  host: ${SFTP_HOST:rfrlmasoamg02}
+  port: ${SFTP_PORT:22}
+
+
+
