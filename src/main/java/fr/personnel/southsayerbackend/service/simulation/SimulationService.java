@@ -172,13 +172,13 @@ public class SimulationService {
      * Get SimCode By ConfCategId (Like)
      * @return {@link List<String>}
      */
-    public List<String> getSimCodeByConfCategIdLike(String confCategId) {
-        Optional<List<ConfigurationStorage>> configurationStorages =
-                this.configurationStorageRepository.findByConfCategIdLike(confCategId);
+    public List<String> getSimCodeByConfCategIdLikeAndConfIdLike(String confCategId, String confID) {
 
-        if (!configurationStorages.isPresent()) throw new NotFoundException(this.notFoundMessage.toString(confCategId));
-
-        return configurationStorages.get().stream()
+        return Optional.ofNullable(this.configurationStorageRepository
+                .findByConfCategIdLikeAndConfIdLike(confCategId, confID))
+                .orElseThrow(() -> new NotFoundException(
+                        this.notFoundMessage.toString(confID,confCategId)))
+                .stream()
                 .filter(x -> x.getConfCategId().contains("OAP:0"))
                 .map(ConfigurationStorage::getConfId)
                 .collect(Collectors.toList());

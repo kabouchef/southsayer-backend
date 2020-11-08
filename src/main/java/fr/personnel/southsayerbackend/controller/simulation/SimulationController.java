@@ -108,13 +108,15 @@ public class SimulationController {
     @Operation(summary = "API to extract OAP simulation",
             description = "Retrieves the list of code simulations by idOAP")
     @CrossOrigin
-    @GetMapping("/byIdOAP")
+    @GetMapping("/simulationCodes")
     @ResponseBody
     public List<String> getSimulationCodes(
             @Parameter(description = "idOAP", example = "OAP:016", required = true)
-            @RequestParam(name = "idOAP") String idOAP) {
+            @RequestParam(name = "idOAP") String idOAP,
+            @Parameter(description = "simCodeFilter", example = "20201107%", required = true)
+            @RequestParam(name = "simCodeFilter") String simCodeFilter) {
 
-        return this.simulationService.getSimCodeByConfCategIdLike(idOAP);
+        return this.simulationService.getSimCodeByConfCategIdLikeAndConfIdLike(idOAP, simCodeFilter);
     }
 
     /**
