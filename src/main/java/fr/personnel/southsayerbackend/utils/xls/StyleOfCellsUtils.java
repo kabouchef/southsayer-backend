@@ -33,7 +33,7 @@ public class StyleOfCellsUtils {
         spreadSheet.addMergedRegion(new CellRangeAddress(0,0,0,3));
         HSSFCellStyle style = wb.createCellStyle();
         font.setFontName(StyleCellConstant.LEROY_MERLIN_SANS_BOLD);
-        font.setFontHeightInPoints((short) 20);
+        font.setFontHeightInPoints((short) 16);
         style.setFont(font);
         style.setBorderRight(BorderStyle.MEDIUM);
         style.setBorderTop(BorderStyle.MEDIUM);

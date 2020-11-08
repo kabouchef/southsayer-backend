@@ -58,6 +58,3 @@ sftp:
   password: ${SFTP_PASSWORD:DEVcam11r!}
   host: ${SFTP_HOST:rfrlmasoamg02}
   port: ${SFTP_PORT:22}
-
-
-

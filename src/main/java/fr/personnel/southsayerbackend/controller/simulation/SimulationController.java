@@ -232,7 +232,6 @@ public class SimulationController {
         return this.simulationService.save(updateValueDTOS);
     }
 
-    // TODO 1 - Make frontUI for uploadToServer
     /**
      * Upload To Server
      * @param simulationCode : simulationCode
