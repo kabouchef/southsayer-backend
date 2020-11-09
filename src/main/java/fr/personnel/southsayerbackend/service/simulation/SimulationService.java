@@ -112,7 +112,7 @@ public class SimulationService {
 
         double valueRate = this.extractFromDatabaseService.countSimulationsByValueByXpath(inputRate);
 
-        double rate = MathUtils.calculatePercentage(valueRate, totalRate);
+        double rate = MathUtils.arrondiMathematique(MathUtils.calculatePercentage(valueRate, totalRate), 2);
 
         ConversionRate conversionRate = new ConversionRate()
                 .withTotal(totalRate)
