@@ -15,6 +15,7 @@ import lombok.With;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PriceLine {
+    private String oapDefinition;
     private String identifiant;
     private String detailPrestation;
     private String quantite;
@@ -33,4 +34,5 @@ public class PriceLine {
     private double totalPriceTVAReduite;
     private double totalPriceTVAInter;
     private double totalPriceTVANormale;
+
 }

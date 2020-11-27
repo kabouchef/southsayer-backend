@@ -30,8 +30,6 @@ import static fr.personnel.southsayerbackend.configuration.constant.RestConstant
 public class ActivityCodeController {
 
     private final ActivityCodeService activityCodeService;
-
-    // TODO 5 - Make frontUI for getAllActivityCode
     /**
      * Get OAP AC
      *
@@ -44,7 +42,6 @@ public class ActivityCodeController {
         return this.activityCodeService.getAll();
     }
 
-    // TODO 6 - Make frontUI for getByCodActivite
     /**
      * Get OAP AC by code activite
      *
@@ -71,7 +68,6 @@ public class ActivityCodeController {
         return this.activityCodeService.getByLib1(lib1);
     }
 
-    // TODO 7 - Make frontUI for getByCodActivite
     /**
      * Get OAP AC by idRayon
      *

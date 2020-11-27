@@ -65,14 +65,27 @@ public class ExcelConverterService {
         cleanDirectory(new File(pathXlsSimulation));
 
         try {
-            //Init Worbook
-            WorkbookDTO workbookDTO =
-                    ExcelUtils.workbookInit(simulationCode, "PRICE_FROM_" + simulationCode);
-
             // Parsing XML Document
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document xmlDocument = builder.parse(pathXmlSimulation + "/" + simulationCode + "." + XML_EXTENSION);
+
+            //Get OAP Code
+            XPath xPath = XPathFactory.newInstance().newXPath();
+            String oapCodeXpath = "//*[@cpe='CPE.Settings.Session.idoaa']/@value";
+            String oapCodeString = xPath.compile(oapCodeXpath).evaluate(xmlDocument, XPathConstants.STRING).toString();
+            //Get OAP Name
+            /*XPath xPath = XPathFactory.newInstance().newXPath();*/
+            String oapNameXpath = "//*[@cpe='CPE.Settings.Session.Workspace']/@value";
+            String oapNameString = xPath.compile(oapNameXpath)
+                    .evaluate(xmlDocument, XPathConstants.STRING)
+                    .toString()
+                    .replace("wksOAP", "OAP ");
+
+            String oapDefinition = oapCodeString + " - " + oapNameString;
+
+            //Init Workbook
+            WorkbookDTO workbookDTO = ExcelUtils.workbookInit(simulationCode,simulationCode +" - "+ oapDefinition);
 
             /**
              * Definition of Cells Style
@@ -142,7 +155,7 @@ public class ExcelConverterService {
             String nbLines = "count(//*[@name='fpPriceHtChiffragePrecisSurrogate']" +
                     "//Value[not(preceding-sibling::Value = .)])";
 
-            XPath xPath = XPathFactory.newInstance().newXPath();
+            /*XPath xPath = XPathFactory.newInstance().newXPath();*/
             String nbPrice = xPath.compile(nbLines).evaluate(xmlDocument, XPathConstants.STRING).toString();
 
             int nbPriceLines = Integer.parseInt(nbPrice);
@@ -157,6 +170,7 @@ public class ExcelConverterService {
                 priceElement = priceLines.split("#");
 
                 PriceLine priceLine = new PriceLine();
+                priceLine.setOapDefinition(oapDefinition);
                 if (priceElement.length >= 1) priceLine.setIdentifiant(priceElement[0]);
                 if (priceElement.length >= 2) priceLine.setDetailPrestation(priceElement[1]);
                 if (priceElement.length >= 3) priceLine.setQuantite(priceElement[2]);
@@ -310,12 +324,12 @@ public class ExcelConverterService {
         return priceLineList;
     }
 
-    public void generateConversionRateExcel(
+    /*public void generateConversionRateExcel(
             double totalRate, double valueRate, double rate,
             InputRate inputRate) throws IOException {
-        /**
+        *//**
          * Drain static repository
-         */
+         *//*
         FileOutputStream fos;
         String currentDate =
                 new SimpleDateFormat("yyyyMMdd-HHmmss").format(new Date(System.currentTimeMillis()));
@@ -332,9 +346,9 @@ public class ExcelConverterService {
 
         fileName = fileName + " - " + currentDate + "." + XLS_EXTENSION;
 
-        /**
+        *//**
          * Definition of Cells Style
-         */
+         *//*
         // Style of Title Cell
         HSSFCellStyle styleHead =
                 StyleOfCellsUtils.getCustomStyleHead(workbookDTO.getHssfWorkbook());
@@ -429,7 +443,7 @@ public class ExcelConverterService {
             log.info("The file \"" + fileName + "\" has not been created...");
         }
         log.info("*******************************");
-    }
+    }*/
 
 
 }
