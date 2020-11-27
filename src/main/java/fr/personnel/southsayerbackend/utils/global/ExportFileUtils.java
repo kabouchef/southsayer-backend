@@ -35,6 +35,12 @@ public class ExportFileUtils {
         try {
             Files.createDirectories(this.fileStorageLocation);
         } catch (Exception ex) {
+            try{
+                Path fileStorageLocation = Paths.get(fileStorageProperties.getUploadDir());
+                Files.createDirectories(fileStorageLocation);
+            }catch (Exception e) {
+                throw new Exception("Could not create the directory where the uploaded files will be stored.", e);
+            }
             throw new Exception("Could not create the directory where the uploaded files will be stored.", ex);
         }
     }
